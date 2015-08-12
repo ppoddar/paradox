@@ -5,9 +5,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.query.Expression;
 import com.paradox.query.ExpressionVisitor;
-import com.paradox.query.QueryContext;
 import com.paradox.query.Expression.Aggregate;
 import com.paradox.query.Expression.And;
 import com.paradox.query.Expression.Avg;
@@ -101,7 +101,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Object lhs = getArgument(0).evaluate(candidate, ctx);
 			Object rhs = getArgument(1).evaluate(candidate, ctx);
 			return _ignoreCase ? lhs.toString().equalsIgnoreCase(rhs.toString()) : lhs.equals(rhs);
@@ -113,7 +113,7 @@ public class Expressions {
 			super(path);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Object lhs = getArgument(0).evaluate(candidate, ctx);
 			return lhs == null;
 		}
@@ -125,7 +125,7 @@ public class Expressions {
 			super(predicate);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Boolean lhs = ((Predicate)getArgument(0)).evaluate(candidate, ctx);
 			return lhs == null ? false : !lhs.booleanValue();
 		}
@@ -136,7 +136,7 @@ public class Expressions {
 			super(path, value);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Number lhs = (Number)getArgument(0).evaluate(candidate, ctx);
 			Number rhs = (Number)getArgument(1).evaluate(candidate, ctx);
 			return lhs.doubleValue() > rhs.doubleValue();
@@ -147,7 +147,7 @@ public class Expressions {
 			super(path, value);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Number lhs = (Number)getArgument(0).evaluate(candidate, ctx);
 			Number rhs = (Number)getArgument(1).evaluate(candidate, ctx);
 			return lhs.doubleValue() >= rhs.doubleValue();
@@ -158,7 +158,7 @@ public class Expressions {
 			super(path, value);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Number lhs = (Number)getArgument(0).evaluate(candidate, ctx);
 			Number rhs = (Number)getArgument(1).evaluate(candidate, ctx);
 			return lhs.doubleValue() < rhs.doubleValue();
@@ -169,7 +169,7 @@ public class Expressions {
 			super(path, value);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Number lhs = (Number)getArgument(0).evaluate(candidate, ctx);
 			Number rhs = (Number)getArgument(1).evaluate(candidate, ctx);
 			return lhs.doubleValue() <= rhs.doubleValue();
@@ -180,7 +180,7 @@ public class Expressions {
 			super(path, value);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			String lhs = (String)getArgument(0).evaluate(candidate, ctx);
 			String rhs = (String)getArgument(1).evaluate(candidate, ctx);
 			return Pattern.matches(rhs, lhs);
@@ -197,7 +197,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public V evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public V evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			return _value;
 		}
 
@@ -265,7 +265,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public Integer evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Integer evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			return assertCollection(candidate).size();
 		}
 		
@@ -276,7 +276,7 @@ public class Expressions {
 			super("sum", path);
 		}
 		@Override
-		public Number evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Number evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Collection<?> coll = assertCollection(candidate);
 			double sum = 0.0;
 			for (Object obj : coll) {
@@ -291,7 +291,7 @@ public class Expressions {
 			super(path);
 		}
 		@Override
-		public Number evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Number evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Collection<?> coll = assertCollection(candidate);
 			if (coll.isEmpty()) return 0.0;
 			double sum = 0.0;
@@ -307,7 +307,7 @@ public class Expressions {
 			super("min", path);
 		}
 		@Override
-		public Number evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Number evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Collection<?> coll = assertCollection(candidate);
 			if (coll.isEmpty()) return 0.0;
 			double min = Double.MAX_VALUE;
@@ -324,7 +324,7 @@ public class Expressions {
 			super("max", path);
 		}
 		@Override
-		public Number evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Number evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Collection<?> coll = assertCollection(candidate);
 			if (coll.isEmpty()) return 0.0;
 			double max = Double.MIN_VALUE;
@@ -366,7 +366,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public V evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public V evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			if (!_bound) throw new RuntimeException("Bind parameter [" + _paramKey + "] is not bound");
 			return (V)_paramValue;
 		}
@@ -379,7 +379,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Boolean lhs = ((Predicate)getArgument(0)).evaluate(candidate, ctx);
 			if (lhs) return true;
 			return ((Predicate)getArgument(1)).evaluate(candidate, ctx);
@@ -393,7 +393,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Boolean lhs = ((Predicate)getArgument(0)).evaluate(candidate, ctx);
 			if (!lhs) return false;
 			return ((Predicate)getArgument(1)).evaluate(candidate, ctx);

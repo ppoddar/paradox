@@ -1,8 +1,8 @@
 package com.paradox.query.impl;
 
+import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.query.Expression;
 import com.paradox.query.ExpressionVisitor;
-import com.paradox.query.QueryContext;
 import com.paradox.query.Expression.Candidate;
 
 
@@ -28,7 +28,7 @@ public class CandidatePath<V> implements Expression.Candidate<V> {
 	 * Evaluates as the given candidate itself.
 	 */
 	@Override
-	public V evaluate(Object candidate, QueryContext<?,?,?> ctx) {
+	public V evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 		return (V)candidate;
 	}
 

@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.query.Expression;
-import com.paradox.query.QueryContext;
 import com.paradox.query.ResultPacker;
 import com.paradox.util.ChainedIterator;
 
@@ -24,12 +24,12 @@ import com.paradox.util.ChainedIterator;
  */
 public abstract class AbstractResultPacker<T> implements ResultPacker<T> {
 	private Select _select;
-	private QueryContext<?,?,T> _ctx;
+	private KVQueryContext<?,?,T> _ctx;
 	private Map<Object,Set<T>> selected;
 	private OrderingComparator<T> _orderByComparator;
 	private static final Object DUMMY_GROUP = new Object();
 	
-	public void setContext(Select select, QueryContext<?,?,T> ctx) {
+	public void setContext(Select select, KVQueryContext<?,?,T> ctx) {
 		_select = select;
 		_ctx = ctx;
 		selected = new HashMap<Object,Set<T>>();

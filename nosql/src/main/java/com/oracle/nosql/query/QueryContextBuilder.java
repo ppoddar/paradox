@@ -6,13 +6,13 @@ import oracle.kv.Key;
 import oracle.kv.Value;
 
 import com.paradox.nosql.query.KeyMaker;
+import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.nosql.query.ValueTransformer;
-import com.paradox.query.QueryContext;
 import com.paradox.query.ResultPacker;
 import com.paradox.schema.Schema;
 
 /**
- * Builder for {@link QueryContext}.
+ * Builder for {@link KVQueryContext}.
  * <br>
  * Uses a {@link DefaultKeyMaker default key} policy. 
  * 

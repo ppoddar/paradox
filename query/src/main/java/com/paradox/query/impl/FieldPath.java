@@ -1,9 +1,9 @@
 package com.paradox.query.impl;
 
+import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.nosql.query.ValueTransformer;
 import com.paradox.query.Expression;
 import com.paradox.query.ExpressionVisitor;
-import com.paradox.query.QueryContext;
 import com.paradox.query.Expression.Path;
 
 /**
@@ -15,7 +15,7 @@ import com.paradox.query.Expression.Path;
  * assume anything about candidate instances.
  * <br>
  * This implementation delegates evaluation to {@link ValueTransformer#extractFieldValue(Object, String) Value Transformer} 
- * interface which is made available via {@link QueryContext#getValueTransformer() execution context}. 
+ * interface which is made available via {@link KVQueryContext#getValueTransformer() execution context}. 
  * 
  * @author pinaki poddar
  *
@@ -99,7 +99,7 @@ public class FieldPath<V> implements Expression.Path<V> {
 	 * The 
 	 */
 	@Override
-	public V evaluate(Object candidate, QueryContext ctx) {
+	public V evaluate(Object candidate, KVQueryContext ctx) {
 		return (V)ctx.getValueTransformer().extractFieldValue(candidate, getName());
 	}
 	

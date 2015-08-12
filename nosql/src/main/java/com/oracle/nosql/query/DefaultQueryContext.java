@@ -10,9 +10,9 @@ import oracle.kv.Value;
 
 import com.oracle.nosql.query.json.JSONValueTransformer;
 import com.paradox.nosql.query.KeyMaker;
+import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.nosql.query.ValueTransformer;
 import com.paradox.query.ExpressionFactory;
-import com.paradox.query.QueryContext;
 import com.paradox.query.ResultPacker;
 import com.paradox.query.impl.QueryExpressionFactory;
 import com.paradox.schema.Schema;
@@ -26,7 +26,7 @@ import com.paradox.schema.Schema;
  * 
  * @author pinaki poddar
  */
-public final class DefaultQueryContext<U> implements QueryContext<Key,Value,U> {
+public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U> {
 	private Schema            		_schema;
 	private KeyMaker<Key> 			_keyMaker;
 	private ValueTransformer<Value,U>  	_valueTransformer;
@@ -55,7 +55,7 @@ public final class DefaultQueryContext<U> implements QueryContext<Key,Value,U> {
 		return _keyMaker;
 	}
 	
-	@Override
+//	@Override
 	public Class<? extends ResultPacker<U>> getResultPacker() {
 		return _resultPacker;
 	}
@@ -100,31 +100,31 @@ public final class DefaultQueryContext<U> implements QueryContext<Key,Value,U> {
 		_resultPacker = packer;
 	}
 
-	@Override
-	public Iterator<U> executeQuery(String sql)  throws Exception {
-		return new DefaultQueryExecutor<U>(this).executeQuery(sql, (Object[])null);
-	}
-	
-	@Override
-	public Iterator<U> executeQuery(String sql, Map<String, Object> bindParams)  throws Exception {
-		return new DefaultQueryExecutor<U>(this).executeQuery(sql, bindParams);
-	}
-	
-	@Override
-	public Iterator<U> executeQuery(String sql, Object... bindPairs)  throws Exception {
-		return new DefaultQueryExecutor<U>(this).executeQuery(sql, bindPairs);
-	}
-
-	@Override
-	public int execute(String sql) {
-		return execute(sql, null);
-	}
-	
-	@Override
-	public int execute(String sql, Map<String,Object> params) {
-		throw new UnsupportedOperationException();
-	}
-
+//	@Override
+//	public Iterator<U> executeQuery(String sql)  throws Exception {
+//		return new DefaultQueryExecutor<U>(this).executeQuery(sql, (Object[])null);
+//	}
+//	
+//	@Override
+//	public Iterator<U> executeQuery(String sql, Map<String, Object> bindParams)  throws Exception {
+//		return new DefaultQueryExecutor<U>(this).executeQuery(sql, bindParams);
+//	}
+//	
+//	@Override
+//	public Iterator<U> executeQuery(String sql, Object... bindPairs)  throws Exception {
+//		return new DefaultQueryExecutor<U>(this).executeQuery(sql, bindPairs);
+//	}
+//
+//	@Override
+//	public int execute(String sql) {
+//		return execute(sql, null);
+//	}
+//	
+//	@Override
+//	public int execute(String sql, Map<String,Object> params) {
+//		throw new UnsupportedOperationException();
+//	}
+//
 	@Override
 	public ExpressionFactory getExpressionFactory() {
 		if (_factory == null) {

@@ -33,7 +33,7 @@ public class FullScanIndex implements Index<Value> {
 	}
 	
 	@Override
-	public Iterator<Value> fetch(QueryContext<?,Value,?> ctx) {
+	public Iterator<Value> fetch(QueryContext ctx) {
 		Transformer<KeyValueVersion, Value> transformer = new Transformer<KeyValueVersion, Value>(){
 			public Value transform(KeyValueVersion kvv) {
 				return kvv.getValue();

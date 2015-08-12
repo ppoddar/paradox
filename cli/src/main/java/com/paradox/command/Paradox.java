@@ -26,7 +26,7 @@ import com.oracle.nosql.query.QueryContextBuilder;
 import com.oracle.nosql.query.json.JSONResultPacker;
 import com.oracle.nosql.query.json.JSONValueTransformer;
 import com.oracle.paradox.DataLoader;
-import com.paradox.query.QueryContext;
+import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.schema.Attribute;
 import com.paradox.schema.Schema;
 import com.paradox.schema.UserType;

@@ -3,8 +3,8 @@ package com.paradox.query.impl;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.query.Expression;
-import com.paradox.query.QueryContext;
 
 /**
  * A comparator to order query results.
@@ -14,10 +14,10 @@ import com.paradox.query.QueryContext;
  * @param <T> the type of result rows to be compared
  */
 public class OrderingComparator<T> implements Comparator<T> {
-	private final QueryContext<?,?,?> _ctx;
+	private final KVQueryContext<?,?,?> _ctx;
 	private final Select _select;
 	
-	public OrderingComparator(QueryContext<?,?,?> ctx, Select select) {
+	public OrderingComparator(KVQueryContext<?,?,?> ctx, Select select) {
 		_ctx = ctx;
 		_select = select;
 	}

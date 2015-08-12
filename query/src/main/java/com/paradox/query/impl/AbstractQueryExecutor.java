@@ -5,11 +5,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.paradox.nosql.query.Index;
+import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.nosql.query.ValueTransformer;
 import com.paradox.query.Expression;
-import com.paradox.query.QueryContext;
 import com.paradox.query.QueryExecutor;
 import com.paradox.query.ResultPacker;
+import com.paradox.query.QueryContext;
 import com.paradox.util.NVPair;
 
 /**
@@ -20,7 +21,7 @@ import com.paradox.util.NVPair;
  * <li> Parse the query string to build a {@link Select} statement in terms of {@link Expression expression nodes}.
  * <li> Bind query parameters, if any
  * <li> Analyze the query predicate (i.e. a {@code where} clause in a {@code select} statement) to 
- * {@link #selectIndex(Select, QueryContext) determine} the appropriate index. 
+ * {@link #selectIndex(Select, KVQueryContext) determine} the appropriate index. 
  * <li> Retrieve the candidate extent as an {@link KVStore#storeIterator(oracle.kv.Direction, int, oracle.kv.Key, 
  * oracle.kv.KeyRange, oracle.kv.Depth, oracle.kv.Consistency, long, java.util.concurrent.TimeUnit, 
  * oracle.kv.StoreIteratorConfig) iterator over stored key-value} pairs from the chosen index 
@@ -44,20 +45,20 @@ import com.paradox.util.NVPair;
  * the storage representation of a byte array.<br>
  * During evaluation of each expression, the extraction of attribute value(s) from the candidate record is delegated
  * to the {@link ValueTransformer#extractFieldValue(Object, String) Value Transformer} interface. The user of this facility must
- * provide the {@link ValueTransformer Transformer} via the {@link QueryContext#getValueTransformer() execution context}
+ * provide the {@link ValueTransformer Transformer} via the {@link KVQueryContext#getValueTransformer() execution context}
  * 
  * 
  * @author pinaki poddar
  */
 public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,U> {
-	private final QueryContext<K,V,U> _ctx;
+	private final KVQueryContext<K,V,U> _ctx;
 	
-	public AbstractQueryExecutor(QueryContext<K,V,U> ctx) {
+	public AbstractQueryExecutor(KVQueryContext<K,V,U> ctx) {
 		if (ctx == null) throw new NullPointerException("Can not create executor with null context");
 		_ctx = ctx;
 	}
 	
-	public final QueryContext<K,V,U> getContext() {
+	public final KVQueryContext<K,V,U> getContext() {
 		return _ctx;
 	}
 	
@@ -68,7 +69,7 @@ public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,
 	public Iterator<U> executeQuery(String query, Map<String, Object> bindParams) throws Exception {
 		ValueTransformer<V,U> valueTransformer = _ctx.getValueTransformer();
 		Select select = new Select(query, _ctx.getSchema(), _ctx.getExpressionFactory());
-		ResultPacker<U> packer = newResultPacker(select,_ctx.getResultPacker());
+		ResultPacker<U> packer = null;// newResultPacker(select,_ctx.getResultPacker());
 		bindParams(select, bindParams);
 		Index<V> index = selectIndex(select, _ctx);
 		Iterator<V> candidates = index.fetch(_ctx);
@@ -87,6 +88,16 @@ public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,
 	public int execute(String query, Map<String, Object> bindParams) {
 		throw new UnsupportedOperationException();
 	}
+  @Override
+  public Iterator<U> executeQuery(String sql) throws Exception {
+    return executeQuery(sql, (Object[])null);
+  }
+
+  @Override
+  public int execute(String sql) throws Exception {
+    return execute(sql, null);
+  }
+
 	
 	protected void bindParams(Select select, Map<String,Object> params) {
 		if (select.getPredicate() == null) return;
@@ -109,15 +120,15 @@ public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,
 		
 	}
 	
-	protected  ResultPacker<U> newResultPacker(Select select, Class<? extends ResultPacker<U>> cls) {
-		try {
-			ResultPacker<U> packer =  cls.newInstance();
-			((AbstractResultPacker<U>)packer).setContext(select, _ctx);
-			return packer;
-		} catch (Exception ex) {
-			throw new RuntimeException("Failed to create result packer instance from " + cls);
-		}
-	}
+//	protected  ResultPacker<U> newResultPacker(Select select, Class<? extends ResultPacker<U>> cls) {
+//		try {
+//			ResultPacker<U> packer =  cls.newInstance();
+//			((AbstractResultPacker<U>)packer).setContext(select, _ctx);
+//			return packer;
+//		} catch (Exception ex) {
+//			throw new RuntimeException("Failed to create result packer instance from " + cls);
+//		}
+//	}
 	/**
 	 * Chooses a suitable index for the given select statement.
 	 * This index would be used retrieve the extent.
@@ -125,5 +136,5 @@ public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,
 	 * @param ctx the query execution environment
 	 * @return an Index to retrieve the candidate extent
 	 */
-	protected abstract Index<V> selectIndex(Select select, QueryContext<K,V,U> ctx); 
+	protected abstract Index<V> selectIndex(Select select, KVQueryContext<K,V,U> ctx); 
 }

@@ -1,7 +1,5 @@
 package com.paradox.query;
 
-
-
 /**
  * A factory for query expressions.
  * 
@@ -10,7 +8,7 @@ package com.paradox.query;
  */
 public interface ExpressionFactory {
 	/**
-	 * Creates a path expression from the given field/attribute/property name.
+	 * Creates a path expression from the given attribute name.
 	 */
 	Expression.Path<?> newPath(String field);
 	

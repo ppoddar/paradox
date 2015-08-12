@@ -1,7 +1,5 @@
 package com.paradox.query;
 
-
-
 /**
  * Visitor for expression tree.
  * 
