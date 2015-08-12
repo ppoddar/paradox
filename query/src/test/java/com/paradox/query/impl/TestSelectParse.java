@@ -28,7 +28,7 @@ public class TestSelectParse {
 		Schema schema = null;
 		ExpressionFactory factory = new QueryExpressionFactory();
 		String sql = "select name from Person";
-		Select select = new SelectBuilder(schema, factory).compile(sql);
+		Select select = new SelectBuilder(schema, factory).parse(sql);
 		Assert.assertEquals(sql, select.getSQL());
 	}
 	
@@ -37,7 +37,7 @@ public class TestSelectParse {
 		Schema schema = null;
 		ExpressionFactory factory = new QueryExpressionFactory();
 		String sql = "select name from Person";
-		Select select = new SelectBuilder(schema, factory).compile(sql);
+		Select select = new SelectBuilder(schema, factory).parse(sql);
 		String extent = select.getCandidate().getName();
 		Assert.assertEquals("Person", extent);
 	}
@@ -47,7 +47,7 @@ public class TestSelectParse {
 		Schema schema = null;
 		ExpressionFactory factory = new QueryExpressionFactory();
 		String sql = "select name from Person";
-		Select select = new SelectBuilder(schema, factory).compile(sql);
+		Select select = new SelectBuilder(schema, factory).parse(sql);
 		Iterator<Expression.Path<?>> terms = select.getFieldTerms();
 		
 		Assert.assertTrue(terms.hasNext());
@@ -60,7 +60,7 @@ public class TestSelectParse {
 		Schema schema = null;
 		ExpressionFactory factory = new QueryExpressionFactory();
 		String sql = "select name,email from Person";
-		Select select = new SelectBuilder(schema, factory).compile(sql);
+		Select select = new SelectBuilder(schema, factory).parse(sql);
 		Iterator<Expression.Path<?>> terms = select.getFieldTerms();
 		
 		Assert.assertTrue(terms.hasNext());

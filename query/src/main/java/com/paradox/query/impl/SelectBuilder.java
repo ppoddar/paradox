@@ -114,7 +114,7 @@ class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListener {
 	 * @throws IOException if the given sql string can not be read
 	 * SchemaValidationException the name tokens are not semantically valid, for example  
 	 */
-	public Select compile(String sql) throws IOException, SchemaValidationException {
+	public Select parse(String sql) throws IOException, SchemaValidationException {
 		synchronized (_stack) {
 			_select = new Select(sql);
 			ANTLRInputStream in = new CaseInsensitiveANTLRStringStream(_select.getSQL());

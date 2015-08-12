@@ -68,7 +68,7 @@ public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,
 	@Override
 	public Iterator<U> executeQuery(String query, Map<String, Object> bindParams) throws Exception {
 		ValueTransformer<V,U> valueTransformer = _ctx.getValueTransformer();
-		Select select = new SelectBuilder(_ctx.getSchema(), _ctx.getExpressionFactory()).compile(query);
+		Select select = new SelectBuilder(_ctx.getSchema(), _ctx.getExpressionFactory()).parse(query);
 		ResultPacker<U> packer = null;// newResultPacker(select,_ctx.getResultPacker());
 		bindParams(select, bindParams);
 		Index<V> index = selectIndex(select, _ctx);
