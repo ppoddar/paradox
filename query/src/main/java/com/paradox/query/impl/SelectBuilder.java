@@ -66,7 +66,6 @@ import com.paradox.query.Expression.Constant;
 import com.paradox.query.Expression.Path;
 import com.paradox.query.Expression.Predicate;
 import com.paradox.query.Expression.Value;
-import com.paradox.query.parser.CaseInsensitiveANTLRStringStream;
 import com.paradox.schema.Schema;
 import com.paradox.schema.SchemaValidationException;
 
@@ -117,7 +116,7 @@ class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListener {
 	public Select parse(String sql) throws IOException, SchemaValidationException {
 		synchronized (_stack) {
 			_select = new Select(sql);
-			ANTLRInputStream in = new CaseInsensitiveANTLRStringStream(_select.getSQL());
+			ANTLRInputStream in = new ANTLRInputStream(sql);
 			_lexer    = new NoSQLLexer(in);
 			CommonTokenStream tokens = new CommonTokenStream(_lexer);
 			NoSQLParser parser = new NoSQLParser(tokens);

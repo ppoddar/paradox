@@ -31,6 +31,14 @@ public class TestSelectParse {
 		Select select = new SelectBuilder(schema, factory).parse(sql);
 		Assert.assertEquals(sql, select.getSQL());
 	}
+	@Test
+	public void testKeywordsAreCaseInsensitive() throws Exception {
+		Schema schema = null;
+		ExpressionFactory factory = new QueryExpressionFactory();
+		String sql = "select name FroM Person";
+		Select select = new SelectBuilder(schema, factory).parse(sql);
+		Assert.assertEquals(sql, select.getSQL());
+	}
 	
 	@Test
 	public void testCandidate() throws Exception {
