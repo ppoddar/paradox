@@ -3,14 +3,18 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.eclipse.persistence</groupId>
+		<groupId>org.paradox</groupId>
 		<artifactId>paradox</artifactId>
 		<version>0.2</version>
+		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>cli</artifactId>
 	<packaging>jar</packaging>
 
 	<name>Command-Line Client</name>
+	<build>
+		<finalName>paradox-cli</finalName>
+	</build>
 
 	<dependencies>
 		<dependency>
@@ -19,12 +23,12 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
-			<artifactId>main</artifactId>
+			<groupId>org.paradox</groupId>
+			<artifactId>api</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.eclipse.persistence</groupId>
+			<groupId>org.paradox</groupId>
 			<artifactId>nosql</artifactId>
 			<version>${project.version}</version>
 		</dependency>

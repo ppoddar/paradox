@@ -4,15 +4,18 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.eclipse.persistence</groupId>
+        <groupId>org.paradox</groupId>
         <artifactId>paradox</artifactId>
         <version>0.2</version>
+		<relativePath>..</relativePath>
     </parent>
     <artifactId>util</artifactId>
     <packaging>jar</packaging>
 
     <name>Utilities</name>
+	<build>
+		<finalName>paradox-util</finalName>
+	</build>
     
-  
     
 </project>
