@@ -1,7 +1,5 @@
 package com.paradox.schema.impl;
 
-import java.lang.reflect.Array;
-
 import com.paradox.schema.ContainerType;
 import com.paradox.schema.Type;
 

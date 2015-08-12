@@ -1,7 +1,9 @@
 package com.paradox.query;
 
 import com.paradox.schema.Schema;
-
+/*
+ *  A context provides an environment to execute a query.
+ */
 public interface QueryContext {
 
   /**
@@ -13,10 +15,6 @@ public interface QueryContext {
   Schema getSchema();
 
 
-  /**
-   * Gets the timeout in millisecond unit.
-   */
-  long getQueryTimeout();
 
   ExpressionFactory getExpressionFactory();
 

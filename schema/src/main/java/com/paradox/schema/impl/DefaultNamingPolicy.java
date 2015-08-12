@@ -30,7 +30,8 @@ class DefaultNamingPolicy implements NamingPolicy {
 
 	@Override
 	public boolean isPluralTypeName(String typeName) {
-		return typeName != null && typeName.endsWith(PLURAL_NAME_MARKER);
+		return typeName != null 
+			&& (typeName.endsWith(PLURAL_NAME_MARKER) || "map".equalsIgnoreCase(typeName));
 	}
 
 	public String getSingularTypeName(String typeName) {

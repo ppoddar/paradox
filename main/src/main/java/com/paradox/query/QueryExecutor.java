@@ -69,4 +69,8 @@ public interface QueryExecutor<K,V,U> {
 	 */
 	QueryContext getContext();
 	
+	  /**
+	   * Gets the timeout in millisecond unit.
+	   */
+	  long getQueryTimeout();
 }
