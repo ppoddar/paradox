@@ -5,10 +5,11 @@ import oracle.kv.KVStore;
 import oracle.kv.Key;
 import oracle.kv.Value;
 
-import com.paradox.nosql.query.KeyMaker;
+import org.json.JSONObject;
+
 import com.paradox.nosql.query.KVQueryContext;
+import com.paradox.nosql.query.KeyMaker;
 import com.paradox.nosql.query.ValueTransformer;
-import com.paradox.query.ResultPacker;
 import com.paradox.schema.Schema;
 
 /**
@@ -19,10 +20,9 @@ import com.paradox.schema.Schema;
  * @author pinaki poddar
  *
  */
-public class QueryContextBuilder<T> {
+public class QueryContextBuilder {
 	private KeyMaker<Key> _keyMaker = new DefaultKeyMaker();
-	private ValueTransformer<Value,T> _valueTransformer;
-	private Class<? extends ResultPacker<T>>  _resultPacker;
+	private ValueTransformer<Value,JSONObject> _valueTransformer;
 	private final Schema _schema;
 	private Consistency _consistency = Consistency.NONE_REQUIRED;
 	private long _timeout;
@@ -34,16 +34,14 @@ public class QueryContextBuilder<T> {
 		_schema = schema;
 	}
 	
-	public DefaultQueryContext<T> build() {
+	public DefaultQueryContext build() {
 		if (_keyMaker == null) throw new IllegalStateException("Must set Key Distribution Policy");
 		if (_valueTransformer == null) throw new IllegalStateException("Must set Value Transformation Policy");
-		if (_resultPacker == null) throw new IllegalStateException("Must set Result Packing Policy");
 		
-		DefaultQueryContext<T> ctx = new DefaultQueryContext<T>();
+		DefaultQueryContext ctx = new DefaultQueryContext();
 		
   		ctx.setKeyMaker(_keyMaker);
   		ctx.setValueTransformer(_valueTransformer);
-  		ctx.setResultPacker(_resultPacker);
   		ctx.setSchema(_schema);
   		ctx.setConsistency(_consistency);
   		ctx.setQueryTimeout(_timeout);
@@ -57,7 +55,7 @@ public class QueryContextBuilder<T> {
 	 * 
 	 * @return the same builder
 	 */
-	public QueryContextBuilder<T> withKeyMaker(DefaultKeyMaker keyMaker) {
+	public QueryContextBuilder withKeyMaker(DefaultKeyMaker keyMaker) {
 		_keyMaker = keyMaker;
 		return this;
 	}
@@ -66,24 +64,16 @@ public class QueryContextBuilder<T> {
 	 * Sets the transformer that converts between Oracle NoSQL storage representation and
 	 * user representation of data values.
 	 */
-	public QueryContextBuilder<T> withValueTransformer(ValueTransformer<Value,T> transformer) {
+	public QueryContextBuilder withValueTransformer(ValueTransformer<Value,JSONObject> transformer) {
 		_valueTransformer = transformer;
 		return this;
 	}
 	
-	/**
-	 * Sets the result packer that presents the 
-	 * user representation of data values.
-	 */
-	public QueryContextBuilder<T> withResultPacker(Class<? extends ResultPacker<T>> packer) {
-		_resultPacker = packer;
-		return this;
-	}
 	
 	/**
 	 * Sets the level of read consistency required for query result.
 	 */
-	public QueryContextBuilder<T> withConsistency(Consistency consistency) {
+	public QueryContextBuilder withConsistency(Consistency consistency) {
 		_consistency = consistency;
 		return this;
 	}
@@ -91,7 +81,7 @@ public class QueryContextBuilder<T> {
 	/**
 	 * Sets the timeout in millisecond unit.
 	 */
-	public QueryContextBuilder<T> withQueryTimeout(long timeout) {
+	public QueryContextBuilder withQueryTimeout(long timeout) {
 		_timeout = timeout;
 		return this;
 	}

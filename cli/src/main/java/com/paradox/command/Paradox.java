@@ -23,10 +23,8 @@ import org.json.JSONObject;
 import com.oracle.nosql.query.DefaultKeyMaker;
 import com.oracle.nosql.query.DefaultQueryContext;
 import com.oracle.nosql.query.QueryContextBuilder;
-import com.oracle.nosql.query.json.JSONResultPacker;
 import com.oracle.nosql.query.json.JSONValueTransformer;
 import com.oracle.paradox.DataLoader;
-import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.schema.Attribute;
 import com.paradox.schema.Schema;
 import com.paradox.schema.UserType;
@@ -84,12 +82,11 @@ public class Paradox extends AbstractCommandLineClient {
 		println("\t" + (_schema != null ? "Using schema " + _schemaURI : "*** Not loaded a schema"));
 	}
 	
-	public DefaultQueryContext<JSONObject> getQueryContext() {
+	public DefaultQueryContext getQueryContext() {
 		assertActive();
-		return new QueryContextBuilder<JSONObject>(_store, _schema)
+		return new QueryContextBuilder(_store, _schema)
 					.withKeyMaker(new DefaultKeyMaker())
 					.withValueTransformer(new JSONValueTransformer())
-					.withResultPacker(JSONResultPacker.class)
 					.build();
 	}
 
@@ -139,7 +136,7 @@ public class Paradox extends AbstractCommandLineClient {
 	
 	public class Get {
 		public void execute(List<String> keys)	throws Exception {
-			DefaultQueryContext<JSONObject> ctx = getQueryContext();
+			DefaultQueryContext ctx = getQueryContext();
 			
 			 for (String k : keys) {
 				 Key key = Key.fromString(k);

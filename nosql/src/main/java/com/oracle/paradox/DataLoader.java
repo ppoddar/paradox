@@ -40,7 +40,7 @@ public class DataLoader {
 	 * @param type type name
 	 * @param reader each line contains a JSON format data. 
 	 */
-	public static int loadData(DefaultQueryContext<JSONObject> ctx, String type, BufferedReader reader) throws Exception {
+	public static int loadData(DefaultQueryContext ctx, String type, BufferedReader reader) throws Exception {
 		UserType personType = ctx.getSchema().getUserType(type);
 		List<Attribute> identifiers = personType.getIdAttributes();
 		KeyMaker<Key> keyMaker = ctx.getKeyMaker();
@@ -70,7 +70,7 @@ public class DataLoader {
 	/**
 	 * Deletes all key-value pairs of the given datastore.
 	 */
-	public static int deleteAll(DefaultQueryContext<?> ctx) {
+	public static int deleteAll(DefaultQueryContext ctx) {
 		KVStore store = ctx.getStore();
 		Iterator<KeyValueVersion> allPairs = store.storeIterator(Direction.UNORDERED, 0);
 		int count = 0;

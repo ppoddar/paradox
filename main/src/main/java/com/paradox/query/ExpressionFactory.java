@@ -97,7 +97,7 @@ public interface ExpressionFactory {
 	/**
 	 * Creates an expression to hold a bind parameter of given name.
 	 */
-	Expression.BindParameter<?>       newBindParameter(String param);
+	Expression.BindParameter       newBindParameter(String param);
 
 	/**
 	 * Creates an expression for a literal constant of particular type.

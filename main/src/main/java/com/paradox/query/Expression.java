@@ -107,7 +107,7 @@ public interface Expression<V> {
 	/**
 	 * A bind parameter is a named placeholder for a value.
 	 */
-	interface BindParameter<V> extends Value<V> {
+	interface BindParameter extends Value<Object> {
 		/**
 		 * Gets the name of this bind parameter.
 		 */
@@ -115,7 +115,7 @@ public interface Expression<V> {
 		/** 
 		 * Binds the bind parameter to the given value.
 		 */
-		void setValue(V value);
+		void setValue(Object value);
 	}
 	
 	/**

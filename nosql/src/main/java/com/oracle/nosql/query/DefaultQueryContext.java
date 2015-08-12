@@ -1,5 +1,7 @@
 package com.oracle.nosql.query;
 
+import org.json.JSONObject;
+
 import oracle.kv.Consistency;
 import oracle.kv.KVStore;
 import oracle.kv.Key;
@@ -23,19 +25,19 @@ import com.paradox.schema.Schema;
  * 
  * @author pinaki poddar
  */
-public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U> {
+public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONObject> {
 	private Schema            		_schema;
 	private KeyMaker<Key> 			_keyMaker;
-	private ValueTransformer<Value,U>  	_valueTransformer;
-	private Class<? extends ResultPacker<U>>  _resultPacker;
+	private ValueTransformer<Value,JSONObject>  	_valueTransformer;
+	private Class<? extends ResultPacker<JSONObject>>  _resultPacker;
 	private KVStore                 _store;
 	private Consistency             _consistency;
 	private ExpressionFactory       _factory;
-	private final QueryExecutor<Key, Value, U> _executor;
+	private final QueryExecutor<Key, Value, JSONObject> _executor;
 	
 	
 	DefaultQueryContext() {
-		_executor = new DefaultQueryExecutor<U>(this);
+		_executor = new DefaultQueryExecutor(this);
 	}
 	
 	public KVStore getStore() {
@@ -48,7 +50,7 @@ public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U>
 	}
 	
 	@Override
-	public ValueTransformer<Value,U> getValueTransformer() {
+	public ValueTransformer<Value,JSONObject> getValueTransformer() {
 		return _valueTransformer;
 	}
 	
@@ -58,7 +60,7 @@ public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U>
 	}
 	
 //	@Override
-	public Class<? extends ResultPacker<U>> getResultPacker() {
+	public Class<? extends ResultPacker<JSONObject>> getResultPacker() {
 		return _resultPacker;
 	}
 
@@ -84,14 +86,10 @@ public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U>
 		_store = store;
 	}
 	
-	void setValueTransformer(ValueTransformer<Value,U> transformer) {
+	void setValueTransformer(ValueTransformer<Value,JSONObject> transformer) {
 		_valueTransformer = transformer;
 	}
 	
-	void setResultPacker(Class<? extends ResultPacker<U>> packer) {
-		_resultPacker = packer;
-	}
-
 	@Override
 	public ExpressionFactory getExpressionFactory() {
 		if (_factory == null) {
@@ -105,7 +103,7 @@ public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U>
 	}
 
 	@Override
-	public QueryExecutor<Key,Value,U> getExecutor() {
+	public QueryExecutor<Key,Value,JSONObject> getExecutor() {
 		return _executor;
 	}
 }

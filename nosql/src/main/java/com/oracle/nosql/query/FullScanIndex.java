@@ -33,7 +33,7 @@ public class FullScanIndex implements Index<Value> {
 	}
 	
 	@Override
-	public Iterator<Value> fetch(QueryContext ctx) {
+	public Iterator<Value> fetch(QueryContext<?,?,?> ctx) {
 		Transformer<KeyValueVersion, Value> transformer = new Transformer<KeyValueVersion, Value>(){
 			public Value transform(KeyValueVersion kvv) {
 				return kvv.getValue();
@@ -41,7 +41,7 @@ public class FullScanIndex implements Index<Value> {
 		};
 		
 		
-		DefaultQueryContext<?> kvctx = (DefaultQueryContext<?>)ctx;
+		DefaultQueryContext kvctx = (DefaultQueryContext)ctx;
 		
 		// Note: storeIterator is used instead of multiGetIterator
 		// as the parent key has partial major path
