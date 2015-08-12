@@ -4,7 +4,6 @@ import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.nosql.query.ValueTransformer;
 import com.paradox.query.Expression;
 import com.paradox.query.ExpressionVisitor;
-import com.paradox.query.Expression.Path;
 
 /**
  * Implements a path expression.
@@ -95,8 +94,8 @@ public class FieldPath<V> implements Expression.Path<V> {
 	}
 	
 	/**
-	 * Evaluates this expression by delegation to {@link ValueTransformer#extractFieldValue(Object, String) value transformer}.
-	 * The 
+	 * Evaluates this expression by delegation to {@link ValueTransformer#extractFieldValue(Object, String) 
+	 * value transformer}.
 	 */
 	@Override
 	public V evaluate(Object candidate, KVQueryContext ctx) {

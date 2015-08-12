@@ -13,7 +13,7 @@ import com.paradox.query.ExpressionVisitor;
  *
  * @param <X> type of expression node to collect
  */
-public class ExpressionCollector<X extends Expression> implements ExpressionVisitor {
+public class ExpressionCollector<X extends Expression<?>> implements ExpressionVisitor {
 	private final Class<X> _type;
 	private List<X>  _collection = new ArrayList<X>();
 	

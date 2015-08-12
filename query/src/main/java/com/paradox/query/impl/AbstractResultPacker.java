@@ -67,7 +67,6 @@ public abstract class AbstractResultPacker<T> implements ResultPacker<T> {
 	public Iterator<T> getResultList() {
 		if (_select.hasGrouping()) {
 			List<Iterator<T>> childIterators = new ArrayList<Iterator<T>>();
-			int i = 0;
 			for (Map.Entry<Object, Set<T>> entry : selected.entrySet()) {
 				childIterators.add(createIterator(entry.getValue()));
 			}

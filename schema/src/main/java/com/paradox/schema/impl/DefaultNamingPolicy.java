@@ -2,7 +2,7 @@ package com.paradox.schema.impl;
 
 import com.paradox.schema.NamingPolicy;
 
-class DefaultNamingPolicy implements NamingPolicy {
+public class DefaultNamingPolicy implements NamingPolicy {
 	public static final String PLURAL_NAME_MARKER = "[]";
 	
 	@Override

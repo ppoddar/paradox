@@ -60,12 +60,6 @@ import antlr4.generated.NoSQLParser.WhereClauseContext;
 
 import com.paradox.query.Expression;
 import com.paradox.query.ExpressionFactory;
-import com.paradox.query.Expression.Aggregate;
-import com.paradox.query.Expression.Candidate;
-import com.paradox.query.Expression.Constant;
-import com.paradox.query.Expression.Path;
-import com.paradox.query.Expression.Predicate;
-import com.paradox.query.Expression.Value;
 import com.paradox.schema.Schema;
 import com.paradox.schema.SchemaValidationException;
 

@@ -4,13 +4,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import oracle.kv.KVStore;
+
 import com.paradox.nosql.query.Index;
 import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.nosql.query.ValueTransformer;
 import com.paradox.query.Expression;
 import com.paradox.query.QueryExecutor;
 import com.paradox.query.ResultPacker;
-import com.paradox.query.QueryContext;
 import com.paradox.util.NVPair;
 
 /**
@@ -69,7 +70,7 @@ public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,
 	public Iterator<U> executeQuery(String query, Map<String, Object> bindParams) throws Exception {
 		ValueTransformer<V,U> valueTransformer = _ctx.getValueTransformer();
 		Select select = new SelectBuilder(_ctx.getSchema(), _ctx.getExpressionFactory()).parse(query);
-		ResultPacker<U> packer = null;// newResultPacker(select,_ctx.getResultPacker());
+		ResultPacker<U> packer = newResultPacker(select, _ctx);
 		bindParams(select, bindParams);
 		Index<V> index = selectIndex(select, _ctx);
 		Iterator<V> candidates = index.fetch(_ctx);
@@ -110,7 +111,7 @@ public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,
 		
 	}
 	
-	Object getBindParameterValue(Expression.BindParameter<?> param, Map<String,Object> params) {
+	Object getBindParameterValue(Expression.BindParameter param, Map<String,Object> params) {
 		if (params == null) 
 			throw new IllegalArgumentException("Parameter [" + param.getName() + "] is not supplied");
 		if (!params.containsKey(param.getName())) 
@@ -120,15 +121,6 @@ public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,
 		
 	}
 	
-//	protected  ResultPacker<U> newResultPacker(Select select, Class<? extends ResultPacker<U>> cls) {
-//		try {
-//			ResultPacker<U> packer =  cls.newInstance();
-//			((AbstractResultPacker<U>)packer).setContext(select, _ctx);
-//			return packer;
-//		} catch (Exception ex) {
-//			throw new RuntimeException("Failed to create result packer instance from " + cls);
-//		}
-//	}
 	/**
 	 * Chooses a suitable index for the given select statement.
 	 * This index would be used retrieve the extent.
@@ -137,4 +129,5 @@ public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,
 	 * @return an Index to retrieve the candidate extent
 	 */
 	protected abstract Index<V> selectIndex(Select select, KVQueryContext<K,V,U> ctx); 
+	protected abstract ResultPacker<U> newResultPacker(Select select, KVQueryContext<K,V,U> ctx); 
 }

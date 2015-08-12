@@ -104,8 +104,8 @@ public class QueryExpressionFactory implements ExpressionFactory {
 	}
 
 	@Override
-	public Expression.BindParameter<?> newBindParameter(String param) {
-		return new Expressions.BindParameter<Object>(param);
+	public Expression.BindParameter newBindParameter(String param) {
+		return new Expressions.BindParameter(param);
 	}
 
 	@Override

@@ -1,18 +1,11 @@
 package com.paradox.query.impl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
 import com.paradox.query.Expression;
-import com.paradox.query.ExpressionFactory;
-import com.paradox.query.Expression.Aggregate;
-import com.paradox.query.Expression.Candidate;
-import com.paradox.query.Expression.Path;
-import com.paradox.query.Expression.Predicate;
-import com.paradox.schema.Schema;
 
 /**
  * A concrete structure that holds different components of a select query as {@link Expression expression nodes} e.g.

@@ -9,3 +9,5 @@
 **/pom.properties
 **/maven-archiver
 **/*.prefs
+/query/src/main/antlr4/generated/
+/**/*.tokens

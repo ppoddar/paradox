@@ -3,7 +3,6 @@ package com.paradox.query.impl;
 import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.query.Expression;
 import com.paradox.query.ExpressionVisitor;
-import com.paradox.query.Expression.Candidate;
 
 
 

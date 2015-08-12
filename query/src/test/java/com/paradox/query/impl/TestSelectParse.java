@@ -1,7 +1,5 @@
 package com.paradox.query.impl;
 
-import static org.junit.Assert.*;
-
 import java.util.Iterator;
 
 import org.junit.After;

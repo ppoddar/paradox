@@ -8,30 +8,6 @@ import java.util.regex.Pattern;
 import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.query.Expression;
 import com.paradox.query.ExpressionVisitor;
-import com.paradox.query.Expression.Aggregate;
-import com.paradox.query.Expression.And;
-import com.paradox.query.Expression.Avg;
-import com.paradox.query.Expression.BindParameter;
-import com.paradox.query.Expression.Count;
-import com.paradox.query.Expression.DecimalValue;
-import com.paradox.query.Expression.Equals;
-import com.paradox.query.Expression.Greater;
-import com.paradox.query.Expression.GreaterOrEqual;
-import com.paradox.query.Expression.IntegerValue;
-import com.paradox.query.Expression.IsNull;
-import com.paradox.query.Expression.Less;
-import com.paradox.query.Expression.LessOrEqual;
-import com.paradox.query.Expression.Like;
-import com.paradox.query.Expression.Max;
-import com.paradox.query.Expression.Min;
-import com.paradox.query.Expression.Not;
-import com.paradox.query.Expression.Operator;
-import com.paradox.query.Expression.Or;
-import com.paradox.query.Expression.Path;
-import com.paradox.query.Expression.Predicate;
-import com.paradox.query.Expression.StringValue;
-import com.paradox.query.Expression.Sum;
-import com.paradox.query.Expression.Value;
 
 /**
  * Defines the concrete query expressions.
@@ -343,7 +319,7 @@ public class Expressions {
 	 *
 	 * @param <V>
 	 */
-	public static class BindParameter<V> extends AbstractExpression<V> implements Expression.BindParameter<V> {
+	public static class BindParameter extends AbstractExpression<Object> implements Expression.BindParameter {
 		private final String _paramKey;
 		private Object _paramValue;
 		private boolean _bound;
@@ -366,9 +342,9 @@ public class Expressions {
 		}
 		
 		@Override
-		public V evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Object evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			if (!_bound) throw new RuntimeException("Bind parameter [" + _paramKey + "] is not bound");
-			return (V)_paramValue;
+			return _paramValue;
 		}
 	}
 	
