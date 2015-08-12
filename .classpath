@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="query/target/test-classes" path="schema/src/main/java"/>
+	<classpathentry kind="src" output="query/target/classes" path="query/src/main/java"/>
+	<classpathentry kind="src" output="util/target/classes" path="util/src/main/java"/>
+	<classpathentry kind="src" output="main/target/classes" path="main/src/main/java"/>
+	<classpathentry kind="src" output="nosql/target/classes" path="nosql/src/main/java"/>
+	<classpathentry kind="src" output="cli/target/classes" path="cli/src/main/resources"/>
+	<classpathentry kind="src" output="cli/target/test-classes" path="cli/src/test/java"/>
+	<classpathentry kind="src" output="cli/target/test-classes" path="cli/src/test/resources"/>
+	<classpathentry kind="src" output="nosql/target/test-classes" path="nosql/src/test/java"/>
+	<classpathentry kind="src" output="nosql/target/test-classes" path="nosql/src/test/resources"/>
+	<classpathentry kind="src" output="schema/target/test-classes" path="schema/src/test/java"/>
+	<classpathentry kind="src" output="schema/target/test-classes" path="schema/src/test/resources"/>
+	<classpathentry kind="src" output="util/target/test-classes" path="util/src/test/java"/>
+	<classpathentry kind="src" output="util/target/test-classes" path="util/src/test/resources"/>
+	<classpathentry kind="src" output="cli/target/classes" path="cli/src/main/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/KVSTORE"/>
+	<classpathentry kind="lib" path="C:/Users/pipoddar.ORADEV/.m2/repository/org/antlr/antlr4/4.5/antlr4-4.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/pipoddar.ORADEV/.m2/repository/jline/jline/1.0/jline-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/pipoddar.ORADEV/.m2/repository/org/json/json/20140107/json-20140107.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="output" path="target/classes"/>
+</classpath>

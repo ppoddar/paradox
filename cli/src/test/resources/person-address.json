@@ -1,0 +1,17 @@
+# -----------------------------------------------------------------------------
+# Test data for Person-Address 
+# The schema is available in person-address-schema.json
+#
+# This test data is hand-crafted 
+# The tests depends on the data values
+# -----------------------------------------------------------------------------
+{"ssn":123456780, "name":"John",   "age":25, "address":{"city":"San Francisco", "state":"CA"}}
+{"ssn":123456781, "name":"Mary",   "age":27, "address":{"city":"San Francisco", "state":"CA"}}
+{"ssn":123456782, "name":"Rohan",  "age":32, "address":{"city":"Seattle", "state":"WA"}}
+{"ssn":123456783, "name":"Jeff",   "age":45, "address":{"city":"Seattle", "state":"WA"}}
+{"ssn":123456784, "name":"Shiva",  "age":61, "address":{"city":"New York", "state":"NY"}}
+{"ssn":123456785, "name":"Hari",   "age":25, "address":{"city":"New York", "state":"NY"}}
+{"ssn":123456786, "name":"Ram",    "age":43, "address":{"city":"Los Angeles", "state":"CA"}}
+{"ssn":123456787, "name":"Julie",  "age":34, "address":{"city":"Dallas", "state":"TX"}}
+{"ssn":123456788, "name":"Santos", "age":12, "address":{"city":"San Francisco", "state":"CA"}}
+{"ssn":123456789, "name":"Oliver", "age":21, "address":{"city":"San Francisco", "state":"CA"}}

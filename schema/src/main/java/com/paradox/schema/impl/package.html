@@ -1,0 +1,115 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../../../../../css/prism.css"  data-noprefix />
+</head>
+<body>
+Implementation of a Schema.
+<p>
+A schema can be built from a schema descriptor in JSON format.
+
+<pre>
+<code class="language-java">
+    Schema schema = new DefaultSchemaCompiler().compile("person-address-schema.json"); 
+</code>
+</pre>
+
+The format is described with a example, highlighting some of the schema capabilities
+<script src="../../../../../scripts/prism.js"></script>
+
+<pre>
+<code class="language-javascript">
+{
+    "name": "TestSchema",
+    "description": "A Person-Address schema used for testing",
+    "types": {
+        "Person": {
+            "attributes": {
+                "ssn"  : {"type": "long"},
+                "name" : {"indexed":true},
+                "email": {"type": "string[]"},
+                "age"  : {"type": "integer"},
+                "bestFriend":{"type":"Person"},
+                "address": {"type":"Address"},
+                "phones": {"type": "map", "key-type":"Phone", "value-type":"number"},
+            },
+            "identifiers": ["ssn"]
+        },
+        "Address": {
+            "attributes": {
+               "street": {},
+               "city"  : {"type:"string"},
+               "owner" : {"type":"Person"},
+               "state" :  {"type":"State"}
+            }
+        }
+    },
+    "enums": {
+        "State": {
+            "values": ["CA","TX","NY"]
+        },
+        "Phone": {
+            "values": ["Home", "Office", "Cell"],
+            "case-sensitive":false
+        }
+    }
+}
+</code>
+ </pre> 
+ 
+ 
+ <br>
+ <ul>
+ <li> The schema has name and an optional description specified via {@code "name"} and {@code "description"} properties of the JSON.
+ <li> Types are specified  via {@code "types"} property. The value of {@code "types"} property is a single JSON object whose
+ property names are the user-defined type names e.g. {@code Person} or {@code Address} in the example above.
+  <li>The attributes of each type is described via the {@code "attributes"} property of the JSON object which is the
+  value of individual type-named property. For example, the JSON object value for property  {@code "Address"} has a
+  property named {@code "attributes"} which, in turn, consists of 4 JSON values named {@code "street", "city", "owner"} and {@code "state"}.
+  <li>Each attribute definition specifies type of the attribute. For example, {@code "city"} is of type {@code "string"}
+  while {@code "owner"} is of type {@code "Person"}.
+  <li>Similar to the user-defined types, {@code "enums"} defines the enumerated types. Enumerated Types do not have
+  attributes, but have a sequence of allowed values.
+  </ul>
+  <p>
+  Few more salient features of this schema as noted in the example above
+  <dl>
+       <dt>Primary Key</dt>
+       <dd>The schema definition s geared towards the assumption that the instances adhering to this schema would be 
+           persisted. Hence, a type definition can specify a {@code "identifiers"} property with an array of strings
+           as value. The elements of the array are some of the attribute names defined for the type. The order 
+           of the elements is significant, because a user of the schema may use this information to form a key
+           from the values of the identifier attributes.<br>
+           Some types may not be identifiable as they always appear as part of some other types. {@code Address} is
+           one such type in the example above.</dd>
+  
+       <dt>Indexed Attribute</dt>
+       <dd> An attribute can be qualified to be indexed. For example, the {@code Person.name} attribute has been specified 
+  to use an index {@code "name" : {"indexed":true}}.</dd>
+  
+       <dt>Container Type</dt>
+       <dd>Container types are expressed with array symbol [] as in
+       <code>"email": {"type": "string[]"}</code>
+       </dd>
+       
+       <dt>Map Type</dt>
+       <dd>Map types are expressed with built-in type <code>map</code> and supplying the key and value type.
+        <pre><code>"phones": {"type": "map", "key-type":"Phone", "value-type":"number"}</code></pre>
+       </dd>
+       <dt>Reference Type</dt>
+       <dd>An attribute type can be another user-defined type, including its owning type.
+       <pre><code>"bestFriend":{"type":"Person"}</code></pre>
+       </dd>
+       
+       <dt>Implicit Type</dt>
+       <dd>
+       "street": {}
+       </dd>
+       <dt>Primitive Type</dt>
+       <dd>
+           "age": {"type": "integer"},
+        </dd>
+</dl>
+
+</body>
+
+</html>

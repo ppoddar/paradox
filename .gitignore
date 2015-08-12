@@ -1,0 +1,11 @@
+/**/target/
+/**/*.jar
+/**/*.zip
+/**/*.class
+/doc.xml
+/notes.txt
+/wip/
+/META-INF
+**/pom.properties
+**/maven-archiver
+**/*.prefs
