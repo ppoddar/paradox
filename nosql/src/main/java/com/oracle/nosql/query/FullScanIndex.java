@@ -52,7 +52,7 @@ public class FullScanIndex implements Index<Value> {
 				null, // key range
 				Depth.DESCENDANTS_ONLY,
 				kvctx.getConsistency(),
-				ctx.getQueryTimeout(),
+				ctx.getExecutor().getQueryTimeout(),
 				TimeUnit.MILLISECONDS);
 		return new TransforminIterator<KeyValueVersion, Value>(base, transformer);
 	}

@@ -152,7 +152,7 @@ public class Paradox extends AbstractCommandLineClient {
 	public class SelectQuery {
 		public void execute(String cmdLine) throws Exception {
 			long start = System.currentTimeMillis();
-			Iterator<JSONObject> results = getQueryContext().executeQuery(cmdLine);
+			Iterator<JSONObject> results = getQueryContext().getExecutor().executeQuery(cmdLine);
 			long elapsed = System.currentTimeMillis() - start;
 			int count = 0;
 			for (; results.hasNext(); count++) {

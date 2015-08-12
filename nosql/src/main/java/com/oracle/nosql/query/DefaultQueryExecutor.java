@@ -19,7 +19,7 @@ import com.paradox.schema.UserType;
  * @param <T>
  */
 public class DefaultQueryExecutor<U> extends AbstractQueryExecutor<Key,Value,U> {
-	
+	private long _timeout;
 	public DefaultQueryExecutor(KVQueryContext<Key,Value,U> ctx) {
 		super(ctx);
 	}
@@ -34,6 +34,16 @@ public class DefaultQueryExecutor<U> extends AbstractQueryExecutor<Key,Value,U> 
 		
 		Key key   = (Key)ctx.getKeyMaker().makeTypeKey(type);
 		return new FullScanIndex(key);
+	}
+
+	@Override
+	public long getQueryTimeout() {
+		return _timeout;
+	}
+
+	@Override
+	public void setQueryTimeout(long timeout) {
+		_timeout = timeout;		
 	}
 
 }

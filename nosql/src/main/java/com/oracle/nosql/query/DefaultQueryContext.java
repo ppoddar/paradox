@@ -1,18 +1,15 @@
 package com.oracle.nosql.query;
 
-import java.util.Iterator;
-import java.util.Map;
-
 import oracle.kv.Consistency;
 import oracle.kv.KVStore;
 import oracle.kv.Key;
 import oracle.kv.Value;
 
-import com.oracle.nosql.query.json.JSONValueTransformer;
-import com.paradox.nosql.query.KeyMaker;
 import com.paradox.nosql.query.KVQueryContext;
+import com.paradox.nosql.query.KeyMaker;
 import com.paradox.nosql.query.ValueTransformer;
 import com.paradox.query.ExpressionFactory;
+import com.paradox.query.QueryExecutor;
 import com.paradox.query.ResultPacker;
 import com.paradox.query.impl.QueryExpressionFactory;
 import com.paradox.schema.Schema;
@@ -33,8 +30,13 @@ public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U>
 	private Class<? extends ResultPacker<U>>  _resultPacker;
 	private KVStore                 _store;
 	private Consistency             _consistency;
-	private long                    _timeout;
 	private ExpressionFactory       _factory;
+	private final QueryExecutor<Key, Value, U> _executor;
+	
+	
+	DefaultQueryContext() {
+		_executor = new DefaultQueryExecutor<U>(this);
+	}
 	
 	public KVStore getStore() {
 		return _store;
@@ -64,12 +66,6 @@ public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U>
     	return _consistency;
     }
 	
-	@Override
-	public long getQueryTimeout() {
-		return _timeout;
-	}
-	
-
 	void setConsistency(Consistency consistency) {
 		_consistency = consistency;
 	}
@@ -88,10 +84,6 @@ public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U>
 		_store = store;
 	}
 	
-	void setQueryTimeout(long timeout) {
-		_timeout = timeout;
-	}
-	
 	void setValueTransformer(ValueTransformer<Value,U> transformer) {
 		_valueTransformer = transformer;
 	}
@@ -100,31 +92,6 @@ public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U>
 		_resultPacker = packer;
 	}
 
-//	@Override
-//	public Iterator<U> executeQuery(String sql)  throws Exception {
-//		return new DefaultQueryExecutor<U>(this).executeQuery(sql, (Object[])null);
-//	}
-//	
-//	@Override
-//	public Iterator<U> executeQuery(String sql, Map<String, Object> bindParams)  throws Exception {
-//		return new DefaultQueryExecutor<U>(this).executeQuery(sql, bindParams);
-//	}
-//	
-//	@Override
-//	public Iterator<U> executeQuery(String sql, Object... bindPairs)  throws Exception {
-//		return new DefaultQueryExecutor<U>(this).executeQuery(sql, bindPairs);
-//	}
-//
-//	@Override
-//	public int execute(String sql) {
-//		return execute(sql, null);
-//	}
-//	
-//	@Override
-//	public int execute(String sql, Map<String,Object> params) {
-//		throw new UnsupportedOperationException();
-//	}
-//
 	@Override
 	public ExpressionFactory getExpressionFactory() {
 		if (_factory == null) {
@@ -133,4 +100,12 @@ public final class DefaultQueryContext<U> implements KVQueryContext<Key,Value,U>
 		return _factory;
 	}
 	
+	public void setQueryTimeout(long timeout) {
+		_executor.setQueryTimeout(timeout);
+	}
+
+	@Override
+	public QueryExecutor<Key,Value,U> getExecutor() {
+		return _executor;
+	}
 }

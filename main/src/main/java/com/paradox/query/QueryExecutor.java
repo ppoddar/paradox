@@ -15,9 +15,7 @@ import com.paradox.nosql.query.KVQueryContext;
  *
  */
 public interface QueryExecutor<K,V,U> {
-
-//  ResultPacker<U> getResultPacker(Class<U> userType);
-  
+ 
   /**
    * Executes the given select query and returns a list of results.
    * @param sql a SQL select query
@@ -67,10 +65,11 @@ public interface QueryExecutor<K,V,U> {
 	/**
 	 * The execution context of this receiver.
 	 */
-	QueryContext getContext();
+	QueryContext<K,V,U> getContext();
 	
 	  /**
 	   * Gets the timeout in millisecond unit.
 	   */
 	  long getQueryTimeout();
+	  void setQueryTimeout(long timeout);
 }

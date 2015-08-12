@@ -91,7 +91,7 @@ import com.paradox.schema.SchemaValidationException;
 class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListener {
 	private final Stack<Expression<?>> _stack;
 	private final ExpressionFactory _factory;
-	private final Select _select;
+	private Select _select;
 	private final Schema _schema;
 	
 	// a state to determine how field paths on teh stack are to be treated
@@ -99,9 +99,8 @@ class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListener {
 	private ParseClause _parseCtx = null;
 	private NoSQLLexer _lexer;
 	
-	SelectBuilder(Select select, Schema schema, ExpressionFactory factory) {
+	SelectBuilder(Schema schema, ExpressionFactory factory) {
 		_stack = new Stack<Expression<?>>();
-		_select = select;
 		_schema = schema;
 		_factory = factory;
 		
@@ -115,16 +114,17 @@ class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListener {
 	 * @throws IOException if the given sql string can not be read
 	 * SchemaValidationException the name tokens are not semantically valid, for example  
 	 */
-	public void compile() throws IOException, SchemaValidationException {
+	public Select compile(String sql) throws IOException, SchemaValidationException {
 		synchronized (_stack) {
+			_select = new Select(sql);
 			ANTLRInputStream in = new CaseInsensitiveANTLRStringStream(_select.getSQL());
 			_lexer    = new NoSQLLexer(in);
 			CommonTokenStream tokens = new CommonTokenStream(_lexer);
 			NoSQLParser parser = new NoSQLParser(tokens);
-			//parser.addErrorListener(this);
 			ParseTree ast = parser.selectStatement(); // parse the statement
 			new ParseTreeWalker().walk(this, ast);
 		}
+		return _select;
 	}
 	
 	/**

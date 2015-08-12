@@ -43,13 +43,8 @@ public class Select {
 	 * @param sql a select statement
 	 * @param schema a schema for semantic validation. Can be null to disable validation.
 	 */
-	public Select(String sql, Schema schema, ExpressionFactory factory) {
+	Select(String sql) {
 		_sql = sql;
-		try {
-			new SelectBuilder(this, schema, factory).compile();
-		} catch (IOException ex) {
-			throw new RuntimeException(ex);
-		}
 	}
 	
 	/**
