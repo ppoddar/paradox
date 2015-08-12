@@ -3,9 +3,6 @@ package com.paradox.query.impl;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import oracle.kv.KVStore;
-
 import com.paradox.nosql.query.Index;
 import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.nosql.query.ValueTransformer;
