@@ -48,9 +48,10 @@ public class Paradox extends AbstractCommandLineClient {
 	
 	public Paradox() throws Exception {
 		super();
-		URL url = getClass().getResource("paradox-commands.xml");
+		String rsrc = "paradox-commands.xml";
+		URL url = getClass().getResource(rsrc);
 		if (url == null)
-			throw new RuntimeException("Can not load commands.xml");
+			throw new RuntimeException("Can not load " + rsrc);
 		init(url.openStream(), new File(System.getProperty("user.home"), ".paradox-history"));
 	}
 	

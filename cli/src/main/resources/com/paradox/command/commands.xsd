@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== -->
+<!-- A schema for Command Line syntax                                       -->
+<!--                                                                        -->
+<!-- Basic command syntax is                                                -->
+<!--    command  := command-key (option)* (argument)*                       -->
+<!--    option   := '-' flag ('=' value)                                    -->
+<!--    argument := string                                                  -->
+<!--                                                                        -->
+<!-- Each Command, Option and Argument has 'description' attribute used to  -->
+<!-- provide help about the commands                                        -->
+<!--                                                                        -->
+<!-- A Command Line Client is defined as sequence of Command                -->
+<!-- A greetings and prompt also are specified as attribute for the client  -->
+<!-- ====================================================================== -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    elementFormDefault="qualified">
+	<xs:element name="command" type="command-type" />
+	<xs:element name="option" type="option-type" />
+	<xs:element name="arg" type="arg-type" />
+	<xs:element name="description" type="desciption-type" />
+
+	<xs:complexType name="command-type">
+		<xs:sequence>
+            <xs:element name="description" type="desciption-type"   minOccurs="1" maxOccurs="1" />
+            <xs:element name="details"     type="desciption-type"   minOccurs="0" maxOccurs="1" />
+            <!-- Useful for commands that are not parsed as they would not have options/args -->
+            <xs:element name="usage"       type="desciption-type"   minOccurs="0" maxOccurs="1" />
+			<xs:element name="option"      type="option-type"       minOccurs="0" maxOccurs="unbounded" />
+			<xs:element name="arg"         type="arg-type"          minOccurs="0" maxOccurs="unbounded" />
+		</xs:sequence>
+		<xs:attribute name="key"   type="xs:string"  use="required" />
+		<!-- If false, the command line will not be parsed and will be directly passed to execution -->
+		<!-- This makes sense for 'select' statement                                                -->
+		<xs:attribute name="parse" type="xs:boolean" use="optional"	default="true" />
+	</xs:complexType>
+
+	<xs:complexType name="option-type">
+		<xs:sequence>
+			<xs:element name="description" type="desciption-type" />
+		</xs:sequence>
+		<xs:attribute name="flag"          type="xs:string" use="required" />
+		<xs:attribute name="name"          type="xs:string" use="optional" />
+        <xs:attribute name="requiresValue" type="xs:boolean" use="optional" default="true" />
+        <xs:attribute name="optional"      type="xs:boolean" use="optional" default="false" />
+	</xs:complexType>
+
+
+	<xs:complexType name="arg-type">
+		<xs:sequence>
+			<xs:element name="description" type="desciption-type" />
+		</xs:sequence>
+		<xs:attribute name="name"      type="xs:string"  use="required" />
+		<xs:attribute name="minOccurs" type="xs:integer" use="optional" default="1" />
+		<xs:attribute name="maxOccurs" type="xs:integer" use="optional"	default="1" />
+	</xs:complexType>
+
+
+	<xs:complexType name="desciption-type">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+
+	<xs:element name="commands">
+		<xs:complexType>
+			<xs:sequence>
+                <xs:element name="description" type="desciption-type" />
+				<xs:element name="command" type="command-type" maxOccurs="unbounded" minOccurs="0" />
+			</xs:sequence>
+        <xs:attribute name="greetings" type="xs:string" use="required" />
+        <xs:attribute name="prompt"    type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+
+
+</xs:schema>
