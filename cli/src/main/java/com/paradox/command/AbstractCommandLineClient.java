@@ -51,8 +51,7 @@ public abstract class AbstractCommandLineClient implements Runnable, ErrorHandle
 
   protected AbstractCommandLineClient(String prompt) throws Exception {
     _prompt = prompt;
-    _output = System.out;
-    _consoleWriter = new PrintWriter(_output, true);
+    _consoleWriter = new PrintWriter(_output = System.out, true);
     _console = System.console();
 
     Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook()));
