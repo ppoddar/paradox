@@ -29,6 +29,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>oracle-paradox</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
