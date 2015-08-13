@@ -1,16 +1,13 @@
 package com.paradox.command;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import oracle.kv.KVStore;
 import oracle.kv.KVStoreConfig;
@@ -46,12 +43,17 @@ public class Paradox extends AbstractCommandLineClient {
 		new Paradox().run();
 	}
 	
-	public Paradox() throws Exception {
-		super("paradox> ");
-		String rsrc = "paradox-commands.xml";
-		URL url = getClass().getResource(rsrc);
-		if (url == null)
-			throw new RuntimeException("Can not load " + rsrc);
+	private Paradox() {
+		setGreeting("Welcome to Paradox");
+		setPrompt("paradox> ");
+		setHelp("help");
+		registerCommand(new Command("get"));
+		registerCommand(new Command("exit").setDescription("Exits this program"));
+		
+		Command connect = new Command("connect").setDescription("Connects to a database");
+		connect.defineArgument().setName("url").setDescription("URL for databse");
+		registerCommand(connect);
+		
 	}
 	
 	
@@ -78,8 +80,8 @@ public class Paradox extends AbstractCommandLineClient {
 	}
 	
 	public void status() {
-		println("\t" + (_store  != null ? "Connected to " + _uri       : "*** Not connetced to NoSQL store"));
-		println("\t" + (_schema != null ? "Using schema " + _schemaURI : "*** Not loaded a schema"));
+		getWriter().println("\t" + (_store  != null ? "Connected to " + _uri       : "*** Not connetced to NoSQL store"));
+		getWriter().println("\t" + (_schema != null ? "Using schema " + _schemaURI : "*** Not loaded a schema"));
 	}
 	
 	public DefaultQueryContext getQueryContext() {
@@ -106,31 +108,25 @@ public class Paradox extends AbstractCommandLineClient {
 
 
 	@Override
-	protected void execute(String cmd, String line,
-			Map<String, String> options, List<String> args) throws Exception {
-		if ("get".equalsIgnoreCase(cmd.toString())) {
-			new Get().execute(args);
-		} else if ("connect".equalsIgnoreCase(cmd.toString())) {
-			connect(args.get(0));
-		} else if ("exit".equalsIgnoreCase(cmd.toString())) {
+	protected void execute(ParsedCommand cmd) throws Exception {
+		if (cmd.matches("get")) {
+			new Get().execute(cmd.getArgs());
+		} else if (cmd.matches("connect")) {
+			connect(cmd.getArgs(0));
+		} else if (cmd.matches("exit")) {
 			System.exit(0);
-		} else if ("schema".equalsIgnoreCase(cmd.toString())) {
-			if (args.size() > 0) {
-				loadSchema(args.get(0));
-			} else if (_schema != null) {
-				new SchemaPrinter().print(_schema, getPrinter());
-			} else {
-				handleError(new IllegalStateException("No schema is loaded. See help schema"));
-			}
-		} else if ("data".equalsIgnoreCase(cmd.toString())) {
-			BufferedReader reader = new BufferedReader(new FileReader(args.get(0)));
-			DataLoader.loadData(getQueryContext(), options.get("type"), reader);
-		} else if ("select".equalsIgnoreCase(cmd.toString())) {
-			new SelectQuery().execute(line);
-		} else if ("status".equalsIgnoreCase(cmd)) {
+		} else if (cmd.matches("load schema")) {
+			loadSchema(cmd.getArgs(0));
+		} else if (cmd.matches("show schema")) {
+			new SchemaPrinter().print(_schema, getWriter());
+		} else if ("load data".equalsIgnoreCase(cmd.toString())) {
+			BufferedReader reader = new BufferedReader(new FileReader(cmd.getArgs(0)));
+			DataLoader.loadData(getQueryContext(), cmd.getOption("-type"), reader);
+		} else if (cmd.matches("select")) {
+			new SelectQuery().execute(cmd.getLine());
+		} else if (cmd.matches("status")) {
 			status();
 		} 
-		
 	}
 
 	
@@ -141,7 +137,7 @@ public class Paradox extends AbstractCommandLineClient {
 			 for (String k : keys) {
 				 Key key = Key.fromString(k);
 				 ValueVersion vv = ctx.getStore().get(key);
-				 println(key + " \t " + ctx.getValueTransformer().decode(vv.getValue()));
+				 getWriter().println(key + " \t " + ctx.getValueTransformer().decode(vv.getValue()));
 			 }
 		}
 	}
@@ -153,9 +149,9 @@ public class Paradox extends AbstractCommandLineClient {
 			long elapsed = System.currentTimeMillis() - start;
 			int count = 0;
 			for (; results.hasNext(); count++) {
-				println("\t["+ count +"]: " + results.next());
+				getWriter().println("\t["+ count +"]: " + results.next());
 			}
-			println("Query executed in " + elapsed + "ms and selected " 
+			getWriter().println("Query executed in " + elapsed + "ms and selected " 
 			   + (count == 0 ? "no" : ""+count) + " key-value pair" + (count < 2 ? "" : "s"));
 		}
 	}
