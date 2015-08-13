@@ -1,5 +1,5 @@
 {
-    "name": "TestSchema",
+    "name": "Test Schema",
     "description": "A Person-Address schema used for testing",
     "types": {
         "Person": {
