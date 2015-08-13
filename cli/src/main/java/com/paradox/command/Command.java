@@ -1,6 +1,8 @@
 package com.paradox.command;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -19,6 +21,7 @@ public class Command {
 	Map<String, Option> _options = new TreeMap<String, Option>();
 	List<Argument> _args = new ArrayList<Argument>();
 	private String _description = "";
+	private String _usage;
 	private boolean requiresParse = true;
 
 	private static enum ParseState {READ_OPTION_KEY, READ_OPTION_VALUE, READ_ARGS};
@@ -29,16 +32,24 @@ public class Command {
 		}
 	}
 	
-	String getDescription() {
+	public String getDescription() {
 		return _description;
 	}
-	
 	Command setDescription(String desc) {
 		_description = desc;
 		return this;
 	}
+	Command setUsage(String u) {
+		_usage = u;
+		return this;
+	}
 	boolean hasOption(String key) {
 		return _options.containsKey(key);
+	}
+	
+	Command requiresParse(boolean flag) {
+		requiresParse = flag;
+		return this;
 	}
 	
 	protected Option defineOption(String key) {
@@ -153,6 +164,7 @@ public class Command {
 	}
 	
 	String getUsage() {
+		if (_usage != null) return _usage;
 	    StringBuffer buf = new StringBuffer();
 	    buf.append(getIdenetifierString());
 	    for (Option opt : _options.values()) {
@@ -168,9 +180,19 @@ public class Command {
 	    }
 	    return buf.toString();
 	}
+	
+	
+	Collection<Option> getOptions() {
+		return _options.values();
+	}
+	Collection<Argument> getArguments() {
+		return _args;
+	}
+		
+	}
 
 	
-}
+
 	
 
 		

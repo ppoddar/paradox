@@ -1,6 +1,10 @@
 package com.paradox.command;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.Writer;
 
 /**
  * Prints in column.
@@ -8,12 +12,22 @@ import java.io.PrintWriter;
  * @since 1.0
  *
  */
-public class ColumnPrinter {
-  private PrintWriter _writer;
-  
+public class ColumnPrinter extends PrintWriter {
   private int[] indents;
   private int[] widths;
   
+  public ColumnPrinter(File file, int[] indentAndWidth) throws FileNotFoundException {
+	  super(file);
+	  init(indentAndWidth);
+  }
+  public ColumnPrinter(OutputStream out, int[] indentAndWidth) {
+	  super(out);
+	  init(indentAndWidth);
+  }
+  public ColumnPrinter(Writer w, int[] indentAndWidth) {
+	  super(w);
+	  init(indentAndWidth);
+  }
   /**
    * 
    * @param w a writer
@@ -21,8 +35,7 @@ public class ColumnPrinter {
    * is the indent of i-th column, {@code 2*i+1}-th element is the width,
    * both in unit of number of printed characters.
    */
-  public ColumnPrinter(PrintWriter w, int[] indentAndWidth) {
-    _writer = w;
+  private void init(int[] indentAndWidth) {
     indents = new int[indentAndWidth.length/2];
     widths  = new int[indentAndWidth.length/2];
     for (int i = 0; i < indentAndWidth.length-1; i +=2) {
@@ -30,10 +43,17 @@ public class ColumnPrinter {
       widths[i/2]  = indentAndWidth[i+1];
     }
   }
-  
-  public void print(String... strings) {
+  public void printLine(String s)  {
+	  repeat(indents[0], ' ');
+	  println(s);
+  }
+  /**
+   * Prints the given strings in each column.
+   * @param strings
+   */
+  public void printColumn(String... strings) {
     if (strings.length > indents.length) {
-      throw new IllegalArgumentException("More column values");
+      throw new IllegalArgumentException("Available columns " + indents.length + " Supplied columns " + strings.length);
     }
     int maxLine = 0;
     for (int i = 0; i < strings.length; i++) {
@@ -56,16 +76,16 @@ public class ColumnPrinter {
           repeat(indents[col] + widths[col], ' ');
         } else {
           repeat(indents[col], ' ');
-          _writer.print(txt);
+          print(txt);
           repeat(widths[col] - txt.length(), ' ');
         }
       }
-      _writer.println();
-      _writer.flush();
+      println();
+      flush();
     }
   }
   void repeat(int n, char c) {
-    for (int i = 0; i < n; i++) _writer.print(c);
+    for (int i = 0; i < n; i++) print(c);
   }
   String[] wrap(String txt, int w) {
     int L = txt.length();
@@ -86,8 +106,8 @@ public class ColumnPrinter {
   }
   
   public static void main(String[] args) throws Exception {
-    ColumnPrinter printer = new ColumnPrinter(new PrintWriter(System.out), new int[]{8,16,4,40,6,12});
-    printer.print("colum0", "this is a a long text in the middle column that must span more than a line",
+    ColumnPrinter printer = new ColumnPrinter(System.out, new int[]{8,16,4,40,6,12});
+    printer.printColumn("colum0", "this is a a long text in the middle column that must span more than a line",
         "a trailing column");
   }
 }

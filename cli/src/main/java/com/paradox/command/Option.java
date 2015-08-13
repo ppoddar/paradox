@@ -36,4 +36,13 @@ class Option {
 		return this;
 	}
 	
+	Option setDescription(String d) {
+		this.description = d;
+		return this;
+	}
+	Option requiresValue(boolean flag) {
+		requiresValue = flag;
+		return this;
+	}
+	
 }

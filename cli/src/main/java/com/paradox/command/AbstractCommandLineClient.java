@@ -4,8 +4,10 @@ import java.io.Console;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -25,7 +27,7 @@ public abstract class AbstractCommandLineClient implements CLI {
 	private String _prompt;
 	private String _greetings;
 	private HelpCommand _help;
-	private Set<Command> _metas = new HashSet<Command>();
+	private Map<String, Command> _metas = new HashMap<String,Command>();
 
 	protected AbstractCommandLineClient() {
 		_console = System.console();
@@ -35,8 +37,12 @@ public abstract class AbstractCommandLineClient implements CLI {
 		Runtime.getRuntime().addShutdownHook(new Thread(new ShutdownHook()));
 	}
 
-	protected void registerCommand(Command cmd) {
-		_metas.add(cmd);
+	public void registerCommand(Command cmd) {
+		if (cmd == null)
+			throw new NullPointerException("Can not register null command");
+		if (_metas.containsKey(cmd.getIdenetifierString()))
+			throw new IllegalArgumentException("Duplicate command " + cmd.getIdenetifierString());
+		_metas.put(cmd.getIdenetifierString(), cmd);
 	}
 
 	protected void setHelp(String key) {
@@ -119,7 +125,7 @@ public abstract class AbstractCommandLineClient implements CLI {
 	 *            a command line
 	 */
 	protected void executeCommandLine(String line) throws Exception {
-		for (Command cmd : _metas) {
+		for (Command cmd : _metas.values()) {
 			if (cmd.matches(line)) {
 				if (cmd == _help)
 					_help.run(line);
@@ -144,7 +150,7 @@ public abstract class AbstractCommandLineClient implements CLI {
 
 	@Override
 	public final Iterator<Command> iterator() {
-		return _metas.iterator();
+		return _metas.values().iterator();
 	}
 
 	@Override

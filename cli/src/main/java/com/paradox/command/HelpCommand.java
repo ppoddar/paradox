@@ -5,7 +5,6 @@ import java.util.List;
 
 class HelpCommand extends Command {
 	final CLI _cli;
-	final PrintWriter _writer;
 	
 	public HelpCommand(CLI cli) {
 		this(cli, "help");
@@ -14,24 +13,23 @@ class HelpCommand extends Command {
 	public HelpCommand(CLI cli, String key) {
 		super(key);
 		_cli = cli;
-		_writer = cli.getWriter();
 	}
 
 	void help() {
-		_writer.println("Available commands are:");
-		_writer.println();
+		_cli.getWriter().println("Available commands are:");
+		_cli.getWriter().println();
 		int wmax = 0;
 		for (Command cmd : _cli) {
 			wmax = Math.max(wmax, cmd.getIdenetifierString().length());
 		}
 		int[] indentAndWidth = { 8, wmax, 4, Math.max(80 - (8 + wmax - 4), 20) };
-		ColumnPrinter printer = new ColumnPrinter(_writer,	indentAndWidth);
+		ColumnPrinter printer = new ColumnPrinter(_cli.getWriter(),	indentAndWidth);
 		for (Command cmd : _cli) {
 			printer.print(cmd.getIdenetifierString(), cmd.getDescription());
 		}
-		_writer.println();
-		_writer.println("Type " + getIdenetifierString() + " <command> for information on specific command");
-		_writer.println();
+		_cli.getWriter().println();
+		_cli.getWriter().println("Type " + getIdenetifierString() + " <command> for information on specific command");
+		_cli.getWriter().println();
 	}
 	
 	void run(String line) {
@@ -40,18 +38,27 @@ class HelpCommand extends Command {
 		if (args.isEmpty()) {
 			help();
 		} else {
-			ColumnPrinter printer = new ColumnPrinter(_writer,	new int[]{8,80});
-			for (String arg : args) {
-				Command cmd = _cli.getCommand(arg);
-				if (cmd == null) {
-					printer.print("*** Unknown command " + arg);
-					continue;
-				} else {
-					printer.print(arg);
-					printer.print(cmd.getDescription());
-					printer.print("Usage: " + cmd.getUsage());
+			ColumnPrinter printer = new ColumnPrinter(_cli.getWriter(),	new int[]{8,16,2,64});
+			String id = line.substring(getIdenetifierString().length()).trim();
+			Command cmd = _cli.getCommand(id);
+			if (cmd == null) {
+				printer.print("*** Unknown command " + id);
+			} else {
+				printer.printLine(cmd.getIdenetifierString());
+				printer.printLine(cmd.getDescription());
+				printer.printLine("Usage: " + cmd.getUsage());
+				if (!cmd.getOptions().isEmpty())
+					printer.printLine("where options are:");
+				for (Option opt : cmd.getOptions()) {
+					printer.printColumn(opt.key(), opt.description());
+				}
+				if (!cmd.getArguments().isEmpty())
+					printer.printLine("where arguments are:");
+				for (Argument arg : cmd.getArguments()) {
+					printer.printColumn(arg.name(), arg.getDescription());
 				}
 			}
+			printer.close();
 		}
 	}
 

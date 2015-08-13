@@ -2,7 +2,7 @@ package com.paradox.command;
 
 public class Argument {
 	public String name;
-	public String description;
+	public String _description;
 	public int maxOccurs;
 	public int minOccurs;
 	
@@ -15,8 +15,11 @@ public class Argument {
 		return this;
 	}
 	Argument setDescription(String d) {
-		this.description = d;
+		_description = d;
 		return this;
+	}
+	public String getDescription() {
+		return _description;
 	}
 
 }
