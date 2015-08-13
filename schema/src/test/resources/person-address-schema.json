@@ -1,0 +1,35 @@
+{
+    "name": "TestSchema",
+    "description": "A Person-Address schema used for testing",
+    "types": {
+        "Person": {
+            "attributes": {
+                "ssn"  : {"type": "long"},
+                "name" : {"indexed":true},
+                "email": {"type": "string[]"},
+                "age"  : {"type": "integer"},
+                "bestFriend":{"type":"Person"},
+                "address": {"type":"Address"},
+                "phones": {"type": "map", "key-type":"Phone", "value-type":"number"},
+            },
+            "identifiers": ["ssn"]
+        },
+        "Address": {
+            "attributes": {
+               "street": {},
+               "city"  : {},
+               "owner" : {"type":"Person"},
+               "state" :  {"type":"State"}
+            }
+        }
+    },
+    "enums": {
+        "State": {
+            "values": ["CA","TX","NY"]
+        },
+        "Phone": {
+            "values": ["Home", "Office", "Cell"],
+            "case-sensitive":false
+        }
+    }
+}
