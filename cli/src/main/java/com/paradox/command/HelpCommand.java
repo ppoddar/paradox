@@ -25,7 +25,7 @@ class HelpCommand extends Command {
 		int[] indentAndWidth = { 8, wmax, 4, Math.max(80 - (8 + wmax - 4), 20) };
 		ColumnPrinter printer = new ColumnPrinter(_cli.getWriter(),	indentAndWidth);
 		for (Command cmd : _cli) {
-			printer.print(cmd.getIdenetifierString(), cmd.getDescription());
+//			printer.print(cmd.getIdenetifierString(), cmd.getDescription());
 		}
 		_cli.getWriter().println();
 		_cli.getWriter().println("Type " + getIdenetifierString() + " <command> for information on specific command");

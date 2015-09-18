@@ -3,7 +3,6 @@
 	<classpathentry kind="src" output="query/target/test-classes" path="schema/src/main/java"/>
 	<classpathentry kind="src" output="query/target/classes" path="query/src/main/java"/>
 	<classpathentry kind="src" output="util/target/classes" path="util/src/main/java"/>
-	<classpathentry kind="src" output="main/target/classes" path="main/src/main/java"/>
 	<classpathentry kind="src" output="nosql/target/classes" path="nosql/src/main/java"/>
 	<classpathentry kind="src" output="cli/target/classes" path="cli/src/main/resources"/>
 	<classpathentry kind="src" output="cli/target/test-classes" path="cli/src/test/java"/>
