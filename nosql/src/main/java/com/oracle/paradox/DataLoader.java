@@ -15,9 +15,9 @@ import oracle.kv.Value;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import com.oracle.nosql.query.DefaultQueryContext;
 import com.paradox.nosql.query.KeyMaker;
 import com.paradox.nosql.query.ValueTransformer;
+import com.paradox.oracle.nosql.DefaultQueryContext;
 import com.paradox.schema.Attribute;
 import com.paradox.schema.UserType;
 

@@ -1,4 +1,4 @@
-package com.oracle.nosql.query;
+package com.paradox.oracle.nosql;
 
 import org.json.JSONObject;
 
@@ -7,10 +7,10 @@ import oracle.kv.KVStore;
 import oracle.kv.Key;
 import oracle.kv.Value;
 
-import com.oracle.nosql.query.json.JSONValueTransformer;
 import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.nosql.query.KeyMaker;
 import com.paradox.nosql.query.ValueTransformer;
+import com.paradox.oracle.nosql.json.JSONValueTransformer;
 import com.paradox.query.ExpressionFactory;
 import com.paradox.query.QueryExecutor;
 import com.paradox.query.ResultPacker;

@@ -1,4 +1,4 @@
-package com.oracle.nosql.query;
+package com.paradox.oracle.nosql;
 
 import oracle.kv.Consistency;
 import oracle.kv.KVStore;

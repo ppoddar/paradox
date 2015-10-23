@@ -1,4 +1,4 @@
-package com.oracle.nosql.query.json;
+package com.paradox.oracle.nosql.json;
 
 import org.json.JSONObject;
 

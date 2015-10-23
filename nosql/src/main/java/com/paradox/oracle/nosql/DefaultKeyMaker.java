@@ -1,4 +1,4 @@
-package com.oracle.nosql.query;
+package com.paradox.oracle.nosql;
 
 import java.util.ArrayList;
 import java.util.List;

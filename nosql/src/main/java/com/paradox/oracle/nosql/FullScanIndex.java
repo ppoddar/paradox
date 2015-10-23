@@ -1,4 +1,4 @@
-package com.oracle.nosql.query;
+package com.paradox.oracle.nosql;
 
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;

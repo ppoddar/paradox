@@ -1,13 +1,13 @@
-package com.oracle.nosql.query;
+package com.paradox.oracle.nosql;
 
 import org.json.JSONObject;
 
 import oracle.kv.Key;
 import oracle.kv.Value;
 
-import com.oracle.nosql.query.json.JSONResultPacker;
 import com.paradox.nosql.query.Index;
 import com.paradox.nosql.query.KVQueryContext;
+import com.paradox.oracle.nosql.json.JSONResultPacker;
 import com.paradox.query.ResultPacker;
 import com.paradox.query.impl.AbstractQueryExecutor;
 import com.paradox.query.impl.Select;
