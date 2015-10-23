@@ -7,9 +7,10 @@ import oracle.kv.Value;
 
 import org.json.JSONObject;
 
-import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.nosql.query.KeyMaker;
 import com.paradox.nosql.query.ValueTransformer;
+import com.paradox.query.ExpressionFactory;
+import com.paradox.query.impl.QueryExpressionFactory;
 import com.paradox.schema.Schema;
 
 /**
@@ -21,28 +22,31 @@ import com.paradox.schema.Schema;
  *
  */
 public class QueryContextBuilder {
-	private KeyMaker<Key> _keyMaker = new DefaultKeyMaker();
+	private KeyMaker<Key> _keyMaker;
 	private ValueTransformer<Value,JSONObject> _valueTransformer;
 	private final Schema _schema;
 	private Consistency _consistency = Consistency.NONE_REQUIRED;
 	private long _timeout;
-	private final KVStore _store;
+	private KVStore _store;
+	
+	public QueryContextBuilder(KVStore store) {
+		this(store, null);
+	}
 	
 	public QueryContextBuilder(KVStore store, Schema schema) {
+		if (store == null) 
+			throw new IllegalArgumentException("Can not create context with null store");
 		_store  = store;
-		if (_store == null) throw new IllegalStateException("Must set NoSQL Store connection");
 		_schema = schema;
 	}
 	
 	public DefaultQueryContext build() {
-		if (_keyMaker == null) throw new IllegalStateException("Must set Key Distribution Policy");
-		if (_valueTransformer == null) throw new IllegalStateException("Must set Value Transformation Policy");
-		
 		DefaultQueryContext ctx = new DefaultQueryContext();
 		
-  		ctx.setKeyMaker(_keyMaker);
-  		ctx.setValueTransformer(_valueTransformer);
-  		ctx.setSchema(_schema);
+  		if (_keyMaker != null) ctx.setKeyMaker(_keyMaker);
+  		if (_valueTransformer != null) ctx.setValueTransformer(_valueTransformer);
+  		if (_schema != null) ctx.setSchema(_schema);
+  		
   		ctx.setConsistency(_consistency);
   		ctx.setQueryTimeout(_timeout);
   		ctx.setStore(_store);

@@ -12,22 +12,27 @@ import com.paradox.query.ResultPacker;
 import com.paradox.util.NVPair;
 
 /**
- * Defines the basic functions of query execution. The concrete implementations must supply these functions.
+ * Defines evaluation functions to compose a query. 
+ * The concrete implementations must supply these functions.
  * <p>
  * The basic discipline of query execution is
  * <ol>
- * <li> Parse the query string to build a {@link Select} statement in terms of {@link Expression expression nodes}.
- * <li> Bind query parameters, if any
- * <li> Analyze the query predicate (i.e. a {@code where} clause in a {@code select} statement) to 
- * {@link #selectIndex(Select, KVQueryContext) determine} the appropriate index. 
+ * <li> Parse the query string to build a {@link Select} statement 
+ *      in terms of {@link Expression expression nodes}.
+ * <li> Bind query parameters, if any.
+ * <li> Analyze the query predicate (i.e. a {@code where} clause in 
+ *      a {@code select} statement) to 
+ *     {@link #selectIndex(Select, KVQueryContext) determine} the appropriate index. 
  * <li> Retrieve the candidate extent as an {@link KVStore#storeIterator(oracle.kv.Direction, int, oracle.kv.Key, 
- * oracle.kv.KeyRange, oracle.kv.Depth, oracle.kv.Consistency, long, java.util.concurrent.TimeUnit, 
- * oracle.kv.StoreIteratorConfig) iterator over stored key-value} pairs from the chosen index 
- * <li> For each key-value pair, {@link ValueTransformer#decode(oracle.kv.Value) transform} the stored representation
- * to a candidate record in user representation 
- * <li> Evaluate each candidate on the query predicate. Collect the candidate if it passes evaluation.
- * <li> {@link ResultPacker#pack(Projections, Object) Pack} the collected candidates into a result, 
- * optionally sorting them. 
+ *      oracle.kv.KeyRange, oracle.kv.Depth, oracle.kv.Consistency, long, java.util.concurrent.TimeUnit, 
+ *      oracle.kv.StoreIteratorConfig) iterator over stored key-value} pairs from the chosen index 
+ * <li> For each key-value pair, {@link ValueTransformer#decode(oracle.kv.Value) transform} 
+ *      the stored representation to a candidate record in user representation 
+ * <li> Evaluate each candidate on the query predicate. 
+ *      Collect the candidate if it passes evaluation.
+ * <li> {@link ResultPacker#pack(Projections, Object) Pack} the collected 
+ *      candidates into a result, 
+ * <li> optionally sort the candidates. 
  * </ol>
  * <p>
  * The concrete implementations must provide the details on 
@@ -86,6 +91,7 @@ public abstract class AbstractQueryExecutor<K,V,U> implements QueryExecutor<K,V,
 	public int execute(String query, Map<String, Object> bindParams) {
 		throw new UnsupportedOperationException();
 	}
+	
   @Override
   public Iterator<U> executeQuery(String sql) throws Exception {
     return executeQuery(sql, (Object[])null);

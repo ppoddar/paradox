@@ -52,21 +52,23 @@ public class Expressions {
 	/**
 	 * An expression that operates on other expression(s).
 	 */
-	public static abstract class OperatorExpression<V> extends AbstractExpression<V> implements Expression.Operator<V>{
+	public static abstract class OperatorExpression<V> extends AbstractExpression<V> 
+		implements Expression.Operator<V>{
 		
 		protected OperatorExpression(Expression<?> expr) {
 			addArgument(expr);
 		}
+		
 		protected OperatorExpression(Expression.Path<?> lhs, Expression<?> rhs) {
 			addArgument(lhs);
 			addArgument(rhs);
 		}
-		
 	}
 	
 	
 	public static class Equals extends OperatorExpression<Boolean> implements Expression.Equals {
 		boolean _ignoreCase;
+		
 		public Equals(Expression.Path<?> path, Expression.Value<?> value) {
 			this(path, value, false);
 		}
@@ -107,47 +109,53 @@ public class Expressions {
 		}
 	}
 	
-	public static class Greater extends OperatorExpression<Boolean> implements Expression.Greater {
+	public static abstract class BinaryNumericExpression extends OperatorExpression<Boolean> {
+		public BinaryNumericExpression(Expression.Path<?> path, Expression.Value<Number> value) {
+			super(path, value);
+		}
+		@Override
+		public final Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+			Number lhs = (Number)getArgument(0).evaluate(candidate, ctx);
+			Number rhs = (Number)getArgument(1).evaluate(candidate, ctx);
+			return compare(lhs,rhs);
+		}
+		
+		abstract Boolean compare(Number lhs, Number rhs);
+		
+	}
+	public static class Greater extends BinaryNumericExpression implements Expression.Greater {
 		public Greater(Expression.Path<?> path, Expression.Value<Number> value) {
 			super(path, value);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
-			Number lhs = (Number)getArgument(0).evaluate(candidate, ctx);
-			Number rhs = (Number)getArgument(1).evaluate(candidate, ctx);
+		public Boolean compare(Number lhs, Number rhs) {
 			return lhs.doubleValue() > rhs.doubleValue();
 		}
 	}
-	public static class GreaterOrEqual extends OperatorExpression<Boolean> implements Expression.GreaterOrEqual {
+	public static class GreaterOrEqual extends BinaryNumericExpression implements Expression.GreaterOrEqual {
 		public GreaterOrEqual(Expression.Path<?> path, Expression.Value<Number> value) {
 			super(path, value);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
-			Number lhs = (Number)getArgument(0).evaluate(candidate, ctx);
-			Number rhs = (Number)getArgument(1).evaluate(candidate, ctx);
+		public Boolean compare(Number lhs, Number rhs) {
 			return lhs.doubleValue() >= rhs.doubleValue();
 		}
 	}
-	public static class Less extends OperatorExpression<Boolean> implements Expression.Less {
+	public static class Less extends BinaryNumericExpression implements Expression.Less {
 		public Less(Expression.Path<?> path, Expression.Value<Number> value) {
 			super(path, value);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
-			Number lhs = (Number)getArgument(0).evaluate(candidate, ctx);
-			Number rhs = (Number)getArgument(1).evaluate(candidate, ctx);
+		public Boolean compare(Number lhs, Number rhs) {
 			return lhs.doubleValue() < rhs.doubleValue();
 		}
 	}
-	public static class LessOrEqual extends OperatorExpression<Boolean> implements Expression.LessOrEqual {
+	public static class LessOrEqual extends BinaryNumericExpression implements Expression.LessOrEqual {
 		public LessOrEqual(Expression.Path<?> path, Expression.Value<Number> value) {
 			super(path, value);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
-			Number lhs = (Number)getArgument(0).evaluate(candidate, ctx);
-			Number rhs = (Number)getArgument(1).evaluate(candidate, ctx);
+		public Boolean compare(Number lhs, Number rhs) {
 			return lhs.doubleValue() <= rhs.doubleValue();
 		}
 	}

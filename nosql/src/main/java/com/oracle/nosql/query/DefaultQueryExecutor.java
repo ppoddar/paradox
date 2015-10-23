@@ -22,19 +22,21 @@ import com.paradox.schema.UserType;
  */
 public class DefaultQueryExecutor extends AbstractQueryExecutor<Key,Value,JSONObject> {
 	private long _timeout;
+	
 	public DefaultQueryExecutor(KVQueryContext<Key,Value,JSONObject> ctx) {
 		super(ctx);
 	}
 
 	@Override
 	protected Index<Value> selectIndex(Select select, KVQueryContext<Key, Value, JSONObject> ctx) {
-		if (ctx.getSchema() == null)
-			throw new IllegalStateException("No schema has been set of this conetxt");
-		UserType type = ctx.getSchema().getUserType(select.getCandidate().getName());
-		if (type == null) 
-			throw new RuntimeException(select.getCandidate().getName() + "is not a known type to select");
-		
-		Key key   = (Key)ctx.getKeyMaker().makeTypeKey(type);
+		UserType type = null;
+		if (ctx.getSchema() != null) {
+			type = ctx.getSchema().getUserType(select.getCandidate().getName());
+		}
+		Key key = null;
+		if (type != null) {
+			key   = (Key)ctx.getKeyMaker().makeTypeKey(type);
+		}
 		return new FullScanIndex(key);
 	}
 
@@ -50,7 +52,9 @@ public class DefaultQueryExecutor extends AbstractQueryExecutor<Key,Value,JSONOb
 
 	@Override
 	protected ResultPacker<JSONObject> newResultPacker(Select select, KVQueryContext<Key, Value, JSONObject> ctx) {
-		return new JSONResultPacker();
+		JSONResultPacker packer = new JSONResultPacker();
+		packer.setContext(select, ctx);
+		return packer;
 	}
 
 }

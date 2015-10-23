@@ -1,8 +1,14 @@
 package com.paradox.query;
 
 import com.paradox.schema.Schema;
-/*
- *  A context provides an environment to execute a query.
+
+/**
+ *  A context provides an environment to execute a query
+ *  on a key-value store.
+ *  
+ *  @param K key type
+ *  @param V value type
+ *  @param U user type
  */
 public interface QueryContext<K,V,U> {
 

@@ -29,6 +29,11 @@ public abstract class AbstractResultPacker<T> implements ResultPacker<T> {
 	private OrderingComparator<T> _orderByComparator;
 	private static final Object DUMMY_GROUP = new Object();
 	
+	/**
+	 * Sets the context before use.
+	 * @param select
+	 * @param ctx
+	 */
 	public void setContext(Select select, KVQueryContext<?,?,T> ctx) {
 		_select = select;
 		_ctx = ctx;

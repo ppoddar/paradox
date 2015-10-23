@@ -7,6 +7,7 @@ import oracle.kv.KVStore;
 import oracle.kv.Key;
 import oracle.kv.Value;
 
+import com.oracle.nosql.query.json.JSONValueTransformer;
 import com.paradox.nosql.query.KVQueryContext;
 import com.paradox.nosql.query.KeyMaker;
 import com.paradox.nosql.query.ValueTransformer;
@@ -26,24 +27,39 @@ import com.paradox.schema.Schema;
  * @author pinaki poddar
  */
 public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONObject> {
-	private Schema            		_schema;
-	private KeyMaker<Key> 			_keyMaker;
-	private ValueTransformer<Value,JSONObject>  	_valueTransformer;
+	private KeyMaker<Key> _keyMaker;
+	private ValueTransformer<Value,JSONObject> _valueTransformer;
+	private Schema _schema;
+	private KVStore _store;
+	private Consistency _consistency = Consistency.NONE_REQUIRED;
 	private Class<? extends ResultPacker<JSONObject>>  _resultPacker;
-	private KVStore                 _store;
-	private Consistency             _consistency;
-	private ExpressionFactory       _factory;
 	private final QueryExecutor<Key, Value, JSONObject> _executor;
 	
 	
 	DefaultQueryContext() {
 		_executor = new DefaultQueryExecutor(this);
+		
+		_keyMaker = new DefaultKeyMaker();
+		_valueTransformer = new JSONValueTransformer();
+	}
+	
+	
+	public Class<? extends ResultPacker<JSONObject>> getResultPacker() {
+		return _resultPacker;
+	}
+
+	public void setQueryTimeout(long timeout) {
+		_executor.setQueryTimeout(timeout);
+	}
+
+	@Override
+	public QueryExecutor<Key,Value,JSONObject> getExecutor() {
+		return _executor;
 	}
 	
 	public KVStore getStore() {
 		return _store;
 	}
-	
 	@Override
 	public Schema getSchema() {
 		return _schema;
@@ -59,13 +75,8 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 		return _keyMaker;
 	}
 	
-//	@Override
-	public Class<? extends ResultPacker<JSONObject>> getResultPacker() {
-		return _resultPacker;
-	}
-
     public Consistency getConsistency() {
-    	return _consistency;
+    		return _consistency;
     }
 	
 	void setConsistency(Consistency consistency) {
@@ -92,18 +103,6 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 	
 	@Override
 	public ExpressionFactory getExpressionFactory() {
-		if (_factory == null) {
-			_factory = new QueryExpressionFactory();
-		}
-		return _factory;
-	}
-	
-	public void setQueryTimeout(long timeout) {
-		_executor.setQueryTimeout(timeout);
-	}
-
-	@Override
-	public QueryExecutor<Key,Value,JSONObject> getExecutor() {
-		return _executor;
+		return new QueryExpressionFactory();
 	}
 }

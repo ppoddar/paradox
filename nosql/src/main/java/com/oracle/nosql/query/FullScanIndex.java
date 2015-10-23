@@ -7,7 +7,7 @@ import com.paradox.nosql.query.Index;
 import com.paradox.query.QueryContext;
 import com.paradox.schema.UserType;
 import com.paradox.util.Transformer;
-import com.paradox.util.TransforminIterator;
+import com.paradox.util.TransformingIterator;
 
 import oracle.kv.Depth;
 import oracle.kv.Direction;
@@ -25,7 +25,8 @@ public class FullScanIndex implements Index<Value> {
 	private final Key _parentKey;
 	
 	/**
-	 * Supply the key whose descendants are the entire extent of a {@link UserType user-defined type}.
+	 * Supply the key whose descendants are the entire extent of a 
+	 * {@link UserType user-defined type}.
 	 * @param key a key with partial major path as it represents an extent of a type
 	 */
 	public FullScanIndex(Key key) {
@@ -54,7 +55,7 @@ public class FullScanIndex implements Index<Value> {
 				kvctx.getConsistency(),
 				ctx.getExecutor().getQueryTimeout(),
 				TimeUnit.MILLISECONDS);
-		return new TransforminIterator<KeyValueVersion, Value>(base, transformer);
+		return new TransformingIterator<KeyValueVersion, Value>(base, transformer);
 	}
 
 }

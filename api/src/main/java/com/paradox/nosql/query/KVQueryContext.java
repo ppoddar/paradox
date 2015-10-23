@@ -34,7 +34,7 @@ import com.paradox.schema.Schema;
  * @author pinaki poddar
  *
  */
-public interface KVQueryContext<K,V,U> extends QueryContext {
+public interface KVQueryContext<K,V,U> extends QueryContext<K,V,U> {
 	/**
 	 * Gets the policy to create {@link Key key} for Oracle NoSQL data store.
 	 * 
