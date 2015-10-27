@@ -6,20 +6,14 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import com.paradox.query.Expression;
-import com.paradox.query.ExpressionFactory;
-import com.paradox.schema.Schema;
+import org.paradox.query.Expression;
+import org.paradox.query.ExpressionFactory;
+import org.paradox.query.impl.QueryExpressionFactory;
+import org.paradox.query.impl.Select;
+import org.paradox.query.impl.SelectBuilder;
+import org.paradox.schema.Schema;
 
 public class TestSelectParse {
-
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	@Test
 	public void testOriginalSQLIsRetained() throws Exception {

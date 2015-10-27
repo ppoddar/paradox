@@ -4,18 +4,16 @@
 </head>
 <body>
 
-Interfaces to a Query Engine for Oracle NoSQL store.    
+Query Engine Interface to Key-Value store.    
 
 This package provides the user interfaces to execute a query using a SQL like string. 
 A query engine on a key-value store requires 
 few essential artifacts that must be supplied by the user of this API. 
-This package defines these artifacts
-as following interface contracts:
+These interface contracts are  defined in:
 <ol type='i'>
 	<li>{@link com.oracle.nosql.query.KeyMaker KeyMaker}
 	<li>{@link com.oracle.nosql.query.ValueTransformer}
 	<li>{@link com.oracle.schema.Schema}
-	<li>and last, but not the least, {@link oracle.kv.KVStore}
 </ol>
 
 
