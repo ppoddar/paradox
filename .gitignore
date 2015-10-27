@@ -9,7 +9,11 @@
 **/pom.properties
 **/maven-archiver
 **/*.prefs
-/query/src/main/antlr4/generated/
+/query/src/main/java/antlr4/
 /**/*.tokens
+<<<<<<< HEAD
 /.classpath
 /.project
+=======
+/target
+>>>>>>> ae9bf706ecaa26c0cf77a79a3b34b2fd988c26bc

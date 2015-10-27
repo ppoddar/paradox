@@ -1,5 +1,6 @@
 package com.paradox.query;
 
+<<<<<<< HEAD
 import java.util.Iterator;
 import java.util.Map;
 
@@ -8,6 +9,17 @@ import org.paradox.schema.Schema;
 /**
  *  A context provides an environment to execute a query.
  *  
+=======
+import com.paradox.schema.Schema;
+
+/**
+ *  A context provides an environment to execute a query
+ *  on a key-value store.
+ *  
+ *  @param K key type
+ *  @param V value type
+ *  @param U user type
+>>>>>>> ae9bf706ecaa26c0cf77a79a3b34b2fd988c26bc
  */
 public interface QueryContext<K,V,U> {
 

@@ -16,6 +16,7 @@ import oracle.kv.Key;
 import oracle.kv.ValueVersion;
 
 import org.json.JSONObject;
+<<<<<<< HEAD:cli/src/main/java/org/paradox/command/Paradox.java
 import org.paradox.nosql.query.DefaultKeyMaker;
 import org.paradox.nosql.query.DefaultQueryContext;
 import org.paradox.nosql.query.JSONValueTransformer;
@@ -24,6 +25,18 @@ import org.paradox.schema.Attribute;
 import org.paradox.schema.Schema;
 import org.paradox.schema.UserType;
 import org.paradox.schema.impl.SchemaCompiler;
+=======
+
+import com.oracle.paradox.DataLoader;
+import com.paradox.oracle.nosql.DefaultKeyMaker;
+import com.paradox.oracle.nosql.DefaultQueryContext;
+import com.paradox.oracle.nosql.QueryContextBuilder;
+import com.paradox.oracle.nosql.json.JSONValueTransformer;
+import com.paradox.schema.Attribute;
+import com.paradox.schema.Schema;
+import com.paradox.schema.UserType;
+import com.paradox.schema.impl.SchemaCompiler;
+>>>>>>> ae9bf706ecaa26c0cf77a79a3b34b2fd988c26bc:cli/src/main/java/com/paradox/command/Paradox.java
 
 /**
  * A command-line client.
@@ -49,34 +62,22 @@ public class Paradox extends AbstractCommandLineClient {
 		Command get = new Command("get").setDescription("Gets the value for the given key(s)");
 		get.defineArgument().setName("key(s)").setDescription("key used for Oracle NoSQL datastore");
 		
-		Command loadSchema = new Command("load", "schema")
-							.setDescription("Reads a schema descriptor file to build a Schema");
-		loadSchema.defineArgument().setName("schema descriptor")
-			.setDescription("A resource name. The resource defines available types and their attributes in JSON format");
-		
-		Command showSchema = new Command("show", "schema")
-							.setDescription("Shows the current schema");
-		
-		
-		
+		Command loadSchema = new Command("load", "schema").setDescription("Reads a schema descriptor file to build a Schema");
+		loadSchema.defineArgument().setName("schema descriptor").setDescription("A resource name. The resource defines available types and their attributes in JSON format");
+		Command showSchema = new Command("show", "schema").setDescription("Shows the current schema");
 		Command connect = new Command("connect").setDescription("Connects to a Oracle NoSQL Key-Value data store");
-		connect.defineArgument().setName("url")
-			.setDescription("Connection URL format is nosql://store-name@host:port. Default host is 'localhost'." +
-					"Default port is 5000.");
+		connect.defineArgument().setName("url").setDescription("Connection URL format is nosql://store-name@host:port. Default host is 'localhost'." +"Default port is 5000.");
 		
 		Command select = new Command("select").setDescription("Executes a SQL select statement");
 		select.requiresParse(false);
 		select.setUsage("select [projection|*] from [type] (where predicate (and|or predicate)) (order by) (group by) (skip n) (limit n)");
 		
 		Command status = new Command("status").setDescription("Prints current state of the client");
-		registerCommand(status);
 		
-		Command loadData = new Command("load", "data")
-							.setDescription("Loads data from a given JSON file");
+		Command loadData = new Command("load", "data").setDescription("Loads data from a given JSON file");
 		loadData.defineOption("-type").setName("type").setDescription("A user defined type in the schema");
 		loadData.defineOption("-validate").requiresValue(false).setDescription("Validates data by the schema");
-		loadData.defineArgument().setName("data file")
-			.setDescription("a file where each line contains a JSON formatted data for a given type");
+		loadData.defineArgument().setName("data file").setDescription("a file where each line contains a JSON formatted data for a given type");
 		
 		Command exit = new Command("exit").setDescription("Exits this program");
 
@@ -87,6 +88,7 @@ public class Paradox extends AbstractCommandLineClient {
 		registerCommand(loadSchema);
 		registerCommand(showSchema);
 		registerCommand(select);
+		registerCommand(status);
 		registerCommand(exit);
 		
 	}
