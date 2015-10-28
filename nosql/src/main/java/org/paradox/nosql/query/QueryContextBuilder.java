@@ -21,11 +21,15 @@ import org.paradox.schema.Schema;
  */
 public class QueryContextBuilder {
 	private KeyMaker<Key> _keyMaker = new DefaultKeyMaker();
-	private ValueTransformer<Value,JSONObject> _valueTransformer;
+	private ValueTransformer<Value,JSONObject> _valueTransformer = new JSONValueTransformer();
 	private final Schema _schema;
 	private Consistency _consistency = Consistency.NONE_REQUIRED;
 	private long _timeout;
 	private final KVStore _store;
+	
+	public QueryContextBuilder(KVStore store) {
+		this(store, null);
+	}
 	
 	public QueryContextBuilder(KVStore store, Schema schema) {
 		_store  = store;
@@ -34,9 +38,6 @@ public class QueryContextBuilder {
 	}
 	
 	public DefaultQueryContext build() {
-		if (_keyMaker == null) throw new IllegalStateException("Must set Key Distribution Policy");
-		if (_valueTransformer == null) throw new IllegalStateException("Must set Value Transformation Policy");
-		
 		DefaultQueryContext ctx = new DefaultQueryContext();
 		
   		ctx.setKeyMaker(_keyMaker);

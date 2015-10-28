@@ -109,9 +109,9 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 	@Override
 	public Iterator<JSONObject> executeQuery(String query, Map<String, Object> bindParams) throws Exception {
 		Select select = new SelectBuilder(getSchema(), getExpressionFactory()).parse(query);
-		ResultPacker<JSONObject> packer = newResultPacker(select, this);
+		ResultPacker<JSONObject> packer = newResultPacker(select);
 		bindParams(select, bindParams);
-		Index<Value> index = selectIndex(select, this);
+		Index<Value> index = selectIndex(select);
 		Iterator<Value> candidates = index.fetch(this);
 		while (candidates.hasNext()) {
 			Value kvv = candidates.next();
@@ -164,18 +164,17 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 	 * Chooses a suitable index for the given select statement.
 	 * This index would be used retrieve the extent.
 	 * @param select the select statement 
-	 * @param ctx the query execution environment
 	 * @return an Index to retrieve the candidate extent
 	 */
-	
-	protected Index<Value> selectIndex(Select select, KVQueryContext<Key, Value, JSONObject> ctx) {
-		if (ctx.getSchema() == null)
-			throw new IllegalStateException("No schema has been set of this conetxt");
-		UserType type = ctx.getSchema().getUserType(select.getCandidate().getName());
+	protected Index<Value> selectIndex(Select select) {
+		if (getSchema() == null) {
+			return new FullScanIndex(null);
+		}
+		UserType type = getSchema().getUserType(select.getCandidate().getName());
 		if (type == null) 
 			throw new RuntimeException(select.getCandidate().getName() + "is not a known type to select");
 		
-		Key key   = (Key)ctx.getKeyMaker().makeTypeKey(type);
+		Key key   = (Key) getKeyMaker().makeTypeKey(type);
 		return new FullScanIndex(key);
 	}
 
@@ -190,8 +189,10 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 	}
 
 	
-	protected ResultPacker<JSONObject> newResultPacker(Select select, KVQueryContext<Key, Value, JSONObject> ctx) {
-		return new JSONResultPacker();
+	protected ResultPacker<JSONObject> newResultPacker(Select select) {
+		JSONResultPacker packer = new JSONResultPacker();
+		packer.setContext(select, this);
+		return packer;
 	}
 
 
