@@ -66,7 +66,7 @@
 					<aggregate>true</aggregate>
 					<quiet>true</quiet>
 					<verbose>false</verbose>
-					<excludePackageNames>antlr4.*:*.command.*:*.impl:*.query.exp</excludePackageNames>
+					<excludePackageNames>antlr4.*:*.command.*:*.impl:*.exp:*.util</excludePackageNames>
 				</configuration>
 				<executions>
 					<execution>

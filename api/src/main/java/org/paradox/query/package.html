@@ -4,29 +4,15 @@
 </head>
 <body>
 
-Query Engine Interface to Key-Value store.    
+Query Engine Interface.    
 
-This package provides the user interfaces to execute a query using a SQL like string. 
-A query engine on a key-value store requires 
-few essential artifacts that must be supplied by the user of this API. 
-These interface contracts are  defined in:
-<ol type='i'>
-	<li>{@link com.oracle.nosql.query.KeyMaker KeyMaker}
-	<li>{@link com.oracle.nosql.query.ValueTransformer}
-	<li>{@link com.oracle.schema.Schema}
-</ol>
-
-
- 
 A concrete implementation is used in client code, as follows, to execute a query: 
 
 <script src="../../../../../scripts/prism.js"></script>
 <pre>
    <code class="language-java">
        KVStore store = // a connection to Oracle NoSQL store
-       QueryContext ctx = new QueryEngine().setStore(store)
-                                           .setValueTransformer(new JSONValueTransformer())
-                                           .setSchema("person-address-schema.json");
+       QueryContext ctx = new QueryConextBuilder().build();
        String sql = "select * from Person where name=:name and age > :age"; 
        List<JSONObject> result = ctx.bindParameter("name", "John")
                                     .bindParameter("age", 25)
@@ -36,8 +22,10 @@ A concrete implementation is used in client code, as follows, to execute a query
 The query engine accepts {@code SELECT} query string following a 
 <a href="../../../../../../../../../../NoSQL.g4.html">SQL-like syntax</a>.
 
-The query string is parsed by an ANTLR-generated parser. If a {@link com.oracle.schema.Schema schema} is 
-available, then the query is also checked for semantic validity i.e. all name tokens (the candidate type, 
+The query string is parsed by an ANTLR-generated parser. 
+If a {@link org.paradox.schema.Schema schema} is 
+available, then the query is also checked for semantic validity 
+i.e. all name tokens (the candidate type, 
 the field paths) must be present in the schema.
 <p>
 
