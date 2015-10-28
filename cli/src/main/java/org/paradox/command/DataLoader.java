@@ -15,19 +15,10 @@ import oracle.kv.Value;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.paradox.nosql.query.DefaultQueryContext;
+import org.paradox.query.kv.KeyMaker;
+import org.paradox.query.kv.ValueTransformer;
 import org.paradox.schema.Attribute;
 import org.paradox.schema.UserType;
-
-<<<<<<< HEAD:cli/src/main/java/org/paradox/command/DataLoader.java
-import com.paradox.query.kv.KeyMaker;
-import com.paradox.query.kv.ValueTransformer;
-=======
-import com.paradox.nosql.query.KeyMaker;
-import com.paradox.nosql.query.ValueTransformer;
-import com.paradox.oracle.nosql.DefaultQueryContext;
-import com.paradox.schema.Attribute;
-import com.paradox.schema.UserType;
->>>>>>> ae9bf706ecaa26c0cf77a79a3b34b2fd988c26bc:nosql/src/main/java/com/oracle/paradox/DataLoader.java
 
 /**
  * Loads data from a file to a NoSQL data store.

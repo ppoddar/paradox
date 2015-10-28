@@ -1,5 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-<<<<<<< HEAD
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
                              http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -75,9 +75,6 @@
 							<goal>aggregate</goal>
 						</goals>
 						<phase>site</phase>
-						<configuration>
-							<excludePackageNames>antlr4.*</excludePackageNames>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -104,84 +101,4 @@
 
 
 	</dependencies>
-
-
-=======
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/maven-v4_0_0.xsd"
->
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.paradox</groupId>
-  <artifactId>paradox</artifactId>
-  <packaging>pom</packaging>
-  <version>0.2</version>
-  <name>Paradox: SQL on Oracle NoSQl</name>
-  <properties>
-    <project.version>0.2</project.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  <modules>
-    <module>api</module>
-    <module>cli</module>
-    <module>util</module>
-    <module>schema</module>
-    <module>query</module>
-    <module>nosql</module>
-    <module>distribution</module>
-  </modules>
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-            <testFailureIgnore>false</testFailureIgnore>
-            <disableXmlReport>true</disableXmlReport>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.5.5</version>
-          <configuration>
-            <finalName>paradox-${project.version}</finalName>
-            <appendAssemblyId>false</appendAssemblyId>
-            <outputDirectory>${basedir}</outputDirectory>
-            <descriptors>
-              <descriptor>assembly.xml</descriptor>
-            </descriptors>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.10.3</version>
-        <configuration>
-          <author>true</author>
-           <sourcepath>schema/src/main/java:query/src/main/java:util/src/main/java:nosql/src/main/java:cli/src/main/java</sourcepath>
-          <excludePackageNames>antlr4.generated:*.impl</excludePackageNames>
-          <stylesheetfile>site/resources/css/javadoc.css</stylesheetfile>
-          <show>public</show>
-          <quiet>true</quiet>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
-        <version>2.4.1</version>
-      </plugin>
-    </plugins>
-  </build>
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
->>>>>>> ae9bf706ecaa26c0cf77a79a3b34b2fd988c26bc
 </project>

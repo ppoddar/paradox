@@ -1,4 +1,4 @@
-package com.paradox.query.kv;
+package org.paradox.query.kv;
 
 /**
  * A transformer between data representation used by the Oracle NoSQL and user application.

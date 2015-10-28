@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.paradox.query.kv.KeyMaker;
 import org.paradox.schema.Attribute;
 import org.paradox.schema.Schema;
 import org.paradox.schema.UserType;
 
 import oracle.kv.Key;
-
-import com.paradox.query.kv.KeyMaker;
 
 /**
  * This default implementation generates a {@link Key key} for Oracle NoSQL key-value store assuming that the user 

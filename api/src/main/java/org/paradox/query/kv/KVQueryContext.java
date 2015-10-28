@@ -1,6 +1,6 @@
-package com.paradox.query.kv;
+package org.paradox.query.kv;
 
-import com.paradox.query.QueryContext;
+import org.paradox.query.QueryContext;
 
 /**
  * A context provides an environment to execute a query.

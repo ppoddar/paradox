@@ -12,9 +12,8 @@ import java.util.TreeSet;
 
 import org.paradox.query.Expression;
 import org.paradox.query.ResultPacker;
+import org.paradox.query.kv.KVQueryContext;
 import org.paradox.util.ChainedIterator;
-
-import com.paradox.query.kv.KVQueryContext;
 
 /**
  * An abstract algorithm packs the result ordering if specified by the select.

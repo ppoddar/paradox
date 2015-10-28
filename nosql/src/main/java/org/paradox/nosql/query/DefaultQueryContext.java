@@ -13,6 +13,9 @@ import org.paradox.query.impl.ExpressionCollector;
 import org.paradox.query.impl.QueryExpressionFactory;
 import org.paradox.query.impl.Select;
 import org.paradox.query.impl.SelectBuilder;
+import org.paradox.query.kv.KVQueryContext;
+import org.paradox.query.kv.KeyMaker;
+import org.paradox.query.kv.ValueTransformer;
 import org.paradox.schema.Schema;
 import org.paradox.schema.UserType;
 import org.paradox.util.NVPair;
@@ -21,10 +24,6 @@ import oracle.kv.Consistency;
 import oracle.kv.KVStore;
 import oracle.kv.Key;
 import oracle.kv.Value;
-
-import com.paradox.query.kv.KVQueryContext;
-import com.paradox.query.kv.KeyMaker;
-import com.paradox.query.kv.ValueTransformer;
 
 /**
  * The execution environment and engine to execute a query.

@@ -4,8 +4,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import org.paradox.query.Expression;
-
-import com.paradox.query.kv.KVQueryContext;
+import org.paradox.query.kv.KVQueryContext;
 
 /**
  * A comparator to order query results.

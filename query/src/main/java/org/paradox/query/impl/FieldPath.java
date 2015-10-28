@@ -2,9 +2,8 @@ package org.paradox.query.impl;
 
 import org.paradox.query.Expression;
 import org.paradox.query.exp.ExpressionVisitor;
-
-import com.paradox.query.kv.KVQueryContext;
-import com.paradox.query.kv.ValueTransformer;
+import org.paradox.query.kv.KVQueryContext;
+import org.paradox.query.kv.ValueTransformer;
 
 /**
  * Implements a path expression.

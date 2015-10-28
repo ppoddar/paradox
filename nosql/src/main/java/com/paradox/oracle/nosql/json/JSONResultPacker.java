@@ -1,9 +1,8 @@
 package com.paradox.oracle.nosql.json;
 
 import org.json.JSONObject;
-
-import com.paradox.query.ResultPacker;
-import com.paradox.query.impl.AbstractResultPacker;
+import org.paradox.query.ResultPacker;
+import org.paradox.query.impl.AbstractResultPacker;
 
 /**
  * Packs query result in a JSON object.

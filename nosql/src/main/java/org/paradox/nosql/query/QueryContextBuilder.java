@@ -6,11 +6,10 @@ import oracle.kv.Key;
 import oracle.kv.Value;
 
 import org.json.JSONObject;
+import org.paradox.query.kv.KVQueryContext;
+import org.paradox.query.kv.KeyMaker;
+import org.paradox.query.kv.ValueTransformer;
 import org.paradox.schema.Schema;
-
-import com.paradox.query.kv.KVQueryContext;
-import com.paradox.query.kv.KeyMaker;
-import com.paradox.query.kv.ValueTransformer;
 
 /**
  * Builder for {@link KVQueryContext}.

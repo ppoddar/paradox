@@ -2,7 +2,7 @@ package org.paradox.query;
 
 import java.util.Iterator;
 
-import com.paradox.query.kv.KVQueryContext;
+import org.paradox.query.kv.KVQueryContext;
 
 /**
  * Packs query result in a user representation.

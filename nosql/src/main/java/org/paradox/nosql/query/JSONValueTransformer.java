@@ -5,8 +5,7 @@ import oracle.kv.Value;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-
-import com.paradox.query.kv.ValueTransformer;
+import org.paradox.query.kv.ValueTransformer;
 
 /**
  * Converts between {@link JSONObject} and Oracle NoSQL {@link Value}.

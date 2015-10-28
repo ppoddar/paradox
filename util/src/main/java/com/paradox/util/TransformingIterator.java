@@ -2,6 +2,8 @@ package com.paradox.util;
 
 import java.util.Iterator;
 
+import org.paradox.util.Transformer;
+
 /**
  * Applies a {@link Transformer transform} on iterated value
  * of another iterator. 

@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.paradox.query.Expression;
-
-import com.paradox.query.kv.KVQueryContext;
+import org.paradox.query.kv.KVQueryContext;
 
 /**
  * Defines the concrete query expressions.

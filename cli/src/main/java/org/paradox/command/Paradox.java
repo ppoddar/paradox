@@ -16,7 +16,6 @@ import oracle.kv.Key;
 import oracle.kv.ValueVersion;
 
 import org.json.JSONObject;
-<<<<<<< HEAD:cli/src/main/java/org/paradox/command/Paradox.java
 import org.paradox.nosql.query.DefaultKeyMaker;
 import org.paradox.nosql.query.DefaultQueryContext;
 import org.paradox.nosql.query.JSONValueTransformer;
@@ -25,19 +24,6 @@ import org.paradox.schema.Attribute;
 import org.paradox.schema.Schema;
 import org.paradox.schema.UserType;
 import org.paradox.schema.impl.SchemaCompiler;
-=======
-
-import com.oracle.paradox.DataLoader;
-import com.paradox.oracle.nosql.DefaultKeyMaker;
-import com.paradox.oracle.nosql.DefaultQueryContext;
-import com.paradox.oracle.nosql.QueryContextBuilder;
-import com.paradox.oracle.nosql.json.JSONValueTransformer;
-import com.paradox.schema.Attribute;
-import com.paradox.schema.Schema;
-import com.paradox.schema.UserType;
-import com.paradox.schema.impl.SchemaCompiler;
->>>>>>> ae9bf706ecaa26c0cf77a79a3b34b2fd988c26bc:cli/src/main/java/com/paradox/command/Paradox.java
-
 /**
  * A command-line client.
  * 

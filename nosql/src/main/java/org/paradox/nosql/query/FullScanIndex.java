@@ -4,11 +4,10 @@ import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 import org.paradox.query.Index;
+import org.paradox.query.QueryContext;
 import org.paradox.schema.UserType;
 import org.paradox.util.Transformer;
 import org.paradox.util.TransforminIterator;
-
-import com.paradox.query.QueryContext;
 
 import oracle.kv.Depth;
 import oracle.kv.Direction;

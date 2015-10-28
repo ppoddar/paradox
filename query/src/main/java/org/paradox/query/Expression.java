@@ -1,8 +1,7 @@
 package org.paradox.query;
 
 import org.paradox.query.exp.ExpressionVisitor;
-
-import com.paradox.query.kv.KVQueryContext;
+import org.paradox.query.kv.KVQueryContext;
 
 
 /**

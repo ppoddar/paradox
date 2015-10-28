@@ -2,7 +2,7 @@ package org.paradox.query;
 
 import java.util.Iterator;
 
-import com.paradox.query.QueryContext;
+import org.paradox.query.QueryContext;
 
 /**
  * A stored index.

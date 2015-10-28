@@ -1,4 +1,4 @@
-package com.paradox.query.kv;
+package org.paradox.query.kv;
 
 import java.util.Map;
 

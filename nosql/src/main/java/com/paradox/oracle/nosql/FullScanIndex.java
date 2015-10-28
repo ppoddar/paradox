@@ -3,10 +3,10 @@ package com.paradox.oracle.nosql;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
-import com.paradox.nosql.query.Index;
-import com.paradox.query.QueryContext;
-import com.paradox.schema.UserType;
-import com.paradox.util.Transformer;
+import org.paradox.query.Index;
+import org.paradox.query.QueryContext;
+import org.paradox.util.Transformer;
+
 import com.paradox.util.TransformingIterator;
 
 import oracle.kv.Depth;
@@ -53,7 +53,7 @@ public class FullScanIndex implements Index<Value> {
 				null, // key range
 				Depth.DESCENDANTS_ONLY,
 				kvctx.getConsistency(),
-				ctx.getExecutor().getQueryTimeout(),
+				ctx.getQueryTimeout(),
 				TimeUnit.MILLISECONDS);
 		return new TransformingIterator<KeyValueVersion, Value>(base, transformer);
 	}

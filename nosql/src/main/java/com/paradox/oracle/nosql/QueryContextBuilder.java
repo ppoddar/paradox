@@ -6,12 +6,11 @@ import oracle.kv.Key;
 import oracle.kv.Value;
 
 import org.json.JSONObject;
-
-import com.paradox.nosql.query.KeyMaker;
-import com.paradox.nosql.query.ValueTransformer;
-import com.paradox.query.ExpressionFactory;
-import com.paradox.query.impl.QueryExpressionFactory;
-import com.paradox.schema.Schema;
+import org.paradox.query.ExpressionFactory;
+import org.paradox.query.impl.QueryExpressionFactory;
+import org.paradox.query.kv.KeyMaker;
+import org.paradox.query.kv.ValueTransformer;
+import org.paradox.schema.Schema;
 
 /**
  * Builder for {@link KVQueryContext}.
@@ -22,7 +21,7 @@ import com.paradox.schema.Schema;
  *
  */
 public class QueryContextBuilder {
-	private KeyMaker<Key> _keyMaker;
+	private DefaultKeyMaker _keyMaker;
 	private ValueTransformer<Value,JSONObject> _valueTransformer;
 	private final Schema _schema;
 	private Consistency _consistency = Consistency.NONE_REQUIRED;
