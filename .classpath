@@ -25,5 +25,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSON"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ORACLE-NOSQL"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ANTLR4"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ORACLE_NOSQL"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
