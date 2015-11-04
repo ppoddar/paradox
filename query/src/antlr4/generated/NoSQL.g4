@@ -44,6 +44,7 @@ predicate          : predicateTerm ((and|or))* ;
 predicateTerm  : unaryPredicate | binaryPredicate ;
 unaryPredicate  : not | isNull | exists ;
 binaryPredicate: equals 
+    | notequals
 	| equalsIgnoreCase 
 	| greater 
 	| greaterOrEqual 
@@ -55,6 +56,7 @@ and  : AND predicateTerm;
 or     : OR  predicateTerm;
 
 equals         : fieldPath EQUALS  ( value | bindParam )  ;
+notequals    : fieldPath NOT_EQUALS  ( value | bindParam )  ;
 equalsIgnoreCase : fieldPath EQUALS_IGNORECASE  ( value | bindParam )  ;
 
 greater        : fieldPath GREATER ( numericValue | bindParam ) ;

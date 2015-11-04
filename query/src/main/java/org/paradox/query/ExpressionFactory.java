@@ -1,5 +1,9 @@
 package org.paradox.query;
 
+import org.paradox.query.Expression.Path;
+import org.paradox.query.Expression.Predicate;
+import org.paradox.query.Expression.Value;
+
 /**
  * A factory for query expressions.
  * 
@@ -61,6 +65,7 @@ public interface ExpressionFactory {
 	 * Creates a predicate expression to evaluate if the given path is equal to the given value.
 	 */
 	Expression.Predicate newEqual(Expression.Path<?> lhs, Expression.Value<?> rhs);
+	Expression.Predicate newNotEqual(Expression.Path<?>  lhs, Expression. Value<?> rhs);
 	Expression.Predicate newEqualIgnoreCase(Expression.Path<?> lhs, Expression.Value<?> rhs);
 
 	/**

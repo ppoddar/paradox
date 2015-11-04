@@ -81,7 +81,29 @@ public class Expressions {
 		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			Object lhs = getArgument(0).evaluate(candidate, ctx);
 			Object rhs = getArgument(1).evaluate(candidate, ctx);
+			if (rhs instanceof String)
+				rhs = unquote(rhs.toString());
 			return _ignoreCase ? lhs.toString().equalsIgnoreCase(rhs.toString()) : lhs.equals(rhs);
+		}
+		
+		String unquote(String s) {
+			if (s != null && s.length() > 1 && s.charAt(0) =='\'' && s.charAt(s.length()-1) == '\'')
+				return s.substring(1, s.length()-1);
+			else 
+				return s;
+		}
+	}
+
+	public static class NotEquals extends OperatorExpression<Boolean> implements Expression.NotEquals {		
+		public NotEquals(Expression.Path<?> path, Expression.Value<?> value) {
+			super(path, value);
+		}
+		
+		@Override
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+			Object lhs = getArgument(0).evaluate(candidate, ctx);
+			Object rhs = getArgument(1).evaluate(candidate, ctx);
+			return !lhs.equals(rhs);
 		}
 	}
 	

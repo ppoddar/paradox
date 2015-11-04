@@ -74,6 +74,9 @@ public interface Expression<V> {
 	/** Affirms if two expressions evaluate to be equal. **/
 	interface Equals extends Predicate{}
 	
+	/** Affirms if two expressions evaluate to be not equal. **/
+	interface NotEquals extends Predicate{}
+	
 	/** Affirms if left hand expression evaluates to be greater 
 	 * than the right hand expression numerically. 
 	 **/

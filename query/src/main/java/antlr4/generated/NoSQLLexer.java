@@ -44,7 +44,7 @@ public class NoSQLLexer extends Lexer {
 
 	private static final String[] _LITERAL_NAMES = {
 		null, null, null, "'_'", "'*'", "'\"'", "'\\'", "':'", "','", "'.'", "'('", 
-		"')'", "'='", "'<>'", "'~='", "'>'", "'>='", "'<'", "'<='", "'LIKE'", 
+		"')'", "'='", "'!='", "'~='", "'>'", "'>='", "'<'", "'<='", "'LIKE'", 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
 		null, "'''"
@@ -174,7 +174,7 @@ public class NoSQLLexer extends Lexer {
 		"\7^\2\2\u009d\17\3\2\2\2\u009e\u009f\7<\2\2\u009f\21\3\2\2\2\u00a0\u00a1"+
 		"\7.\2\2\u00a1\23\3\2\2\2\u00a2\u00a3\7\60\2\2\u00a3\25\3\2\2\2\u00a4\u00a5"+
 		"\7*\2\2\u00a5\27\3\2\2\2\u00a6\u00a7\7+\2\2\u00a7\31\3\2\2\2\u00a8\u00a9"+
-		"\7?\2\2\u00a9\33\3\2\2\2\u00aa\u00ab\7>\2\2\u00ab\u00ac\7@\2\2\u00ac\35"+
+		"\7?\2\2\u00a9\33\3\2\2\2\u00aa\u00ab\7#\2\2\u00ab\u00ac\7?\2\2\u00ac\35"+
 		"\3\2\2\2\u00ad\u00ae\7\u0080\2\2\u00ae\u00af\7?\2\2\u00af\37\3\2\2\2\u00b0"+
 		"\u00b1\7@\2\2\u00b1!\3\2\2\2\u00b2\u00b3\7@\2\2\u00b3\u00b4\7?\2\2\u00b4"+
 		"#\3\2\2\2\u00b5\u00b6\7>\2\2\u00b6%\3\2\2\2\u00b7\u00b8\7>\2\2\u00b8\u00b9"+

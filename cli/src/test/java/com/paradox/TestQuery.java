@@ -38,9 +38,7 @@ public class TestQuery {
 		_store = KVStoreFactory.getStore(config);
 		_ctx = new QueryContextBuilder(_store).build();
 		
-		if (count(_store, _type) > 0) {
-			deleteAll(_store, _type);
-		}
+		deleteAll(_store, _type);
 		populate(_store, _type, _dataSize);
 	}
 
@@ -79,12 +77,20 @@ public class TestQuery {
 		Assert.assertEquals(1, count(result));
 	}
 	
-//	@Test
+	@Test
 	public void testNotEquals() throws Exception {
 		String sql = "select * from Person where age != 46";
 		Iterator<JSONObject> result = _ctx.executeQuery(sql);
 		Assert.assertEquals(_dataSize-1, count(result));
 	}
+	
+	@Test
+	public void testEqualsIgnoreCase() throws Exception {
+		String sql = "select * from Person where name ~= 'person-4'";
+		Iterator<JSONObject> result = _ctx.executeQuery(sql);
+		Assert.assertEquals(1, count(result));
+	}
+
 	
 	static int count(Iterator<?> iterator) {
 		int n = 0;
@@ -96,9 +102,6 @@ public class TestQuery {
 	}
 	static int count(KVStore store, String type) {
 		Key key = Key.createKey(type);
-//		Iterator<Key> keys =  _store.multiGetKeys(key, null, Depth.DESCENDANTS_ONLY).iterator();
-//		Iterator<Key> keys =  _store.multiGetKeysIterator(Direction.FORWARD, 0, key, 
-//				null, Depth.DESCENDANTS_ONLY);
 		Iterator<Key> keys = _ctx.getExtent(key);
 		int n = count(keys);
 		return n;

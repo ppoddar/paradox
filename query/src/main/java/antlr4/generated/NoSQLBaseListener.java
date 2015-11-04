@@ -271,6 +271,18 @@ public class NoSQLBaseListener implements NoSQLListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterNotequals(NoSQLParser.NotequalsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitNotequals(NoSQLParser.NotequalsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterEqualsIgnoreCase(NoSQLParser.EqualsIgnoreCaseContext ctx) { }
 	/**
 	 * {@inheritDoc}

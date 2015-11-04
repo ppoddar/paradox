@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.Parser;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.Token;
@@ -48,6 +49,7 @@ import antlr4.generated.NoSQLParser.LimitClauseContext;
 import antlr4.generated.NoSQLParser.MaxContext;
 import antlr4.generated.NoSQLParser.MinContext;
 import antlr4.generated.NoSQLParser.NotContext;
+import antlr4.generated.NoSQLParser.NotequalsContext;
 import antlr4.generated.NoSQLParser.OrContext;
 import antlr4.generated.NoSQLParser.OrderByClauseContext;
 import antlr4.generated.NoSQLParser.OrderByTermContext;
@@ -154,6 +156,18 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	public void exitWhereClause(WhereClauseContext ctx) {
 		_select.setPredicate(pop(Expression.Predicate.class));
 	}
+//	@Override 
+//	public void enterEveryRule(ParserRuleContext ctx) {
+//		for (int i = 0; i < ctx.depth(); i++) System.err.print("-");
+//		System.err.println("enter  " + ctx.getClass().getSimpleName());
+//		super.enterEveryRule(ctx);
+//	}
+//	@Override 
+//	public void exitEveryRule(ParserRuleContext ctx) {
+//		for (int i = 0; i < ctx.depth(); i++) System.err.print("-");
+//		System.err.println("exit   " + ctx.getClass().getSimpleName());
+//		super.exitEveryRule(ctx);
+//	}
 
 	
 	public void exitIsNotNull(IsNotNullContext ctx) {
@@ -225,35 +239,33 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 		push(_factory.newConstant(ctx.getText()));
 	}
 	
-
-	
 	public void exitEquals(EqualsContext ctx) {
 		Expression.Value<?> rhs   = pop(Expression.Value.class);
 		Expression.Path<?> lhs    = pop(Expression.Path.class);
 		push(_factory.newEqual(lhs, rhs));
 	}
-
 	
+	@Override
+	public void exitNotequals(NotequalsContext ctx) {
+		Expression.Value<?> rhs   = pop(Expression.Value.class);
+		Expression.Path<?> lhs    = pop(Expression.Path.class);
+		push(_factory.newNotEqual(lhs, rhs));
+	}
+
 	public void exitEqualsIgnoreCase(EqualsIgnoreCaseContext ctx) {
 		Expression.Value<?> rhs   = pop(Expression.Value.class);
 		Expression.Path<?> lhs    = pop(Expression.Path.class);
 		push(_factory.newEqualIgnoreCase(lhs, rhs));
 	}
-
-	
 	public void exitOr(OrContext ctx) {
 		Expression.Predicate rhs = pop(Expression.Predicate.class);
 		Expression.Predicate lhs = pop(Expression.Predicate.class);
 		push(_factory.newOr(lhs, rhs));
 	}
-
-
 	
 	public void exitOrderByClause(OrderByClauseContext ctx) {
 		assertEmptyStack();
 	}
-
-
 	
 	public void exitBindParam(BindParamContext ctx) {
 		push(_factory.newBindParameter(ctx.getText()));
@@ -421,7 +433,7 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 			return cls.cast(_stack.pop());
 		} else {
 			String message = _stack.peek() + " is not instance of " + cls;
-			printStack();
+			printStack("failed at pop " + cls.getName());
 			throw new IllegalStateException(message);
 		}
 	}
@@ -432,12 +444,13 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	void assertEmptyStack() {
 		if (!_stack.isEmpty()) {
 			int size = _stack.size();
-			printStack();
+			printStack("failed assertEmptyStack()");
 			throw new IllegalStateException("Stack should have been empty but has " + size + " elements");
 		}
 	}
 	
-	void printStack() {
+	void printStack(String header) {
+		System.err.println(header);
 		while (!_stack.isEmpty()) {
 			System.err.println(_stack.pop());
 		}

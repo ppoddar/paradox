@@ -70,6 +70,11 @@ public class QueryExpressionFactory implements ExpressionFactory {
 	}
 	
 	@Override
+	public Predicate newNotEqual(Path<?>  lhs, Value<?> rhs) {
+		return new Expressions.NotEquals(lhs, rhs);
+	}
+	
+	@Override
 	public Predicate newEqualIgnoreCase(Path<?>  lhs, Value<?> rhs) {
 		return new Expressions.Equals(lhs, rhs, true);
 	}

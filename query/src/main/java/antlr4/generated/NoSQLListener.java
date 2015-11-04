@@ -221,6 +221,16 @@ public interface NoSQLListener extends ParseTreeListener {
 	 */
 	void exitEquals(NoSQLParser.EqualsContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link NoSQLParser#notequals}.
+	 * @param ctx the parse tree
+	 */
+	void enterNotequals(NoSQLParser.NotequalsContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link NoSQLParser#notequals}.
+	 * @param ctx the parse tree
+	 */
+	void exitNotequals(NoSQLParser.NotequalsContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link NoSQLParser#equalsIgnoreCase}.
 	 * @param ctx the parse tree
 	 */

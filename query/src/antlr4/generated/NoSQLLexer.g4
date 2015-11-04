@@ -20,7 +20,7 @@ LPAREN : '(';        // operator left parenthesis
 RPAREN : ')';        // operator right parenthesis
 
 EQUALS       : '=';
-NOT_EQUALS : '<>';
+NOT_EQUALS : '!=';
 EQUALS_IGNORECASE: '~=';
 GREATER      : '>';
 GREATER_OR_EQUAL : '>=';
