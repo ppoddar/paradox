@@ -20,6 +20,7 @@ LPAREN : '(';        // operator left parenthesis
 RPAREN : ')';        // operator right parenthesis
 
 EQUALS       : '=';
+NOT_EQUALS : '<>';
 EQUALS_IGNORECASE: '~=';
 GREATER      : '>';
 GREATER_OR_EQUAL : '>=';
@@ -78,6 +79,8 @@ fragment W: 'w'|'W';
 fragment X: 'x'|'X';
 fragment Y: 'y'|'Y';
 fragment Z: 'z'|'Z';
+
+IDENTIFIER : [a-zA-Z]+;
 
 // Ignore Whitespace in common mode but not inside String Literals
 WS : (' '|'\t'|'\r'|'\n')+ -> skip ; 

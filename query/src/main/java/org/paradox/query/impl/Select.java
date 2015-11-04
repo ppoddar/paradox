@@ -21,11 +21,9 @@ public class Select {
 	private final String              _sql;
 	private Expression.Candidate<?>   _root;
 	private Expression.Predicate      _where;
-	private boolean                   _hasCandidate;
-	private List<Expression.Path<?>>  _paths;
-	private Expression.Path<?>        _groupByTerm;
-	private List<Expression.Aggregate<?>> _aggregates;
-	private List<Expression.Path<?>>      _orderByTerms;
+	private List<Expression.Path<?>>  _projections;
+	private List<Expression.Path<?>>  _groupByTerms;
+	private List<Expression.Path<?>>  _orderByTerms;
 	private Integer             _limit;
 	private Integer             _skip;
 	
@@ -47,7 +45,7 @@ public class Select {
 		return _sql;
 	}
 	
-	void setRoot(Expression.Candidate<?> root) {
+	void setCandidate(Expression.Candidate<?> root) {
 		_root = root;
 	}
 	
@@ -70,19 +68,11 @@ public class Select {
 		return _limit;
 	}
 	
-	public boolean hasLimit() {
-		return _limit != null;
-	}
-	
 	void setSkip(Integer skip) {
 		_skip = skip;
 	}
 	public int getSkip() {
 		return _skip;
-	}
-	
-	public boolean hasSkip() {
-		return _skip != null;
 	}
 	
 	void addOrderByTerm(Expression.Path<?> path) {
@@ -96,92 +86,49 @@ public class Select {
 		if (_orderByTerms == null) return Collections.emptyIterator();
 		return  _orderByTerms.iterator();
 	}
-	
-	
-	/**
-	 * Sets that this project will be using the candidate type only.
-	 * Field path or aggregate can not be added.
-	 * 
-	 */
-	public void setCandidateTerm() {
-		if (_paths != null || _aggregates != null) {
-			throw new IllegalStateException("Can not set candidate as either field path or aggregate is already used");
-		}
-		_hasCandidate = true;
+	public Iterator<Expression.Path<?>> getGroupByTerms() {
+		if (_orderByTerms == null) return Collections.emptyIterator();
+		return  _groupByTerms.iterator();
 	}
 	
-	void addFieldTerm(Expression.Path<?> term) {
-		if (_hasCandidate || _aggregates != null) {
-			throw new IllegalStateException("Can not add field path " + term + " as either candidate or aggregate is already used");
+	
+	void addProjectionTerm(Expression.Path<?> term) {
+		if (_projections == null) {
+			_projections = new ArrayList<Expression.Path<?>>();
 		}
-		if (_paths == null) {
-			_paths = new ArrayList<Expression.Path<?>>();
-		}
-		_paths.add(term);
+		_projections.add(term);
 	}
 	
-	void addAggregateTerm(Expression.Aggregate<?> aggregate) {
-		if (_hasCandidate || _paths != null) {
-			throw new IllegalStateException("Can not add aggregate " + aggregate + " as either candidate or field path is already used");
-		}
-		if (_aggregates == null) {
-			_aggregates = new ArrayList<Expression.Aggregate<?>>();
-		}
-		_aggregates.add(aggregate);
-	}
 	
 	void addGroupByTerm(Expression.Path<?> term) {
-		_groupByTerm = term;
+		if (_groupByTerms == null) {
+			_groupByTerms = new ArrayList<Expression.Path<?>>();
+		}
+		_groupByTerms.add(term);
 	}
 	
 	/**
 	 * Gets the aggregate expressions.
 	 * @return empty iterator if this projection does not have any aggregate term
 	 */
-	public Iterator<Expression.Path<?>> getFieldTerms() {
-		if (_paths == null) return Collections.emptyIterator();
-		return  _paths.iterator();
+	public Iterator<Expression.Path<?>> getProjectionTerms() {
+		if (_projections == null) return Collections.emptyIterator();
+		return  _projections.iterator();
 	}
 	
-	/**
-	 * Gets the path expressions.
-	 * @return empty iterator if this projection does not any have path expression
-	 */
-	public Iterator<Expression.Aggregate<?>> getAggregateTerms() {
-		if (_aggregates == null) return Collections.emptyIterator();
-		return  _aggregates.iterator();
-	}
-	
-	public Expression.Path<?> getGroupByTerm() {
-		return _groupByTerm;
-	}
-	
-	/**
-	 * Affirms if the projection is using aggregates.
-	 */
-	public boolean hasAggregates() {
-		return _aggregates != null;
-	}
-	
-	/**
-	 * Affirms if the projection is using field paths.
-	 */
-	public boolean hasPaths() {
-		return _paths != null;
-	}
-	
-	/**
-	 * Affirms if the projection is using candidate term i.e. {@code select * from .....}.
-	 */
-	public boolean hasCandidateTerm() {
-		return _hasCandidate;
-	}
 	
 	public boolean hasOrdering() {
-		return _orderByTerms != null;
+		return _orderByTerms != null && !_orderByTerms.isEmpty();
 	}
-	
 	public boolean hasGrouping() {
-		return _groupByTerm != null;
+		return _groupByTerms != null && !_groupByTerms.isEmpty();
+	}
+	public boolean hasAggregateTerms() {
+		if (_projections == null) return false;
+		for (Expression.Path<?> path : _projections) {
+			if (path instanceof Expression.AggregatePath)
+				return true;
+		}
+		return false;
 	}
 }

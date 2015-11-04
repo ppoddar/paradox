@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" output="query/target/test-classes" path="schema/src/main/java"/>
+	<classpathentry kind="src" path="query/src/test/java"/>
 	<classpathentry kind="src" output="query/target/classes" path="query/src/main/java"/>
 	<classpathentry kind="src" output="util/target/classes" path="util/src/main/java"/>
 	<classpathentry kind="src" output="nosql/target/classes" path="nosql/src/main/java"/>
@@ -26,5 +27,5 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ORACLE-NOSQL"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ANTLR4"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ORACLE_NOSQL"/>
-	<classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="output" path="query/target/test-classes"/>
 </classpath>

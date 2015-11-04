@@ -1,8 +1,7 @@
 // Generated from NoSQL.g4 by ANTLR 4.5
 
-package antlr4.generated;
+	package antlr4.generated;
 
-import org.antlr.v4.runtime.misc.NotNull;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**

@@ -70,4 +70,9 @@ public class DefaultKeyMaker implements KeyMaker<Key> {
 		return false;
 	}
 
+	@Override
+	public Key makeTypeKey(String typeName) {
+		return Key.createKey(typeName);
+	}
+
 }

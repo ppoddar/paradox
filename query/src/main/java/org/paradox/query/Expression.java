@@ -119,9 +119,10 @@ public interface Expression<V> {
 	}
 	
 	/**
-	 * Designates a candidate type.
+	 * Designates a candidate type. A candidate is a special path 
+	 * often is root.
 	 */
-	interface Candidate<V> extends Value<V> {
+	interface Candidate<V> extends Path<V> {
 		/**
 		 * Gets the name of this candidate type.
 		 */
@@ -139,7 +140,7 @@ public interface Expression<V> {
 	 * For example, in a {@code Equals} expression as in {@code person.address.city = 'San Francisco'}, 
 	 * the path expression represents {@code person.address.city} as a chain of three segments.
 	 */
-	interface Path<V> extends Value<V> {
+	interface Path<V> extends Value<V>, Aliased {
 		/**
 		 * Gets the name of this path segment
 		 */
@@ -151,7 +152,12 @@ public interface Expression<V> {
 		 * @return a new path
 		 */
 		Path<?> newPath(String segment);
+		
+	}
 
+	
+	
+	interface OrderablePath<V> extends Path<V> {
 		/**
 		 * Sets this path values to be sorted in descending order when the path appears
 		 * in an {@code ORDER BY} clause.
@@ -168,7 +174,7 @@ public interface Expression<V> {
 	
 	/**
 	 * Literal constants as a query expression.
-	 * Occurs in right hand term of an expressin.
+	 * Occurs in right hand term of an expression.
 	 */
 	interface Constant<V> extends Value<V> {
 		V getValue();
@@ -187,52 +193,34 @@ public interface Expression<V> {
 	interface IntegerValue extends Constant<Integer> {}
 
 	/**
-	 * A operator that evaluates on an aggregation instead of an instance.
+	 * A path evaluated on a collection instead of an instance.
+	 * Combines a path with an aggregate {@link Operator operator}
 	 */
-	interface Aggregate<V> extends Operator<V> {
+	interface AggregatePath<V> extends Path<V> {
 		
-		/**
-		 * Gets the alias of this aggregate expression.
-		 *  
-		 * @return If an alias is not set explicitly a concatenation of 
-		 * the operation and argument path name
-		 */
-		String getAlias();
-		
-		/**
-		 * Sets alias to this expression.
-		 * @param alias can be null. A null alias denotes the path to be non-aliased.
-		 * @return this expression itself
-		 */
-		Aggregate<V> setAlias(String alias);
-		
-		/**
-		 * Affirms if this expression has been aliased.
-		 */
-		boolean isAliased();
 	}
 	
 	/** Evaluates to the count of selected candidates 
 	 **/
-	interface Count extends Aggregate<Integer>{}
+	interface Count extends AggregatePath<Integer>{}
 	
 	/** Evaluates to the sum of evaluated values of its argument 
 	 *  path across all selected candidates 
 	 **/
-	interface Sum extends Aggregate<Number>{}
+	interface Sum extends AggregatePath<Number>{}
 	
 	/** Evaluates to the minimum of evaluated values of its argument 
 	 *  across all selected candidates 
 	 **/
-	interface Min extends Aggregate<Number>{}
+	interface Min extends AggregatePath<Number>{}
 	
 	/** Evaluates to the maximum of evaluated values of its argument 
 	 *  across all selected candidates 
 	 **/
-	interface Max extends Aggregate<Number>{}
+	interface Max extends AggregatePath<Number>{}
 	
 	/** Evaluates to the average of evaluated values of its argument 
 	 *  across all selected candidates 
 	 **/
-	interface Avg extends Aggregate<Number>{}
+	interface Avg extends AggregatePath<Number>{}
 }

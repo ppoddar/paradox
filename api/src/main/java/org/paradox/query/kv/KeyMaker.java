@@ -31,6 +31,8 @@ public interface KeyMaker<K> {
 	 */
 	K makeTypeKey(UserType type);
 	
+	K makeTypeKey(String typeName);
+	
 	/**
 	 * Affirms if the key for the given user-defined type is a complete major path.
 	 * This is likely to return {@code false} except cases where all records of a

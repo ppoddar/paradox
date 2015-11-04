@@ -1,7 +1,6 @@
 package org.paradox.nosql.query;
 
 import java.util.Iterator;
-import java.util.concurrent.TimeUnit;
 
 import org.paradox.query.Index;
 import org.paradox.query.QueryContext;
@@ -9,10 +8,7 @@ import org.paradox.schema.UserType;
 import org.paradox.util.Transformer;
 import org.paradox.util.TransforminIterator;
 
-import oracle.kv.Depth;
-import oracle.kv.Direction;
 import oracle.kv.Key;
-import oracle.kv.KeyValueVersion;
 import oracle.kv.Value;
 
 /**
@@ -25,36 +21,27 @@ public class FullScanIndex implements Index<Value> {
 	private final Key _parentKey;
 	
 	/**
-	 * Supply the key whose descendants are the entire extent of a {@link UserType user-defined type}.
-	 * @param key a key with partial major path as it represents an extent of a type
+	 * Supply the key whose descendants are the entire extent of a 
+	 * {@link UserType user-defined type}.
+	 * @param key a key with partial major path as it represents an 
+	 * extent of a type. Must not be null.
 	 */
 	public FullScanIndex(Key key) {
+		if (key == null)
+			throw new IllegalArgumentException("FullScanIndex must have non-null key");
 		_parentKey = key;
 	}
 	
 	@Override
 	public Iterator<Value> fetch(QueryContext<?,?,?> ctx) {
-		Transformer<KeyValueVersion, Value> transformer = new Transformer<KeyValueVersion, Value>(){
-			public Value transform(KeyValueVersion kvv) {
-				return kvv.getValue();
+		final DefaultQueryContext kvctx = (DefaultQueryContext)ctx;
+		Transformer<Key, Value> transformer = new Transformer<Key, Value>(){
+			public Value transform(Key k) {
+				return kvctx.getStore().get(k).getValue();
 			}
 		};
-		
-		
-		DefaultQueryContext kvctx = (DefaultQueryContext)ctx;
-		
-		// Note: storeIterator is used instead of multiGetIterator
-		// as the parent key has partial major path
-		Iterator<KeyValueVersion> base = kvctx.getStore().storeIterator(
-				Direction.UNORDERED, // currently only supports unordered fetch
-				0,                   // the store will decide
-				_parentKey, 
-				null, // key range
-				Depth.DESCENDANTS_ONLY,
-				kvctx.getConsistency(),
-				ctx.getQueryTimeout(),
-				TimeUnit.MILLISECONDS);
-		return new TransforminIterator<KeyValueVersion, Value>(base, transformer);
+		return 
+		new TransforminIterator<Key,Value>(kvctx.getExtent(_parentKey), transformer);
 	}
 
 }

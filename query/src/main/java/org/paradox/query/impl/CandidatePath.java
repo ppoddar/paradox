@@ -1,7 +1,6 @@
 package org.paradox.query.impl;
 
 import org.paradox.query.Expression;
-import org.paradox.query.exp.ExpressionVisitor;
 import org.paradox.query.kv.KVQueryContext;
 
 
@@ -11,16 +10,9 @@ import org.paradox.query.kv.KVQueryContext;
  * 
  * @param <V> the type 
  */
-public class CandidatePath<V> implements Expression.Candidate<V> {
-	private final String _typeName;
-	
+public class CandidatePath<V> extends AbstractPath<V> implements Expression.Candidate<V> {	
 	public CandidatePath(String type) {
-		_typeName = type;
-	}
-	
-	@Override
-	public void accept(ExpressionVisitor visitor) {
-		visitor.visit(this);
+		super(type);
 	}
 
 	/**
@@ -30,11 +22,6 @@ public class CandidatePath<V> implements Expression.Candidate<V> {
 	@Override
 	public V evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 		return (V)candidate;
-	}
-
-	@Override
-	public String getName() {
-		return _typeName;
 	}
 
 }

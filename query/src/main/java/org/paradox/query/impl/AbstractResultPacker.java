@@ -49,13 +49,11 @@ public abstract class AbstractResultPacker<T> implements ResultPacker<T> {
 	@Override
 	public void pack(T c) {
 		Set<T> group = decideGroup(c);
-		if (_select.hasCandidateTerm() || _select.hasAggregates()) {
-			group.add(c);
-		} else {
-			Iterator<Expression.Path<?>> terms = _select.getFieldTerms();
+			Iterator<Expression.Path<?>> terms = _select.getProjectionTerms();
 			T single = newResult();
 			while (terms.hasNext()) {
 				Expression.Path<?> term = terms.next();
+				if (!(term instanceof Expression.AggregatePath)) continue;
 				Object val = term.evaluate(c, _ctx);
 				try {
 					
@@ -65,7 +63,7 @@ public abstract class AbstractResultPacker<T> implements ResultPacker<T> {
 				}
 			}
 			group.add(single);
-		}
+		
 	}
 	
 	@Override
@@ -82,7 +80,7 @@ public abstract class AbstractResultPacker<T> implements ResultPacker<T> {
 	}
 	
 	Iterator<T> createIterator(Set<T> candidateGroup) {
-		if (_select.hasAggregates()) {
+		if (_select.hasAggregateTerms()) {
 			return Collections.singletonList(computeAggregate(candidateGroup)).iterator();
 		} else {
 			return candidateGroup.iterator();
@@ -90,10 +88,17 @@ public abstract class AbstractResultPacker<T> implements ResultPacker<T> {
 	}
 	
 	private Set<T> decideGroup(Object c) {
-		Object groupKey = _select.hasGrouping() ? _select.getGroupByTerm().evaluate(c, _ctx) : DUMMY_GROUP; 
+		Object groupKey = DUMMY_GROUP;
+		if (_select.getGroupByTerms().hasNext()) {
+			 _select.getGroupByTerms().next().evaluate(c, _ctx);
+		}
 		Set<T> group = selected.get(groupKey);
 		if (group == null) {
-			group = _select.hasOrdering() ? new TreeSet<T>(_orderByComparator) : new HashSet<T>();
+			if (_select.getOrderByTerms().hasNext()) {
+			   group = new TreeSet<T>(_orderByComparator);
+			} else {
+				group = new HashSet<T>();
+			}
 			selected.put(groupKey, group);
 		}
 		return group;
@@ -101,9 +106,11 @@ public abstract class AbstractResultPacker<T> implements ResultPacker<T> {
 	
 	private T computeAggregate(Set<T> candidateSet) {
 		T single = newResult();
-		Iterator<Expression.Aggregate<?>> terms = _select.getAggregateTerms();
+		Iterator<Expression.Path<?>> terms = _select.getProjectionTerms();
 		while (terms.hasNext()) {
-			Expression.Aggregate<?> term = terms.next();
+			Expression.Path<?> term = terms.next();
+			if (!(term instanceof Expression.AggregatePath)) continue;
+			
 			Object val = term.evaluate(candidateSet, _ctx);
 			try {
 				put(single, term.getAlias(), val);

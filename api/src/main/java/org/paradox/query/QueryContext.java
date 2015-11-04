@@ -74,5 +74,12 @@ public interface QueryContext<K,V,U> {
 	   */
 	  long getQueryTimeout();
 	  void setQueryTimeout(long timeout);
+	  
+	  /**
+	   * Gets an iterator on the given key extent.
+	   * @param k
+	   * @return
+	   */
+	  Iterator<K> getExtent(K k);
 
 }

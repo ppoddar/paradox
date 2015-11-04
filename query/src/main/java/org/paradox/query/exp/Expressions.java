@@ -210,35 +210,52 @@ public class Expressions {
 	 *
 	 * @param <V>
 	 */
-	public static abstract class AggregateExpression<V> extends OperatorExpression<V> implements Expression.Aggregate<V> {
+	public static abstract class AggregateExpression<V>  implements Expression.Path<V> {
 		private final String _operator;
-		private String       _alias;
+		private final Expression.Path<?> _path;
 		
 		AggregateExpression(String operator, Expression.Path<?> path) {
-			super(path);
+			_path = path;
 			_operator = operator;
 		}
-		
-		@Override
-		public AggregateExpression<V> setAlias(String alias) {
-			_alias = alias;
-			return this;
+		protected final Expression.Path<?> getPath() {
+			return _path;
 		}
-		
-		@Override
-		public String getAlias() {
-			if (isAliased()) return _alias;
-			return _operator + '_' + getArgument(0).toString().replace('.', '_');
-		}
-		
-		@Override
-		public boolean isAliased() {
-			return _alias != null;
-		}
-		
 		protected Collection<?> assertCollection(Object candidate) {
 			if (candidate instanceof Collection) return Collection.class.cast(candidate);
 			throw new IllegalArgumentException(this + " must have a collection as candidate for evaluation");
+		}
+		public boolean isAliased() {
+			return _path.isAliased();
+		}
+
+		@Override
+		public String getName() {
+			return _path.getName();
+		}
+
+		@Override
+		public org.paradox.query.Expression.Path<?> newPath(String segment) {
+			return _path.newPath(segment);
+		}
+
+		@Override
+		public String getAlias() {
+			return _path.getAlias();
+		}
+
+		@Override
+		public void setAlias(String alias) {
+			_path.setAlias(alias);
+		}
+		
+		@Override
+		public final void accept(ExpressionVisitor visitor) {
+			visitor.visit(this);
+		}
+
+		public String toStoring() {
+			return _operator + '(' + _path + ')';
 		}
 	}
 	
@@ -251,7 +268,6 @@ public class Expressions {
 		public Integer evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			return assertCollection(candidate).size();
 		}
-		
 	}
 	
 	public static class Sum extends AggregateExpression<Number>  implements Expression.Sum {
@@ -263,7 +279,7 @@ public class Expressions {
 			Collection<?> coll = assertCollection(candidate);
 			double sum = 0.0;
 			for (Object obj : coll) {
-				sum += ((Number)getArgument(0).evaluate(obj, ctx)).doubleValue();
+				sum += ((Number)getPath().evaluate(obj, ctx)).doubleValue();
 			}
 			return sum;
 		}
@@ -279,7 +295,7 @@ public class Expressions {
 			if (coll.isEmpty()) return 0.0;
 			double sum = 0.0;
 			for (Object obj : coll) {
-				sum += ((Number)getArgument(0).evaluate(obj, ctx)).doubleValue();
+				sum += ((Number)getPath().evaluate(obj, ctx)).doubleValue();
 			}
 			return sum/coll.size();
 		}
@@ -295,11 +311,10 @@ public class Expressions {
 			if (coll.isEmpty()) return 0.0;
 			double min = Double.MAX_VALUE;
 			for (Object obj : coll) {
-				min = Math.min(min, ((Number)getArgument(0).evaluate(obj, ctx)).doubleValue());
+				min = Math.min(min, ((Number)getPath().evaluate(obj, ctx)).doubleValue());
 			}
 			return min;
 		}
-		
 	}
 	public static class Max extends AggregateExpression<Number> implements Expression.Max{
 		
@@ -312,7 +327,7 @@ public class Expressions {
 			if (coll.isEmpty()) return 0.0;
 			double max = Double.MIN_VALUE;
 			for (Object obj : coll) {
-				max = Math.max(max, ((Number)getArgument(0).evaluate(obj, ctx)).doubleValue());
+				max = Math.max(max, ((Number)getPath().evaluate(obj, ctx)).doubleValue());
 			}
 			return max;
 		}
@@ -322,7 +337,6 @@ public class Expressions {
 	/**
 	 * A bind parameter in a query works differently than other expressions.
 	 * A parameter expression is evaluated to a value that is set 
-	 * @author pipoddar
 	 *
 	 * @param <V>
 	 */

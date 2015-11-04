@@ -2,53 +2,51 @@ package com.paradox.query.impl;
 
 import java.util.Iterator;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.paradox.query.Expression;
 import org.paradox.query.ExpressionFactory;
 import org.paradox.query.impl.QueryExpressionFactory;
 import org.paradox.query.impl.Select;
 import org.paradox.query.impl.SelectBuilder;
-import org.paradox.schema.Schema;
 
 public class TestSelectParse {
 
 	@Test
 	public void testOriginalSQLIsRetained() throws Exception {
-		Schema schema = null;
-		ExpressionFactory factory = new QueryExpressionFactory();
 		String sql = "select name from Person";
-		Select select = new SelectBuilder(schema, factory).parse(sql);
+		Select select = parseSelect(sql);
 		Assert.assertEquals(sql, select.getSQL());
 	}
+	
 	@Test
 	public void testKeywordsAreCaseInsensitive() throws Exception {
-		Schema schema = null;
-		ExpressionFactory factory = new QueryExpressionFactory();
-		String sql = "select name FroM Person";
-		Select select = new SelectBuilder(schema, factory).parse(sql);
+		String sql = "selEct name FroM Person";
+		Select select = parseSelect(sql);
 		Assert.assertEquals(sql, select.getSQL());
 	}
 	
 	@Test
 	public void testCandidate() throws Exception {
-		Schema schema = null;
-		ExpressionFactory factory = new QueryExpressionFactory();
 		String sql = "select name from Person";
-		Select select = new SelectBuilder(schema, factory).parse(sql);
+		Select select = parseSelect(sql);
 		String extent = select.getCandidate().getName();
 		Assert.assertEquals("Person", extent);
+	}
+	@Test
+	public void testCandidateAlias() throws Exception {
+		String sql = "select name from Person p";
+		Select select = parseSelect(sql);
+		Expression.Candidate<?> candidate = select.getCandidate();
+		Assert.assertEquals("Person", candidate.getName());
+		Assert.assertEquals("p", candidate.getAlias());
 	}
 	
 	@Test
 	public void testSingleProjection() throws Exception {
-		Schema schema = null;
-		ExpressionFactory factory = new QueryExpressionFactory();
 		String sql = "select name from Person";
-		Select select = new SelectBuilder(schema, factory).parse(sql);
-		Iterator<Expression.Path<?>> terms = select.getFieldTerms();
+		Select select = parseSelect(sql);
+		Iterator<Expression.Path<?>> terms = select.getProjectionTerms();
 		
 		Assert.assertTrue(terms.hasNext());
 		Expression.Path<?> term = terms.next();
@@ -57,11 +55,9 @@ public class TestSelectParse {
 	
 	@Test
 	public void testIterationOrderIsPreservedForMultipleProjection() throws Exception {
-		Schema schema = null;
-		ExpressionFactory factory = new QueryExpressionFactory();
 		String sql = "select name,email from Person";
-		Select select = new SelectBuilder(schema, factory).parse(sql);
-		Iterator<Expression.Path<?>> terms = select.getFieldTerms();
+		Select select = parseSelect(sql);
+		Iterator<Expression.Path<?>> terms = select.getProjectionTerms();
 		
 		Assert.assertTrue(terms.hasNext());
 		Expression.Path<?> term1 = terms.next();
@@ -73,4 +69,20 @@ public class TestSelectParse {
 		Assert.assertFalse(terms.hasNext());
 	}
 
+	@Test
+	public void testMultiSegmentProjection() throws Exception {
+		String sql = "select user.email from Person";
+		Select select = parseSelect(sql);
+		Iterator<Expression.Path<?>> terms = select.getProjectionTerms();
+		Assert.assertTrue(terms.hasNext());
+		Expression.Path<?> term = terms.next();
+		Assert.assertFalse(terms.hasNext());
+		Assert.assertEquals("user.email", term.getName());
+	}
+	
+	Select parseSelect(String sql) throws Exception {
+		ExpressionFactory factory = new QueryExpressionFactory();
+		Select select = new SelectBuilder(factory).parse(sql);
+		return select;
+	}
 }

@@ -3,6 +3,7 @@ package org.paradox.nosql.query;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 import org.paradox.query.Expression;
@@ -19,10 +20,15 @@ import org.paradox.query.kv.ValueTransformer;
 import org.paradox.schema.Schema;
 import org.paradox.schema.UserType;
 import org.paradox.util.NVPair;
+import org.paradox.util.Transformer;
+import org.paradox.util.TransforminIterator;
 
 import oracle.kv.Consistency;
+import oracle.kv.Depth;
+import oracle.kv.Direction;
 import oracle.kv.KVStore;
 import oracle.kv.Key;
+import oracle.kv.KeyValueVersion;
 import oracle.kv.Value;
 
 /**
@@ -108,7 +114,7 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 	}
 	@Override
 	public Iterator<JSONObject> executeQuery(String query, Map<String, Object> bindParams) throws Exception {
-		Select select = new SelectBuilder(getSchema(), getExpressionFactory()).parse(query);
+		Select select = new SelectBuilder(getExpressionFactory()).parse(query);
 		ResultPacker<JSONObject> packer = newResultPacker(select);
 		bindParams(select, bindParams);
 		Index<Value> index = selectIndex(select);
@@ -167,8 +173,10 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 	 * @return an Index to retrieve the candidate extent
 	 */
 	protected Index<Value> selectIndex(Select select) {
+		String candidateTypeName = select.getCandidate().getName();
 		if (getSchema() == null) {
-			return new FullScanIndex(null);
+			Key key   = (Key) getKeyMaker().makeTypeKey(candidateTypeName);
+			return new FullScanIndex(key);
 		}
 		UserType type = getSchema().getUserType(select.getCandidate().getName());
 		if (type == null) 
@@ -195,5 +203,26 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 		return packer;
 	}
 
-
+	@Override
+	public Iterator<Key> getExtent(Key key) {
+		Transformer<KeyValueVersion, Key> transformer = 
+				new Transformer<KeyValueVersion, Key>(){
+			public Key transform(KeyValueVersion kvv) {
+				return kvv.getKey();
+			}
+		};
+		System.err.println("getExtent of " + key);
+		// Note: storeIterator is used instead of multiGetIterator
+		// as the parent key has partial major path
+		Iterator<KeyValueVersion> base = getStore().storeIterator(
+				Direction.UNORDERED, // currently only supports unordered fetch
+				0,                   // the store will decide timeout
+				key, 
+				null, // key range
+				Depth.DESCENDANTS_ONLY,
+				getConsistency(),
+				getQueryTimeout(),
+				TimeUnit.MILLISECONDS);
+		return new TransforminIterator<KeyValueVersion, Key>(base, transformer);
+	}
 }
