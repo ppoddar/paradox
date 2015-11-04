@@ -203,26 +203,31 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 		return packer;
 	}
 
+	/**
+	 * Gets the extent of the given key.
+	 * 
+	 * @param key must be a complete major key
+	 */
 	@Override
 	public Iterator<Key> getExtent(Key key) {
-		Transformer<KeyValueVersion, Key> transformer = 
-				new Transformer<KeyValueVersion, Key>(){
-			public Key transform(KeyValueVersion kvv) {
-				return kvv.getKey();
-			}
-		};
-		System.err.println("getExtent of " + key);
-		// Note: storeIterator is used instead of multiGetIterator
+	//	This method only allows fetching key/value pairs that are 
+	// descendants of a parentKey that has a complete major path. 
+	// Note: storeIterator is used instead of multiGetIterator
 		// as the parent key has partial major path
-		Iterator<KeyValueVersion> base = getStore().storeIterator(
-				Direction.UNORDERED, // currently only supports unordered fetch
-				0,                   // the store will decide timeout
-				key, 
-				null, // key range
-				Depth.DESCENDANTS_ONLY,
-				getConsistency(),
-				getQueryTimeout(),
-				TimeUnit.MILLISECONDS);
-		return new TransforminIterator<KeyValueVersion, Key>(base, transformer);
+		return 
+		_store.multiGetKeysIterator(Direction.FORWARD, 0, key, 
+				null, Depth.DESCENDANTS_ONLY);
+		
+		
+//		Iterator<KeyValueVersion> base = getStore().storeIterator(
+//				Direction.UNORDERED, // currently only supports unordered fetch
+//				0,                   // the store will decide timeout
+//				key, 
+//				null, // key range
+//				Depth.DESCENDANTS_ONLY,
+//				getConsistency(),
+//				getQueryTimeout(),
+//				TimeUnit.MILLISECONDS);
+//		return new TransforminIterator<KeyValueVersion, Key>(base, transformer);
 	}
 }

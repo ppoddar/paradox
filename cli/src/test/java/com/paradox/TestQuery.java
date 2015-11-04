@@ -2,6 +2,8 @@ package com.paradox;
 
 import java.util.Iterator;
 
+import oracle.kv.Depth;
+import oracle.kv.Direction;
 import oracle.kv.KVStore;
 import oracle.kv.KVStoreConfig;
 import oracle.kv.KVStoreFactory;
@@ -31,7 +33,6 @@ public class TestQuery {
 	public static void init() throws Exception {
 		String storeName = System.getProperty("store", "kvstore");
 		String hostPort   = System.getProperty("hostPort", "localhost:5000");
-		System.err.println("Connecting to " + storeName + " at " + hostPort);
 		KVStoreConfig config = new KVStoreConfig(storeName, hostPort);
 		
 		_store = KVStoreFactory.getStore(config);
@@ -52,35 +53,35 @@ public class TestQuery {
 	
 	@Test
 	public void testExists() throws Exception {
-		String sql = "select * from Person p where exists p.address";
+		String sql = "select * from Person p where exists address";
 		Iterator<JSONObject> result = _ctx.executeQuery(sql);
 		Assert.assertEquals(_dataSize/2, count(result));
 	}
 	
 	@Test
 	public void testLessThan() throws Exception {
-		String sql = "select * from Person p where p.age < 42";
+		String sql = "select * from Person where age < 42";
 		Iterator<JSONObject> result = _ctx.executeQuery(sql);
 		Assert.assertEquals(0, count(result));
 	}
 	
 	@Test
 	public void testGreaterThan() throws Exception {
-		String sql = "select * from Person p where p.age > 42";
+		String sql = "select * from Person p where age > 42";
 		Iterator<JSONObject> result = _ctx.executeQuery(sql);
 		Assert.assertEquals(_dataSize-1, count(result));
 	}
 	
 	@Test
 	public void testEquals() throws Exception {
-		String sql = "select * from Person p where p.age = 46";
+		String sql = "select * from Person where age = 46";
 		Iterator<JSONObject> result = _ctx.executeQuery(sql);
 		Assert.assertEquals(1, count(result));
 	}
 	
-	@Test
+//	@Test
 	public void testNotEquals() throws Exception {
-		String sql = "select * from Person p where p.age != 46";
+		String sql = "select * from Person where age != 46";
 		Iterator<JSONObject> result = _ctx.executeQuery(sql);
 		Assert.assertEquals(_dataSize-1, count(result));
 	}
@@ -95,11 +96,14 @@ public class TestQuery {
 	}
 	static int count(KVStore store, String type) {
 		Key key = Key.createKey(type);
+//		Iterator<Key> keys =  _store.multiGetKeys(key, null, Depth.DESCENDANTS_ONLY).iterator();
+//		Iterator<Key> keys =  _store.multiGetKeysIterator(Direction.FORWARD, 0, key, 
+//				null, Depth.DESCENDANTS_ONLY);
 		Iterator<Key> keys = _ctx.getExtent(key);
-		return count(keys);
+		int n = count(keys);
+		return n;
 	}
 	static int deleteAll(KVStore store, String type) {
-		System.err.println("deleteAll records of " + type);
 		Key key = Key.createKey(type);
 		Iterator<Key> keys = _ctx.getExtent(key);
 		int n = 0;
@@ -107,7 +111,6 @@ public class TestQuery {
 			n++; 
 			store.delete(keys.next());
 		}
-		System.err.println("deleted " + n + " records");
 		return n;
 	}
 	
@@ -118,7 +121,6 @@ public class TestQuery {
 	 * @param N
 	 */
 	static void populate(KVStore store, String type, int N) {
-		System.err.println("populate " + N + " records of " + type);
 		for (int i = 0; i < N; i++) {
 			Key key = Key.createKey(type, ""+i);
 			JSONObject person = new JSONObject();
@@ -127,7 +129,6 @@ public class TestQuery {
 			person.put("age", 42+i);
 			if (i%2 == 0) person.put("address", address);
 			address.put("city", "City-" + i);
-			System.err.println("Put " + key);
 			store.put(key, Value.createValue(person.toString().getBytes()));
 		}
 	}

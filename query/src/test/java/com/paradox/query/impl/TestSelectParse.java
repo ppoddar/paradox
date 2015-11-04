@@ -79,7 +79,35 @@ public class TestSelectParse {
 		Assert.assertFalse(terms.hasNext());
 		Assert.assertEquals("user.email", term.getName());
 	}
+	@Test
+	public void testPredicate() throws Exception {
+		String sql = "select email from Person where ab=1"; // requires at least two character field name
+		Select select = parseSelect(sql);
+		Expression.Predicate predicate = select.getPredicate();
+		Assert.assertNotNull(predicate);
+		Expression<?> lhs = predicate.getArgument(0);
+		Expression<?> rhs = predicate.getArgument(1);
+		Assert.assertNotNull(lhs);
+		Assert.assertNotNull(rhs);
+		Assert.assertTrue(predicate instanceof Expression.Equals);
+		Assert.assertTrue(lhs instanceof Expression.Path);
+		Assert.assertTrue(rhs instanceof Expression.Constant);
+	}
 	
+	public void testPredicate2() throws Exception {
+		String sql = "select * from Person where age < 42";
+		Select select = parseSelect(sql);
+		Expression.Predicate predicate = select.getPredicate();
+		Assert.assertNotNull(predicate);
+		Expression<?> lhs = predicate.getArgument(0);
+		Expression<?> rhs = predicate.getArgument(1);
+		Assert.assertNotNull(lhs);
+		Assert.assertNotNull(rhs);
+		Assert.assertTrue(predicate instanceof Expression.Less);
+		Assert.assertTrue(lhs instanceof Expression.Path);
+		Assert.assertTrue(rhs instanceof Expression.Constant);
+	}
+
 	Select parseSelect(String sql) throws Exception {
 		ExpressionFactory factory = new QueryExpressionFactory();
 		Select select = new SelectBuilder(factory).parse(sql);
