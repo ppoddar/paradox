@@ -70,6 +70,7 @@ public interface Expression<V> {
 	
 	/** Affirms if left hand is null. **/
 	interface IsNull extends Predicate{}
+	interface Exists extends Predicate{}
 	
 	/** Affirms if two expressions evaluate to be equal. **/
 	interface Equals extends Predicate{}

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.paradox.query.Expression;
+import org.paradox.query.ValueNotExistException;
 import org.paradox.query.kv.KVQueryContext;
 
 /**
@@ -46,6 +47,22 @@ public class Expressions {
 			}
 			_args.add(expr);
 		}
+		
+		String unquote(String s) {
+			if (s != null && s.length() > 1 && s.charAt(0) =='\'' && s.charAt(s.length()-1) == '\'')
+				return s.substring(1, s.length()-1);
+			else 
+				return s;
+		}
+		
+		public String toString() {
+			StringBuilder buf = new StringBuilder();
+			for (Expression<?> e : _args) {
+				if (buf.length() >0) buf.append(" ");
+				buf.append(e);
+			}
+			return buf.toString();
+		}
 	}
 	
 	/**
@@ -53,14 +70,24 @@ public class Expressions {
 	 */
 	public static abstract class OperatorExpression<V> extends AbstractExpression<V> 
 		implements Expression.Operator<V>{
+		private final String _operator;
 		
-		protected OperatorExpression(Expression<?> expr) {
+		protected OperatorExpression(String operator, Expression<?> expr) {
 			addArgument(expr);
+			_operator = operator;
 		}
 		
-		protected OperatorExpression(Expression.Path<?> lhs, Expression<?> rhs) {
+		protected OperatorExpression(String operator, Expression.Path<?> lhs, Expression<?> rhs) {
 			addArgument(lhs);
 			addArgument(rhs);
+			_operator = operator;
+		}
+		public String toString() {
+			switch (getArgumentCount()) {
+			case 1:  return _operator + '(' + getArgument(0) + ')';
+			case 2: return getArgument(0).toString() + _operator + getArgument(1).toString();
+			default : return "?";
+			}
 		}
 	}
 	
@@ -73,55 +100,76 @@ public class Expressions {
 		}
 		
 		public Equals(Expression.Path<?> path, Expression.Value<?> value, boolean ignoreCase) {
-			super(path, value);
+			super("=", path, value);
 			_ignoreCase = ignoreCase;
+		}
+		public Equals(String op, Expression.Path<?> path, Expression.Value<?> value) {
+			super(op, path, value);
 		}
 		
 		@Override
 		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
-			Object lhs = getArgument(0).evaluate(candidate, ctx);
+			Object lhs = null;
+			try {
+				lhs = getArgument(0).evaluate(candidate, ctx);
+			} catch (ValueNotExistException ex) {
+				return false;
+			}
 			Object rhs = getArgument(1).evaluate(candidate, ctx);
+			if (lhs == null || rhs == null) return false;
 			if (rhs instanceof String)
 				rhs = unquote(rhs.toString());
 			return _ignoreCase ? lhs.toString().equalsIgnoreCase(rhs.toString()) : lhs.equals(rhs);
 		}
 		
-		String unquote(String s) {
-			if (s != null && s.length() > 1 && s.charAt(0) =='\'' && s.charAt(s.length()-1) == '\'')
-				return s.substring(1, s.length()-1);
-			else 
-				return s;
-		}
 	}
 
-	public static class NotEquals extends OperatorExpression<Boolean> implements Expression.NotEquals {		
+	public static class NotEquals extends Equals implements Expression.NotEquals {		
 		public NotEquals(Expression.Path<?> path, Expression.Value<?> value) {
-			super(path, value);
+			super("!=", path, value);
 		}
 		
 		@Override
 		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
-			Object lhs = getArgument(0).evaluate(candidate, ctx);
-			Object rhs = getArgument(1).evaluate(candidate, ctx);
-			return !lhs.equals(rhs);
+			return !super.evaluate(candidate, ctx);
 		}
 	}
 	
 	public static class IsNull extends OperatorExpression<Boolean> implements Expression.IsNull {
 		public IsNull(Expression.Path<?> path) {
-			super(path);
+			super("isnull", path);
 		}
 		@Override
 		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
-			Object lhs = getArgument(0).evaluate(candidate, ctx);
-			return lhs == null;
+			try {
+				Object lhs = getArgument(0).evaluate(candidate, ctx);
+				return lhs == null;
+			} catch (ValueNotExistException ex) {
+				System.err.println("evaluate "+ this + " false");
+				return false;
+			}
+		}
+	}
+
+	public static class Exists extends OperatorExpression<Boolean> implements Expression.Exists {
+		public Exists(Expression.Path<?> path) {
+			super("exists", path);
+		}
+		@Override
+		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+			try {
+				getArgument(0).evaluate(candidate, ctx);
+			} catch (ValueNotExistException ex) {
+				return false;
+			}
+			return true;
 		}
 	}
 	
 	public static class Not extends OperatorExpression<Boolean> implements Expression.Not {
 		
 		public Not(Predicate predicate) {
-			super(predicate);
+			super("not", predicate);
 		}
 		@Override
 		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
@@ -131,8 +179,9 @@ public class Expressions {
 	}
 	
 	public static abstract class BinaryNumericExpression extends OperatorExpression<Boolean> {
-		public BinaryNumericExpression(Expression.Path<?> path, Expression.Value<Number> value) {
-			super(path, value);
+		public BinaryNumericExpression(String operator, 
+				Expression.Path<?> path, Expression.Value<Number> value) {
+			super(operator, path, value);
 		}
 		@Override
 		public final Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
@@ -146,7 +195,7 @@ public class Expressions {
 	}
 	public static class Greater extends BinaryNumericExpression implements Expression.Greater {
 		public Greater(Expression.Path<?> path, Expression.Value<Number> value) {
-			super(path, value);
+			super(">", path, value);
 		}
 		@Override
 		public Boolean compare(Number lhs, Number rhs) {
@@ -155,7 +204,7 @@ public class Expressions {
 	}
 	public static class GreaterOrEqual extends BinaryNumericExpression implements Expression.GreaterOrEqual {
 		public GreaterOrEqual(Expression.Path<?> path, Expression.Value<Number> value) {
-			super(path, value);
+			super(">=", path, value);
 		}
 		@Override
 		public Boolean compare(Number lhs, Number rhs) {
@@ -164,7 +213,7 @@ public class Expressions {
 	}
 	public static class Less extends BinaryNumericExpression implements Expression.Less {
 		public Less(Expression.Path<?> path, Expression.Value<Number> value) {
-			super(path, value);
+			super("<", path, value);
 		}
 		@Override
 		public Boolean compare(Number lhs, Number rhs) {
@@ -173,7 +222,7 @@ public class Expressions {
 	}
 	public static class LessOrEqual extends BinaryNumericExpression implements Expression.LessOrEqual {
 		public LessOrEqual(Expression.Path<?> path, Expression.Value<Number> value) {
-			super(path, value);
+			super("<=", path, value);
 		}
 		@Override
 		public Boolean compare(Number lhs, Number rhs) {
@@ -182,12 +231,13 @@ public class Expressions {
 	}
 	public static class Like extends OperatorExpression<Boolean> implements Expression.Like {
 		public Like(Expression.Path<?> path, Expression.Value<String> value) {
-			super(path, value);
+			super("like", path, value);
 		}
 		@Override
 		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			String lhs = (String)getArgument(0).evaluate(candidate, ctx);
 			String rhs = (String)getArgument(1).evaluate(candidate, ctx);
+			rhs = unquote(rhs);
 			return Pattern.matches(rhs, lhs);
 		}
 	}
@@ -204,6 +254,10 @@ public class Expressions {
 		@Override
 		public V evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
 			return _value;
+		}
+		
+		public String toString() {
+			return ""+_value;
 		}
 
 	}
@@ -403,6 +457,9 @@ public class Expressions {
 			if (lhs) return true;
 			return ((Predicate)getArgument(1)).evaluate(candidate, ctx);
 		}
+		public String toString() {
+			return getArgument(0).toString() + " or " + getArgument(1).toString();
+		}
 	}
 	
 	public static class And extends AbstractExpression<Boolean> implements Expression.And {
@@ -416,6 +473,10 @@ public class Expressions {
 			Boolean lhs = ((Predicate)getArgument(0)).evaluate(candidate, ctx);
 			if (!lhs) return false;
 			return ((Predicate)getArgument(1)).evaluate(candidate, ctx);
+		}
+		
+		public String toString() {
+			return getArgument(0).toString() + " and " + getArgument(1).toString();
 		}
 	}
 

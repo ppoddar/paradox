@@ -25,6 +25,7 @@ public interface ExpressionFactory {
 	 * Creates a predicate expression to evaluate the given path for nullity.
 	 */
 	Expression.Predicate newIsNull(Expression.Path<?> path);
+	Expression.Predicate newExists(Expression.Path<?> path);
 	
 	/**
 	 * Creates a predicate expression to negate the given predicate.

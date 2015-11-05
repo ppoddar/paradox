@@ -43,7 +43,7 @@ public class TestQuery {
 	}
 
 	@Test
-	public void testCountQuery() throws Exception {
+	public void testCount() throws Exception {
 		String sql = "select * from Person";
 		Iterator<JSONObject> result = _ctx.executeQuery(sql);
 		Assert.assertEquals(_dataSize, count(result));
@@ -51,45 +51,80 @@ public class TestQuery {
 	
 	@Test
 	public void testExists() throws Exception {
-		String sql = "select * from Person p where exists address";
-		Iterator<JSONObject> result = _ctx.executeQuery(sql);
-		Assert.assertEquals(_dataSize/2, count(result));
+		assertQueryResultByResultCount("select * from Person where exists address", _dataSize/2);
 	}
 	
 	@Test
 	public void testLessThan() throws Exception {
-		String sql = "select * from Person where age < 42";
-		Iterator<JSONObject> result = _ctx.executeQuery(sql);
-		Assert.assertEquals(0, count(result));
+		assertQueryResultByResultCount("select * from Person where age < 42", 0);
+	}
+	
+	@Test
+	public void testLessThanEqual() throws Exception {
+		assertQueryResultByResultCount("select * from Person where age <= 42", 1);
 	}
 	
 	@Test
 	public void testGreaterThan() throws Exception {
-		String sql = "select * from Person p where age > 42";
-		Iterator<JSONObject> result = _ctx.executeQuery(sql);
-		Assert.assertEquals(_dataSize-1, count(result));
+		assertQueryResultByResultCount("select * from Person where age > 42", _dataSize-1);
+	}
+	@Test
+	public void testGreaterThanEqual() throws Exception {
+		assertQueryResultByResultCount("select * from Person where age >= 42", _dataSize);
 	}
 	
 	@Test
 	public void testEquals() throws Exception {
-		String sql = "select * from Person where age = 46";
-		Iterator<JSONObject> result = _ctx.executeQuery(sql);
-		Assert.assertEquals(1, count(result));
+		assertQueryResultByResultCount("select * from Person where age = 46", 1);
 	}
 	
 	@Test
 	public void testNotEquals() throws Exception {
-		String sql = "select * from Person where age != 46";
-		Iterator<JSONObject> result = _ctx.executeQuery(sql);
-		Assert.assertEquals(_dataSize-1, count(result));
+		assertQueryResultByResultCount("select * from Person where age != 46", _dataSize-1);
 	}
 	
 	@Test
 	public void testEqualsIgnoreCase() throws Exception {
-		String sql = "select * from Person where name ~= 'person-4'";
-		Iterator<JSONObject> result = _ctx.executeQuery(sql);
-		Assert.assertEquals(1, count(result));
+		assertQueryResultByResultCount("select * from Person where name ~= 'person-4'", 1);
+	}	
+	
+	@Test
+	public void testLike() throws Exception {
+		assertQueryResultByResultCount(
+				"select * from Person where name LIKE 'Person-[1-5]'", 5);
 	}
+	
+	@Test
+	public void testIsNull() throws Exception {
+		assertQueryResultByResultCount("select * from Person where ISNULL gender", 2);
+	}
+	@Test
+	public void testIsNotNull() throws Exception {
+		assertQueryResultByResultCount("select * from Person where NOT(ISNULL gender)",
+				_dataSize - 2);
+	}
+	@Test
+	public void testAnd() throws Exception {
+		assertQueryResultByResultCount("select * from Person where age = 44 and gender='MALE'", 1);
+	}
+	
+	@Test
+	public void testJSONNull() {
+		JSONObject json = new JSONObject();
+		json.put("a", (Object)null);
+		json.put("b", JSONObject.NULL);
+		Assert.assertFalse(json.has("a"));
+		Assert.assertTrue(json.has("b"));
+		Assert.assertNull(json.opt("a"));
+		Assert.assertSame(JSONObject.NULL, json.opt("b"));
+	}
+	void assertQueryResultByResultCount(String sql, int expectedResultCount) throws Exception {
+		Iterator<JSONObject> result = _ctx.executeQuery(sql);
+		Assert.assertEquals(expectedResultCount, count(result));
+	}
+	
+	
+
 
 	
 	static int count(Iterator<?> iterator) {
@@ -130,8 +165,13 @@ public class TestQuery {
 			JSONObject address = new JSONObject();
 			person.put("name", type + "-" + i);
 			person.put("age", 42+i);
+			person.put("gender", i % 2 == 0 ? "MALE" : "FEMALE");
+			if (i == 0 || i == N-1) person.put("gender", JSONObject.NULL);
+			
 			if (i%2 == 0) person.put("address", address);
 			address.put("city", "City-" + i);
+			if (i == 0 || i == N-1) address.put("city", JSONObject.NULL);
+			
 			store.put(key, Value.createValue(person.toString().getBytes()));
 		}
 	}

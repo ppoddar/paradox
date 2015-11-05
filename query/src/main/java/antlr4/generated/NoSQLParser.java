@@ -1071,21 +1071,25 @@ public class NoSQLParser extends Parser {
 		enterRule(_localctx, 30, RULE_predicateTerm);
 		try {
 			setState(201);
-			switch ( getInterpreter().adaptivePredict(_input,16,_ctx) ) {
-			case 1:
+			switch (_input.LA(1)) {
+			case EXISTS:
+			case IS_NULL:
+			case NOT:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(199);
 				unaryPredicate();
 				}
 				break;
-			case 2:
+			case IDENTIFIER:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(200);
 				binaryPredicate();
 				}
 				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1136,7 +1140,7 @@ public class NoSQLParser extends Parser {
 				not();
 				}
 				break;
-			case IDENTIFIER:
+			case IS_NULL:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(204);
@@ -1935,10 +1939,10 @@ public class NoSQLParser extends Parser {
 	}
 
 	public static class IsNullContext extends ParserRuleContext {
+		public TerminalNode IS_NULL() { return getToken(NoSQLParser.IS_NULL, 0); }
 		public FieldPathContext fieldPath() {
 			return getRuleContext(FieldPathContext.class,0);
 		}
-		public TerminalNode IS_NULL() { return getToken(NoSQLParser.IS_NULL, 0); }
 		public IsNullContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1960,9 +1964,9 @@ public class NoSQLParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(277);
-			fieldPath();
-			setState(278);
 			match(IS_NULL);
+			setState(278);
+			fieldPath();
 			}
 		}
 		catch (RecognitionException re) {
@@ -1977,10 +1981,10 @@ public class NoSQLParser extends Parser {
 	}
 
 	public static class IsNotNullContext extends ParserRuleContext {
+		public TerminalNode IS_NOT_NULL() { return getToken(NoSQLParser.IS_NOT_NULL, 0); }
 		public FieldPathContext fieldPath() {
 			return getRuleContext(FieldPathContext.class,0);
 		}
-		public TerminalNode IS_NOT_NULL() { return getToken(NoSQLParser.IS_NOT_NULL, 0); }
 		public IsNotNullContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -2002,9 +2006,9 @@ public class NoSQLParser extends Parser {
 			enterOuterAlt(_localctx, 1);
 			{
 			setState(280);
-			fieldPath();
-			setState(281);
 			match(IS_NOT_NULL);
+			setState(281);
+			fieldPath();
 			}
 		}
 		catch (RecognitionException re) {
@@ -2897,8 +2901,8 @@ public class NoSQLParser extends Parser {
 		"\5\30\r\2\u010d\u0110\7\25\2\2\u010e\u0111\5N(\2\u010f\u0111\5V,\2\u0110"+
 		"\u010e\3\2\2\2\u0110\u010f\3\2\2\2\u01119\3\2\2\2\u0112\u0113\7$\2\2\u0113"+
 		"\u0114\7\f\2\2\u0114\u0115\5 \21\2\u0115\u0116\7\r\2\2\u0116;\3\2\2\2"+
-		"\u0117\u0118\5\30\r\2\u0118\u0119\7\37\2\2\u0119=\3\2\2\2\u011a\u011b"+
-		"\5\30\r\2\u011b\u011c\7 \2\2\u011c?\3\2\2\2\u011d\u011e\7\34\2\2\u011e"+
+		"\u0117\u0118\7\37\2\2\u0118\u0119\5\30\r\2\u0119=\3\2\2\2\u011a\u011b"+
+		"\7 \2\2\u011b\u011c\5\30\r\2\u011c?\3\2\2\2\u011d\u011e\7\34\2\2\u011e"+
 		"\u011f\5\30\r\2\u011fA\3\2\2\2\u0120\u0121\7)\2\2\u0121\u0122\7\f\2\2"+
 		"\u0122\u0123\5\30\r\2\u0123\u0124\7\r\2\2\u0124C\3\2\2\2\u0125\u0126\7"+
 		"#\2\2\u0126\u0127\7\f\2\2\u0127\u0128\5\30\r\2\u0128\u0129\7\r\2\2\u0129"+

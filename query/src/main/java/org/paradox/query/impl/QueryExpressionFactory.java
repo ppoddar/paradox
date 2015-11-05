@@ -28,6 +28,10 @@ public class QueryExpressionFactory implements ExpressionFactory {
 	public Expression.Predicate newIsNull(Expression.Path< ?> path) {
 		return new Expressions.IsNull(path);
 	}
+	@Override
+	public Expression.Predicate newExists(Expression.Path< ?> path) {
+		return new Expressions.Exists(path);
+	}
 
 	@Override
 	public Expression.Predicate  newNot(Expression.Predicate predicate) {

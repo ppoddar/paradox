@@ -66,8 +66,7 @@ lessOrEqual    : fieldPath LESS_OR_EQUAL ( numericValue | bindParam ) ;
 like           : fieldPath LIKE ( stringValue | bindParam ); 
 
 not            : NOT LPAREN predicateTerm RPAREN ;
-isNull         : fieldPath IS_NULL ;
-isNotNull    : fieldPath IS_NOT_NULL ;
+isNull         : IS_NULL fieldPath;
 exists         : EXISTS fieldPath ;
 
 sum  : SUM LPAREN fieldPath RPAREN ;

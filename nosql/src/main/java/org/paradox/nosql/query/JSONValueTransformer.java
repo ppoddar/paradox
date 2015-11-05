@@ -5,6 +5,7 @@ import oracle.kv.Value;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.paradox.query.ValueNotExistException;
 import org.paradox.query.kv.ValueTransformer;
 
 /**
@@ -33,14 +34,23 @@ public class JSONValueTransformer implements ValueTransformer<Value,JSONObject> 
 		}
 	}
 
+	/**
+	 * Extracts value for the given path.
+	 * 
+	 * @return null if path exists but value is null or JSONObjet.NULL
+	 * @exception if path does not exist
+	 */
 	@Override
 	public Object extractFieldValue(JSONObject candidate, String path) {
-		JSONObject json = (JSONObject)candidate;
 		int dot = path.indexOf('.');
 		if (dot == -1) {
-			return json.opt(path);
+			Object value = candidate.opt(path);
+			if (!candidate.has(path)) throw new ValueNotExistException(path);
+			return value == null || value == JSONObject.NULL ? null : value;
 		} else {
-			Object next = json.opt(path.substring(0, dot));
+			String segment = path.substring(0, dot);
+			if (!candidate.has(segment)) throw new ValueNotExistException(segment,path);
+			Object next = candidate.opt(segment);
 			if (next instanceof JSONObject) {
 				return extractFieldValue((JSONObject)next, path.substring(dot+1));
 			} else {

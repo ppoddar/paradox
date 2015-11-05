@@ -89,7 +89,7 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	// a state to determine how field paths on the stack are to be treated
 	private static enum ParseClause {PROJECTION, WHERE, ORDER_BY, GROUP_BY};
 	private ParseClause _parseCtx = ParseClause.PROJECTION;
-	
+	private static final boolean _debug = Boolean.getBoolean("debug");
 	/**
 	 * Supply a factory for Query Expressions.
 	 * @param factory creates concrete expressions. must not be null.
@@ -122,8 +122,8 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	
 	public void enterFieldName(FieldNameContext ctx) {
 		String fieldSegment = ctx.getText();
-		push(_stack.isEmpty() ? _factory.newPath(fieldSegment) :
-				pop(Expression.Path.class).newPath(fieldSegment));
+		push(currentStack(Expression.Path.class) ? 
+				pop(Expression.Path.class).newPath(fieldSegment)  : _factory.newPath(fieldSegment));
 	}
 
 	public void exitFieldPath(FieldPathContext ctx) {
@@ -156,18 +156,20 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	public void exitWhereClause(WhereClauseContext ctx) {
 		_select.setPredicate(pop(Expression.Predicate.class));
 	}
-//	@Override 
-//	public void enterEveryRule(ParserRuleContext ctx) {
-//		for (int i = 0; i < ctx.depth(); i++) System.err.print("-");
-//		System.err.println("enter  " + ctx.getClass().getSimpleName());
-//		super.enterEveryRule(ctx);
-//	}
-//	@Override 
-//	public void exitEveryRule(ParserRuleContext ctx) {
-//		for (int i = 0; i < ctx.depth(); i++) System.err.print("-");
-//		System.err.println("exit   " + ctx.getClass().getSimpleName());
-//		super.exitEveryRule(ctx);
-//	}
+	@Override 
+	public void enterEveryRule(ParserRuleContext ctx) {
+		if (!_debug) return;
+		for (int i = 0; i < ctx.depth(); i++) System.err.print("-");
+		System.err.println("enter  " + ctx.getClass().getSimpleName());
+		super.enterEveryRule(ctx);
+	}
+	@Override 
+	public void exitEveryRule(ParserRuleContext ctx) {
+		if (!_debug) return;
+		for (int i = 0; i < ctx.depth(); i++) System.err.print("-");
+		System.err.println("exit   " + ctx.getClass().getSimpleName());
+		super.exitEveryRule(ctx);
+	}
 
 	
 	public void exitIsNotNull(IsNotNullContext ctx) {
@@ -338,7 +340,7 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	}
 
 	public void exitExists(ExistsContext ctx) {
-		push(_factory.newIsNull(pop(Expression.Path.class)));
+		push(_factory.newExists(pop(Expression.Path.class)));
 	}
 
 	public void exitAggregateTerm(AggregateTermContext ctx) {
@@ -370,6 +372,7 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	
 	public void visitErrorNode(ErrorNode error) {
 		Token token = error.getSymbol();
+
 		int n = token.getStartIndex();
 		int l = token.getText().length();
 		String sql = _select.getSQL();
@@ -436,6 +439,10 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 			printStack("failed at pop " + cls.getName());
 			throw new IllegalStateException(message);
 		}
+	}
+	
+	boolean currentStack(Class<?> cls) {
+		return !_stack.isEmpty() && cls.isInstance(_stack.peek());
 	}
 	
 	/**
