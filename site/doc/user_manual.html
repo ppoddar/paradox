@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset='utf-8' />
+<meta http-equiv="X-UA-Compatible" content="chrome=1" />
+<meta name="description"
+	content="Paradox : SQL on NoSQL Key-Value store" />
+
+<link rel="stylesheet" type="text/css" media="screen"
+	href="../resources/css/stylesheet.css" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="../resources/css/manual.css" />
+<link rel="stylesheet" type="text/css" media="screen"
+	href="../resources/css/prism.css" />
+
+<title>Paradox: Documentation</title>
+
+</head>
+
+<body>
+	<script src="../resources/script/prism.js"></script>
+
+	<!-- HEADER -->
+	<div id="header_wrap" class="outer">
+		<header class="inner">
+			<a id="forkme_banner" href="https://github.com/ppoddar/paradox">View
+				on GitHub</a>
+
+			<h1 id="project_title">Paradox</h1>
+			<h2 id="project_tagline">SQL on NoSQL Key-Value store</h2>
+			<div class="navigation-bar">
+				<ul>
+					<li><a href="../../index.html">Home</a>
+					<li><a href="#"><span style="color: white">Documentation</span></a>
+					<li><a href="downloads.html">Download</a>&nbsp;|&nbsp; <a
+						href="faq.html">FAQ</a>
+				</ul>
+			</div>
+		</header>
+	</div>
+
+	<!-- MAIN CONTENT -->
+	<div id="main_content_wrap" class="outer">
+		<section id="main_content" class="inner">
+			<div class="toc">main section</div>
+			<div class="toc-content">
+				<h3>Introduction</h3>
+				Paradox is a facility to execute SQL query on data stored in NoSQL
+				database. <br> SQL or Structured Query Language is common to
+				all relational database. Relational database requires <em>schema</em>
+				or information about structure of records <em>before</em> storing
+				them. Hence it is possible for a relational database engine to query
+				the data i.e to evaluate the records by certain criteria on their
+				content.
+				<p>
+					NoSQL databases are different. One difference is they can write
+					data <em>without</em> a schema. Hence, the structure of data is
+					often <em>opaque</em> to a NoSQL database.
+				<p>
+					The <em>opaque</em> nature makes it infeasible for a NoSQL database
+					to support query. The applications using NoSQL database reads <em>opaque</em>
+					data and have to interpret them. Paradox enables such applications
+					to evaluate SQL query on data.
+				<h3>Quick Example</h3>
+
+				<h3>Key-Value Store</h3>
+				Key-Value store is a category of NoSQL databases. A Key-Value
+				database stores each record with a unique key. The application must
+				supply unique key for each record. The application later can
+				retrieve the record by the key.
+				<h4>Oracle NoSQL Key-Value Store</h4>
+				Oracle provides a NoSQL Key-Value store with added features <br>
+				<ul>
+					<li>Distributed Storage: Data records are stored in multiple
+						disks. Multiple copies of same data record are maintained.
+					<li>Transaction: Under certain conditions, database provides
+						transaction warranty.
+				</ul>
+
+				Paradox currently works with Oracle NoSQL Key-Value store. But
+				Paradox is designed to work with other Key-Value stores such as
+				Riak, MongoDB or Cassandra.
+
+				<h3>Application</h3>
+				Two essential information to execute SQL query on a Key-Value store
+				<ol>
+					<li>how to form a key to access a record
+					<li>how to extract the value of a named property from a record
+					
+				</ol>
+
+				Ideally, an application can supply these essential information.
+				Paradox can be configured to use such information via a defined
+				interface. However, Paradox defaults to following in absence of such
+				specification by the application
+				<ol>
+					<li>Key Policy: performs a full scan i.e evaluates each record
+					
+					<li>Value Policy: assumes stored records are encoded in JSON
+						so value of a named property can be extracted.
+				</ol>
+
+				A Key Policy, when specified by the application, helps to narrow a
+				the candidate extent. <br> Whereas a Value Policy helps to
+				query records taht are <em>not</em> encoded in JSON. extent.
+
+
+				<h3>SQL</h3>
+				A typical SQL in Paradox is quite similar to standard SQL:
+				<pre>
+					<code>
+ select * from Person where name='John' order by age DESC
+ </code>
+				</pre>
+
+				<h4>Synatx Difference</h4>
+				Paradox differs from SQL syntax in JOIN operation. <br> A
+				Key-Value database maintains each data independently of any other
+				i.e it is non-relational. Hence a JOIN, a relational operation, is
+				expressed in navigation syntax (more like OQL or JPQL). <br>
+				For example to find all Persons with address in city of San
+				Francisco, a Paradox SQL will be: <br>
+				<pre>
+					<code>
+ select * from Person where address.city='San Francisco'
+ </code>
+				</pre>
+				whereas a relational SQL would be:
+				<pre>
+					<code>
+ select * from Person JOIN Address where Person.id=Address.owner_id AND Address.city='San Francisco'
+ </code>
+				</pre>
+
+				<b>Type name</b>
+
+				<h4>Schema</h4>
+			</div>
+		</section>
+	</div>
+
+
+	<!-- FOOTER  -->
+	<div id="footer_wrap" class="outer">
+		<footer class="inner">
+			<p>
+				Published with <a href="https://pages.github.com">GitHub Pages</a>
+			</p>
+		</footer>
+	</div>
+</body>
+</html>
