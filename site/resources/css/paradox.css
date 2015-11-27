@@ -1,0 +1,79 @@
+/**
+ * Style Sheet for Paradox Pages
+ * 
+ */
+ 
+ /**
+  * Page header
+  */
+#header {
+    background-color:black;
+    color:white;
+    text-align:center;
+    padding:5px;
+}
+/**
+ * Horizontal Navigation bar
+ */
+#horizontal-navbar  li {
+	display: inline;
+	list-style-type: none;
+	padding-right: 2em;
+	font-size: 1em;
+	font-weight:bold;
+}
+
+.active-menu-item {
+	color : white;
+}
+
+#toc-menu {
+    line-height:30px;
+    width:12em;
+    float:left;
+    padding:2em; 
+}
+
+/**
+ * Section on page
+ */
+#section {
+    width:30em;
+    float:left;
+    padding-right:2em; 
+}
+
+#footer {
+    background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+    margin:20px; 
+}
+
+/**
+ * Standard HTML paragraphs
+ */
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 21px;
+  }
+
+  h4 {
+    font-size: 18px;
+  }
+
+  h5 {
+    font-size: 14px;
+  }
+
+  h6 {
+    font-size: 12px;
+  }
