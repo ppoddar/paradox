@@ -5,6 +5,8 @@ import oracle.kv.KVStore;
 import oracle.kv.Key;
 import oracle.kv.Value;
 
+import java.util.concurrent.TimeUnit;
+
 import org.json.JSONObject;
 import org.paradox.query.kv.KVQueryContext;
 import org.paradox.query.kv.KeyMaker;
@@ -44,7 +46,7 @@ public class QueryContextBuilder {
   		ctx.setValueTransformer(_valueTransformer);
   		ctx.setSchema(_schema);
   		ctx.setConsistency(_consistency);
-  		ctx.setQueryTimeout(_timeout);
+  		ctx.setQueryTimeout(_timeout, TimeUnit.MILLISECONDS);
   		ctx.setStore(_store);
   		
   		return ctx;

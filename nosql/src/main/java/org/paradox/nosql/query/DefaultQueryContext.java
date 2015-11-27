@@ -112,6 +112,7 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 	public Iterator<JSONObject> executeQuery(String query,Object... bindPairs)  throws Exception {
 		return executeQuery(query, new NVPair(bindPairs));
 	}
+	
 	@Override
 	public Iterator<JSONObject> executeQuery(String query, Map<String, Object> bindParams) throws Exception {
 		Select select = new SelectBuilder(getExpressionFactory()).parse(query);
@@ -131,20 +132,20 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 	}
 	
 	@Override
-	public int execute(String query, Map<String, Object> bindParams) {
+	public int executeUpdate(String query, Map<String, Object> bindParams) {
 		throw new UnsupportedOperationException();
 	}
+	
   @Override
   public Iterator<JSONObject> executeQuery(String sql) throws Exception {
     return executeQuery(sql, (Object[])null);
   }
 
   @Override
-  public int execute(String sql) throws Exception {
-    return execute(sql, null);
+  public int executeUpdate(String sql) throws Exception {
+    return executeUpdate(sql, null);
   }
 
-	
 	protected void bindParams(Select select, Map<String,Object> params) {
 		if (select.getPredicate() == null) return;
 		ExpressionCollector<Expression.BindParameter> collector = 
@@ -153,7 +154,6 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 		for (Expression.BindParameter param : bindParams) {
 			param.setValue(getBindParameterValue(param, params));
 		}
-		
 	}
 	
 	Object getBindParameterValue(Expression.BindParameter param, Map<String,Object> params) {
@@ -163,7 +163,6 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 			throw new IllegalArgumentException("Parameter [" + param.getName() + "] is not supplied. "
 					+ "Supplied parameters are " + params.keySet());
 		return params.get(param.getName());
-		
 	}
 	
 	/**
@@ -192,14 +191,13 @@ public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONO
 	}
 
 	@Override
-	public void setQueryTimeout(long timeout) {
-		_timeout = timeout;		
+	public DefaultQueryContext setQueryTimeout(long timeout, TimeUnit unit) {
+		_timeout = TimeUnit.MILLISECONDS.convert(timeout, unit);
+		return this;
 	}
 
-	
 	protected ResultPacker<JSONObject> newResultPacker(Select select) {
-		JSONResultPacker packer = new JSONResultPacker();
-		packer.setContext(select, this);
+		JSONResultPacker packer = new JSONResultPacker(select, this);
 		return packer;
 	}
 

@@ -5,7 +5,7 @@ import oracle.kv.Value;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.paradox.query.ValueNotExistException;
+import org.paradox.query.kv.ValueNotExistException;
 import org.paradox.query.kv.ValueTransformer;
 
 /**

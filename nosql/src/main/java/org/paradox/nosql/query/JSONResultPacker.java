@@ -1,8 +1,13 @@
 package org.paradox.nosql.query;
 
+import oracle.kv.Key;
+import oracle.kv.Value;
+
 import org.json.JSONObject;
 import org.paradox.query.ResultPacker;
 import org.paradox.query.impl.AbstractResultPacker;
+import org.paradox.query.impl.Select;
+import org.paradox.query.kv.KVQueryContext;
 
 /**
  * Packs query result in a JSON object.
@@ -12,6 +17,10 @@ import org.paradox.query.impl.AbstractResultPacker;
  */
 public class JSONResultPacker extends AbstractResultPacker<JSONObject> implements ResultPacker<JSONObject> {
 
+	public JSONResultPacker(Select select, KVQueryContext<Key, Value, JSONObject> ctx) {
+		setContext(select, ctx);
+	}
+	
 	@Override
 	protected JSONObject newResult() {
 		return new JSONObject();

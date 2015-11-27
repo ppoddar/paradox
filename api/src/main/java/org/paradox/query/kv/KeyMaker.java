@@ -8,6 +8,8 @@ import org.paradox.schema.UserType;
 /**
  * Generates storage key for a key-value data store.
  * 
+ * @param K the type of Key used by the storage engine.
+ * 
  * @author pinaki poddar
  *
  */
@@ -15,9 +17,12 @@ public interface KeyMaker<K> {
 	/**
 	 * Gets a key for the given type and given instance.
 	 * 
-	 * @param type a user type defined in a {@link Schema}.
-	 * @param pkValues the values for {@link UserType#getIdAttributes() identifier attributes} indexed by the
-	 * attribute name. Each identifier attribute may not be present in the given map.
+	 * @param type a user type defined in a {@link Schema}. Can be null.
+	 * @param pkValues the values used to form the key. If a schema is available,
+	 * then the supplied map will contain values for {@link UserType#getIdAttributes() 
+	 * identifier attributes} of the given type indexed by the attribute name. 
+	 * <br>
+	 * Each identifier attribute may not be present in the given map.
 	 * @return a complete or partial key
 	 */
 	K makeInstanceKey(UserType type, Map<String,?> pkValues);
@@ -25,12 +30,20 @@ public interface KeyMaker<K> {
 	
 	/**
 	 * Gets a key for the given type.
-	 * This key will be used to query an extent as the candidate set for query evaluation.
-	 * @param type a user-defined type
-	 * @return a partial key for the given type which will be able to retrieve the entire extent for the given type.
+	 * This key is used to query an extent as the candidate set for query evaluation.
+	 * @param type a user-defined type. Never null.
+	 * @return a partial key for the given type which will be able to retrieve 
+	 * the entire extent for the given type.
 	 */
 	K makeTypeKey(UserType type);
 	
+	/**
+	 * Gets a key for the given type name.
+	 * This key is used to query an extent as the candidate set for query evaluation.
+	 * @param typeName name of a user-defined type. Never null.
+	 * @return a partial key for the given type which will be able to retrieve 
+	 * the entire extent for the given type.
+	 */
 	K makeTypeKey(String typeName);
 	
 	/**

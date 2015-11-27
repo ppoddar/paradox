@@ -1,12 +1,14 @@
 package org.paradox.query;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.paradox.schema.Schema;
 
 /**
  *  A context provides an environment to execute a query
- *  on a key-value store.
+ *  on a key-value store and returns result in user 
+ *  representation.
  *  
  *  @param K key type
  *  @param V value type
@@ -18,14 +20,15 @@ public interface QueryContext<K,V,U> {
    * Gets the schema. If a schema is available, then the query is semantically validated
    * against the schema.
    * 
-   * @return the schema for semantic validation. Can be null to disable validation.
+   * @return the schema for query validation and efficient query plan. 
+   * Can be null to disable validation.
    */
   Schema getSchema();
   
   
   /**
    * Executes the given select query and returns a list of results.
-   * @param sql a SQL select query
+   * @param sql a SQL select query string
    * @return a list of selected result. Can be empty, but never null.
    */
   Iterator<U> executeQuery(String sql) throws Exception;
@@ -58,7 +61,7 @@ public interface QueryContext<K,V,U> {
    * indexed by the bind parameter name
    * @return number of key-value pairs affected.
    */
-  int execute(String sql, Map<String, Object> bindParams) throws Exception;
+  int executeUpdate(String sql, Map<String, Object> bindParams) throws Exception;
 
   /**
    * Executes the given insert/update/delete query and returns the
@@ -66,19 +69,27 @@ public interface QueryContext<K,V,U> {
    * @param sql a insert/update/delete query
    * @return number of key-value pairs affected.
    */
-  int execute(String sql) throws Exception;
+  int executeUpdate(String sql) throws Exception;
 
 	
 	  /**
 	   * Gets the timeout in millisecond unit.
 	   */
 	  long getQueryTimeout();
-	  void setQueryTimeout(long timeout);
+	  
+	  /**
+	   * Sets the query time out.
+	   * @param timeout time value
+	   * @param unit unit of time value
+	   */
+	  QueryContext<K,V,U> setQueryTimeout(long timeout, TimeUnit unit);
 	  
 	  /**
 	   * Gets an iterator on the given key extent.
-	   * @param k
-	   * @return
+	   * @param k a 
+	   * @return If a store organizes its key in a hierarchical namespace 
+	   * (as the case for Oracle NoSQL), all keys that are
+	   * descendant from the given key.
 	   */
 	  Iterator<K> getExtent(K k);
 

@@ -1,5 +1,12 @@
-package org.paradox.query;
+package org.paradox.query.kv;
 
+/**
+ * Raised when a property does not exist in a given record.
+ * Different than property having a null value.
+ * 
+ * @author pinaki poddar
+ *
+ */
 @SuppressWarnings("serial")
 public class ValueNotExistException extends RuntimeException {
 	public ValueNotExistException(String path) {

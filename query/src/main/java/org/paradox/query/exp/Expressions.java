@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.paradox.query.Expression;
-import org.paradox.query.ValueNotExistException;
 import org.paradox.query.kv.KVQueryContext;
+import org.paradox.query.kv.ValueNotExistException;
 
 /**
  * Defines the concrete query expressions.
