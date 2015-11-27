@@ -7,12 +7,9 @@
 <meta name="description"
 	content="Paradox : SQL on NoSQL Key-Value store" />
 
-<link rel="stylesheet" type="text/css" media="screen"
-	href="../resources/css/stylesheet.css" />
-<link rel="stylesheet" type="text/css" media="screen"
-	href="../resources/css/manual.css" />
-<link rel="stylesheet" type="text/css" media="screen"
-	href="../resources/css/prism.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../resources/css/stylesheet.css"/>
+	<link rel="stylesheet" type="text/css" media="screen" href="../resources/css/paradox.css" />
+	<link rel="stylesheet" type="text/css" media="screen" href="../resources/css/prism.css" />
 
 <title>Paradox: Documentation</title>
 
@@ -21,72 +18,103 @@
 <body>
 	<script src="../resources/script/prism.js"></script>
 
-	<!-- HEADER -->
-	<div id="header_wrap" class="outer">
-		<header class="inner">
-			<a id="forkme_banner" href="https://github.com/ppoddar/paradox">View
-				on GitHub</a>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/ppoddar/paradox">View on GitHub</a>
 
-			<h1 id="project_title">Paradox</h1>
-			<h2 id="project_tagline">SQL on NoSQL Key-Value store</h2>
-			<div class="navigation-bar">
+          <h1 id="project_title">Paradox</h1>
+          <h2 id="project_tagline">SQL on NoSQL Key-Value store</h2>
+          <ul id="horizontal-navbar">
+          	<li><a href="../../index.html">Home</a></li>
+          	<li><a href="#" class="active-menu-item">Documentation</a></li>
+            <li><a href="downloads.html">Download</a></li>
+            <li><a href="faq.html">FAQ</a></li>
+          </ul>
+         </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+	
+		<div id="toc-menu">
+			<ul>
+				<li><a href="#Introduction">Introduction</a></li>
+				<li><a href="#quick-example">Quick Example</a></li>
+				<li><a href="key-value-store-basics">Key-Value Store Basics</a></li>
 				<ul>
-					<li><a href="../../index.html">Home</a>
-					<li><a href="#"><span style="color: white">Documentation</span></a>
-					<li><a href="downloads.html">Download</a>&nbsp;|&nbsp; <a
-						href="faq.html">FAQ</a>
+					<li><a href="#oracle-nosql-key-value-store">Oracle NoSQL Key-Value Store</a></li>
+					<li><a href="#other-key-value-stores">Other Key-Value Stores</a></li>
 				</ul>
-			</div>
-		</header>
-	</div>
-
-	<!-- MAIN CONTENT -->
-	<div id="main_content_wrap" class="outer">
-		<section id="main_content" class="inner">
-			<div class="toc">main section</div>
-			<div class="toc-content">
-				<h3>Introduction</h3>
+				<li><a href="#application-requirement">Application Requirement</a></li>
+				<li><a href="#sql-syntax">SQL Syntax</a></li>
+				<ul>
+					<li><a href="syntax-difference">Syntax Difference</a></li>
+					<li><a href="#Introduction">Introduction</a></li>
+					<li><a href="#Introduction">Introduction</a></li>
+				</ul>
+			</ul>
+		</div>
+		
+		
+		<div id="content">
+				<h3 id="Introduction">Introduction</h3>
 				Paradox is a facility to execute SQL query on data stored in NoSQL
-				database. <br> SQL or Structured Query Language is common to
-				all relational database. Relational database requires <em>schema</em>
-				or information about structure of records <em>before</em> storing
-				them. Hence it is possible for a relational database engine to query
-				the data i.e to evaluate the records by certain criteria on their
-				content.
+				database.
 				<p>
-					NoSQL databases are different. One difference is they can write
-					data <em>without</em> a schema. Hence, the structure of data is
-					often <em>opaque</em> to a NoSQL database.
+				All relational databases support SQL or Structured Query Language.
+				Relational databases also require a <em>schema</em>
+				or information about record structures <em>before</em> storing
+				them. Hence a relational database engine can query
+				the records based on their content.
 				<p>
+					NoSQL databases are different. One major difference is they can write
+					data <em>without</em> a schema. The structure of records is often
+				   <em>opaque</em> to a NoSQL database.
 					The <em>opaque</em> nature makes it infeasible for a NoSQL database
-					to support query. The applications using NoSQL database reads <em>opaque</em>
-					data and have to interpret them. Paradox enables such applications
-					to evaluate SQL query on data.
-				<h3>Quick Example</h3>
+					to support query. 
+				</p>
+					
+				<h3 id="quick-example">Quick Example</h3>
+				Paradox is a library to evaluate SQL query on data records.
+				The following example shows a how to run query using Paradox:
+<pre><code class="language-java line-numbers">import paradox.nosql.query;
+QueryContext ctx = new QueryContxtBuilder("nosql://localhost:5000/mydb");
+Iterator&lt;JSONObject> results = ctx.executeQuery("select * from Person p where p.address.city='San Francisco'");</code></pre>
 
-				<h3>Key-Value Store</h3>
+                On line 2, a <code>QueryConetxt</code> is built using a <code>QueryContxtBuilder</code>
+                with a database URL. The database URL 
+                <code>nosql://localhost:5000/mydb</code> identifies a Oracle NoSQL database
+                named <code>mydb</code> running on localhost listening on port 5000. 
+                On next line (line 3), <code>QueryContext</code> is used with a typical SQL string 
+                for query. The query finds all <code>Person</code> records where <code>city</code> property
+                of <code>address</code> property is <code>'San Francisco'</code>. 
+                The result of the query is returned to application  in JSON format.
+                
+				<h3 id="key-value-store-basics">Key-Value Store Baiscs</h3>
 				Key-Value store is a category of NoSQL databases. A Key-Value
 				database stores each record with a unique key. The application must
 				supply unique key for each record. The application later can
 				retrieve the record by the key.
-				<h4>Oracle NoSQL Key-Value Store</h4>
-				Oracle provides a NoSQL Key-Value store with added features <br>
+				<h4 id="oracle-nosql-key-value-store">Oracle NoSQL Key-Value Store</h4>
+				Oracle provides a NoSQL Key-Value store with added features 
 				<ul>
 					<li>Distributed Storage: Data records are stored in multiple
-						disks. Multiple copies of same data record are maintained.
+						disks. Multiple copies of same data record are maintained.</li>
 					<li>Transaction: Under certain conditions, database provides
-						transaction warranty.
+						transaction warranty.</li>
 				</ul>
+				<h4 id="other-key-value-stores">Other Key-Value Store</h4>
 
 				Paradox currently works with Oracle NoSQL Key-Value store. But
 				Paradox is designed to work with other Key-Value stores such as
 				Riak, MongoDB or Cassandra.
 
-				<h3>Application</h3>
+				<h3 id="application-requirement">Application Requirement</h3>
 				Two essential information to execute SQL query on a Key-Value store
 				<ol>
-					<li>how to form a key to access a record
-					<li>how to extract the value of a named property from a record
+					<li>how to form a key to access a record</li>
+					<li>how to extract the value of a named property from a record</li>
 					
 				</ol>
 
@@ -95,18 +123,18 @@
 				interface. However, Paradox defaults to following in absence of such
 				specification by the application
 				<ol>
-					<li>Key Policy: performs a full scan i.e evaluates each record
+					<li>Key Policy: performs a full scan i.e evaluates each record</li>
 					
 					<li>Value Policy: assumes stored records are encoded in JSON
-						so value of a named property can be extracted.
+						so value of a named property can be extracted.</li>
 				</ol>
 
 				A Key Policy, when specified by the application, helps to narrow a
-				the candidate extent. <br> Whereas a Value Policy helps to
-				query records taht are <em>not</em> encoded in JSON. extent.
+				the candidate extent.  Whereas a Value Policy helps to
+				query records that are <em>not</em> encoded in JSON. extent.
 
 
-				<h3>SQL</h3>
+				<h3 id="sql-syntax">SQL Syntax</h3>
 				A typical SQL in Paradox is quite similar to standard SQL:
 				<pre>
 					<code>
@@ -114,40 +142,37 @@
  </code>
 				</pre>
 
-				<h4>Synatx Difference</h4>
-				Paradox differs from SQL syntax in JOIN operation. <br> A
+				<h4 id="syntax-difference">Syntax Difference</h4>
+				Paradox differs from SQL syntax in JOIN operation.  A
 				Key-Value database maintains each data independently of any other
 				i.e it is non-relational. Hence a JOIN, a relational operation, is
-				expressed in navigation syntax (more like OQL or JPQL). <br>
-				For example to find all Persons with address in city of San
-				Francisco, a Paradox SQL will be: <br>
-				<pre>
-					<code>
- select * from Person where address.city='San Francisco'
- </code>
-				</pre>
-				whereas a relational SQL would be:
-				<pre>
-					<code>
- select * from Person JOIN Address where Person.id=Address.owner_id AND Address.city='San Francisco'
- </code>
-				</pre>
+				expressed in navigation syntax (more like OQL or JPQL). 
+				For example, to find all Persons with address in the city of San
+				Francisco, a Paradox SQL will be: 
+<pre><code class="language-sql">select * from Person where address.city='San Francisco'</code></pre>
+				whereas a corresponding relational SQL would be:
+<pre><code class="language-sql">select * from Person JOIN Address 
+         where Person.id=Address.owner_id 
+           AND Address.city='San Francisco'</code></pre>
 
 				<b>Type name</b>
 
-				<h4>Schema</h4>
-			</div>
-		</section>
+				<h3 id="schema">Schema</h3>
+				
+				<h4>Key Distribution Policy</h4>
+				The application developer has to specify the key for each record.
+				This is specified by <a href="???">Key Distribution Policy</a>. 
+				<h4>Value Encoding Policy</h4>
+				The application developer has to also specify a byte representation
+				for each record.
+				This is specified by <a href="???">Value Encoding Policy</a>. 
 	</div>
 
+</div>
 
 	<!-- FOOTER  -->
-	<div id="footer_wrap" class="outer">
-		<footer class="inner">
-			<p>
-				Published with <a href="https://pages.github.com">GitHub Pages</a>
-			</p>
-		</footer>
+	<div id="footer">
+		Published with <a href="https://pages.github.com">GitHub Pages</a>
 	</div>
 </body>
 </html>
