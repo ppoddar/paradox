@@ -64,19 +64,20 @@
 				<p>
 				All relational databases support SQL or Structured Query Language.
 				Relational databases also require a <em>schema</em>
-				or information about record structures <em>before</em> storing
-				them. Hence a relational database engine can query
-				the records based on their content.
+				<em>before</em> storing
+				any record. Hence a relational database engine can query
+				the records predicated on properties.
 				<p>
-					NoSQL databases are different. One major difference is they can write
-					data <em>without</em> a schema. The structure of records is often
+					NoSQL databases are different. One major difference is NoSQL databases can write
+					record <em>without</em> a schema. The structure of records is often
 				   <em>opaque</em> to a NoSQL database.
 					The <em>opaque</em> nature makes it infeasible for a NoSQL database
-					to support query. 
+					to query predicated on properties. 
 				</p>
 					
 				<h3 id="quick-example">Quick Example</h3>
-				Paradox is a library to evaluate SQL query on data records.
+				Paradox is a library to evaluate SQL query on records sored in NoSQL database
+				without a schema.
 				The following example shows a how to run query using Paradox:
 <pre><code class="language-java line-numbers">import paradox.nosql.query;
 QueryContext ctx = new QueryContxtBuilder("nosql://localhost:5000/mydb");
@@ -148,9 +149,9 @@ Iterator&lt;JSONObject> results = ctx.executeQuery("select * from Person p where
 				i.e it is non-relational. Hence a JOIN, a relational operation, is
 				expressed in navigation syntax (more like OQL or JPQL). 
 				For example, to find all Persons with address in the city of San
-				Francisco, a Paradox SQL will be: 
+				Francisco, a Paradox SQL query will be: 
 <pre><code class="language-sql">select * from Person where address.city='San Francisco'</code></pre>
-				whereas a corresponding relational SQL would be:
+				whereas a corresponding relational SQL could be:
 <pre><code class="language-sql">select * from Person JOIN Address 
          where Person.id=Address.owner_id 
            AND Address.city='San Francisco'</code></pre>
