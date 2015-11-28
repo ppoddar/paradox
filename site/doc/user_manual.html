@@ -62,23 +62,29 @@
 				Paradox is a facility to execute SQL query on data stored in NoSQL
 				database.
 				<p>
-				All relational databases support SQL or Structured Query Language.
-				Relational databases also require a <em>schema</em>
-				<em>before</em> storing
-				any record. Hence a relational database engine can query
-				the records predicated on properties.
+				All relational databases support SQL (Structured Query Language).
+				Relational databases can query records predicated on properties
+				because database knows <em>schema</em> i.e. structure of the 
+				records. In fact, a relational database requires a schema
+				<em>before</em> writing any record. 
+				This is known as <em>schema-on-Write</em> approach.
 				<p>
 					NoSQL databases are different. One major difference is NoSQL databases can write
-					record <em>without</em> a schema. The structure of records is often
-				   <em>opaque</em> to a NoSQL database.
-					The <em>opaque</em> nature makes it infeasible for a NoSQL database
+					record <em>without</em> a schema. Thus, a NoSQL database often
+					does not know the structure of the records. It applies a schema to interpret
+					the record <em>after</em> reading. 
+				    This is known as <em>schema-on-Read</em> approach.
+					In such cases, it is infeasible for a NoSQL database
 					to query predicated on properties. 
 				</p>
 					
 				<h3 id="quick-example">Quick Example</h3>
-				Paradox is a library to evaluate SQL query on records sored in NoSQL database
-				without a schema.
-				The following example shows a how to run query using Paradox:
+				Paradox is a library to evaluate SQL query on records in NoSQL database.
+				Paradox does it either assuming the records to be formatted as JSON 
+				or the application specfying a schema. In either case, Paradox works
+				with <em>schema-on-Read</em> approach.
+				The following example shows a how to run query using Paradox (assuming JSON
+				records):
 <pre><code class="language-java line-numbers">import paradox.nosql.query;
 QueryContext ctx = new QueryContxtBuilder("nosql://localhost:5000/mydb");
 Iterator&lt;JSONObject> results = ctx.executeQuery("select * from Person p where p.address.city='San Francisco'");</code></pre>
