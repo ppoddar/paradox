@@ -8,6 +8,7 @@
 		<version>0.2</version>
 		<relativePath>..</relativePath>
 	</parent>
+	<groupId>org.paradox</groupId>
 	<artifactId>api</artifactId>
 	<packaging>jar</packaging>
 

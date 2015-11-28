@@ -12,9 +12,6 @@
 	<packaging>jar</packaging>
 
 	<name>Schema</name>
-	<build>
-		<finalName>paradox-schema</finalName>
-	</build>
 
 	<dependencies>
 			<dependency>

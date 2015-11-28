@@ -49,7 +49,7 @@ import antlr4.generated.NoSQLParser.LimitClauseContext;
 import antlr4.generated.NoSQLParser.MaxContext;
 import antlr4.generated.NoSQLParser.MinContext;
 import antlr4.generated.NoSQLParser.NotContext;
-import antlr4.generated.NoSQLParser.NotequalsContext;
+import antlr4.generated.NoSQLParser.NotEqualsContext;
 import antlr4.generated.NoSQLParser.OrContext;
 import antlr4.generated.NoSQLParser.OrderByClauseContext;
 import antlr4.generated.NoSQLParser.OrderByTermContext;
@@ -248,7 +248,7 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	}
 	
 	@Override
-	public void exitNotequals(NotequalsContext ctx) {
+	public void exitNotEquals(NotEqualsContext ctx) {
 		Expression.Value<?> rhs   = pop(Expression.Value.class);
 		Expression.Path<?> lhs    = pop(Expression.Path.class);
 		push(_factory.newNotEqual(lhs, rhs));
@@ -344,7 +344,7 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	}
 
 	public void exitAggregateTerm(AggregateTermContext ctx) {
-		Expression.Path<?> term = pop(Expression.Path.class);
+		pop(Expression.Path.class);
 	}
 
 	@SuppressWarnings("unchecked")

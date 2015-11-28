@@ -1,6 +1,9 @@
 package org.paradox.command;
 
+import java.io.PrintWriter;
 import java.util.List;
+
+import org.paradox.util.MultiColumnPrinter;
 
 class HelpCommand extends Command {
 	final CLI _cli;
@@ -14,23 +17,36 @@ class HelpCommand extends Command {
 		_cli = cli;
 	}
 
-	void help() {
-		_cli.getWriter().println("Available commands are:");
-		_cli.getWriter().println();
+	/**
+	 * Prints short help message for all available commands. 
+	 */
+	public void printHelp() {
+		PrintWriter writer = _cli.getWriter();
+		writer.println("Available commands are:");
+		writer.println();
 		int wmax = 0;
 		for (Command cmd : _cli) {
 			wmax = Math.max(wmax, cmd.getIdenetifierString().length());
 		}
-		_cli.getWriter().println();
-		_cli.getWriter().println("Type " + getIdenetifierString() + " <command> for information on specific command");
-		_cli.getWriter().println();
+		MultiColumnPrinter.ColumnSpec[] tabs = {
+				new MultiColumnPrinter.ColumnSpec(4,wmax+2),
+				new MultiColumnPrinter.ColumnSpec(wmax+8,4),
+				new MultiColumnPrinter.ColumnSpec(wmax+16,80),
+				};
+		MultiColumnPrinter printer = new MultiColumnPrinter(writer, tabs);
+		for (Command cmd : _cli) {
+			printer.printColumn(cmd.getIdenetifierString(), "--", cmd.getDescription());
+		}
+		writer.println();
+		writer.println("Type " + getIdenetifierString() + " <command> for information on specific command");
+		writer.println();
 	}
 	
 	void run(String line) {
 		ParsedCommand parsed = parse(line, true);
 		List<String> args = parsed.getArgs();
 		if (args.isEmpty()) {
-			help();
+			printHelp();
 		} else {
 			ColumnPrinter printer = new ColumnPrinter(_cli.getWriter(),	new int[]{8,16,2,64});
 			String id = line.substring(getIdenetifierString().length()).trim();

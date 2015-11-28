@@ -42,9 +42,9 @@ alias         : LETTER (LETTER | DIGIT)*;
 
 predicate          : predicateTerm ((and|or))* ;
 predicateTerm  : unaryPredicate | binaryPredicate ;
-unaryPredicate  : not | isNull | exists ;
+unaryPredicate  : not | isNull | isNotNull | exists ;
 binaryPredicate: equals 
-    | notequals
+    | notEquals
 	| equalsIgnoreCase 
 	| greater 
 	| greaterOrEqual 
@@ -56,18 +56,19 @@ and  : AND predicateTerm;
 or     : OR  predicateTerm;
 
 equals         : fieldPath EQUALS  ( value | bindParam )  ;
-notequals    : fieldPath NOT_EQUALS  ( value | bindParam )  ;
+notEquals    : fieldPath NOT_EQUALS  ( value | bindParam )  ;
 equalsIgnoreCase : fieldPath EQUALS_IGNORECASE  ( value | bindParam )  ;
 
-greater        : fieldPath GREATER ( numericValue | bindParam ) ;
+greater             : fieldPath GREATER ( numericValue | bindParam ) ;
 greaterOrEqual : fieldPath GREATER_OR_EQUAL ( numericValue | bindParam ) ;
-less           : fieldPath LESS ( numericValue | bindParam );
-lessOrEqual    : fieldPath LESS_OR_EQUAL ( numericValue | bindParam ) ;
-like           : fieldPath LIKE ( stringValue | bindParam ); 
+less                  : fieldPath LESS ( numericValue | bindParam );
+lessOrEqual      : fieldPath LESS_OR_EQUAL ( numericValue | bindParam ) ;
+like                   : fieldPath LIKE ( stringValue | bindParam ); 
 
-not            : NOT LPAREN predicateTerm RPAREN ;
-isNull         : IS_NULL fieldPath;
-exists         : EXISTS fieldPath ;
+not          : NOT LPAREN predicateTerm RPAREN ;
+isNull      : IS_NULL fieldPath;
+isNotNull : IS_NOT_NULL fieldPath;
+exists      : EXISTS fieldPath ;
 
 sum  : SUM LPAREN fieldPath RPAREN ;
 min  : MIN LPAREN fieldPath RPAREN ;

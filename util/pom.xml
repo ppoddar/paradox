@@ -13,9 +13,6 @@
     <packaging>jar</packaging>
 
     <name>Utilities</name>
-	<build>
-		<finalName>paradox-util</finalName>
-	</build>
     
     
 </project>
