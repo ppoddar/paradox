@@ -2,8 +2,6 @@ package com.paradox;
 
 import java.util.Iterator;
 
-import oracle.kv.Depth;
-import oracle.kv.Direction;
 import oracle.kv.KVStore;
 import oracle.kv.KVStoreConfig;
 import oracle.kv.KVStoreFactory;

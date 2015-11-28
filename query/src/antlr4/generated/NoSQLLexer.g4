@@ -39,6 +39,7 @@ EXISTS  : E X I S T S;
 FROM    : F R O M;
 GROUP_BY: G R O U P B Y;
 IS_NULL : I S N U L L;
+IS_NOT_NULL : I S N O T N U L L;
 LIMIT   : L I M I T;
 MAX     : M A X;
 MIN     : M I N;

@@ -3,6 +3,7 @@ package org.paradox.command;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
@@ -24,6 +25,8 @@ import org.paradox.schema.Attribute;
 import org.paradox.schema.Schema;
 import org.paradox.schema.UserType;
 import org.paradox.schema.impl.SchemaCompiler;
+import org.paradox.util.NoSQLURL;
+
 /**
  * A command-line client.
  * 
@@ -46,12 +49,13 @@ public class Paradox extends AbstractCommandLineClient {
 		setHelp("help");
 		
 		Command get = new Command("get").setDescription("Gets the value for the given key(s)");
-		get.defineArgument().setName("key(s)").setDescription("key used for Oracle NoSQL datastore");
+		get.defineArgument().setName("key(s)").setDescription("key used for  NoSQL datastore");
 		
 		Command loadSchema = new Command("load", "schema").setDescription("Reads a schema descriptor file to build a Schema");
 		loadSchema.defineArgument().setName("schema descriptor").setDescription("A resource name. The resource defines available types and their attributes in JSON format");
 		Command showSchema = new Command("show", "schema").setDescription("Shows the current schema");
-		Command connect = new Command("connect").setDescription("Connects to a Oracle NoSQL Key-Value data store");
+		
+		Command connect = new Command("connect").setDescription("Connects to a NoSQL Key-Value data store");
 		connect.defineArgument().setName("url").setDescription("Connection URL format is nosql://store-name@host:port. Default host is 'localhost'." +"Default port is 5000.");
 		
 		Command select = new Command("select").setDescription("Executes a SQL select statement");
@@ -80,18 +84,13 @@ public class Paradox extends AbstractCommandLineClient {
 	}
 	
 	
-	public void connect(String urlString) throws URISyntaxException {
-		URI url = new URI(urlString);
-		if (!"nosql".equals(url.getScheme()))
-			throw new URISyntaxException(urlString, "Invalid scheme [" + url.getScheme() + "]. Scheme must be 'nosql'");
-		String storeName = url.getUserInfo() == null ? "kvlite"    : url.getUserInfo();
-		String host      = url.getHost() == null     ? "localhost" : url.getHost();
-		int port         = url.getPort() == -1       ? 5000        : url.getPort();
-		KVStoreConfig config = new KVStoreConfig(storeName, host+':'+port);
+	public void connect(String urlString) throws URISyntaxException, MalformedURLException {
+		NoSQLURL url = new NoSQLURL(urlString);
+		KVStoreConfig config = new KVStoreConfig(url.getStoreName(), url.getHostPorts());
 		try {
 			KVStore newStore = KVStoreFactory.getStore(config);
 			_store = newStore;
-			_uri = url;
+			_uri = new URI(url.getFullString());
 		} catch (Throwable t) {
 			throw new RuntimeException("Can not connect to [" + urlString + "] because " + t.getMessage(), t);
 		}

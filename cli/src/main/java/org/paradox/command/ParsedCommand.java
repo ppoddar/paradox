@@ -43,10 +43,7 @@ class ParsedCommand  {
 	boolean matches(String s) {
 		return original.matches(s);
 	}
-	String match(String s) {
-		return original.match(s);
-	}
-	
+
 	void assertOption(String key) {
 		if (!original.hasOption(key))
 			throw new IllegalArgumentException("Undefined option " + key);

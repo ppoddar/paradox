@@ -8,24 +8,17 @@
 		<version>0.2</version>
 		<relativePath>..</relativePath>
 	</parent>
+	<groupId>org.paradox</groupId>
 	<artifactId>nosql</artifactId>
 	<packaging>jar</packaging>
 
 	<name>Oracle NoSQL Binding</name>
-	<build>
-		<finalName>paradox-oracle-nosql</finalName>
-	</build>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.oracle.kv</groupId>
 			<artifactId>oracle-nosql-client</artifactId>
 			<version>3.2.5</version>
-		</dependency>
-		<dependency>
-			<groupId>org.antlr</groupId>
-			<artifactId>antlr4-runtime</artifactId>
-			<version>4.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.paradox</groupId>
@@ -36,11 +29,6 @@
 			<groupId>org.paradox</groupId>
 			<artifactId>query</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20140107</version>
 		</dependency>
 	</dependencies>
 

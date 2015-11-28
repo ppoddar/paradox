@@ -4,9 +4,9 @@ import java.io.Console;
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * A command-line client. Uses JVM console for i/o. The command descriptions are
@@ -25,7 +25,7 @@ public abstract class AbstractCommandLineClient implements CLI {
 	private String _prompt;
 	private String _greetings;
 	private HelpCommand _help;
-	private Map<String, Command> _metas = new HashMap<String,Command>();
+	private Map<String, Command> _metas = new TreeMap<String,Command>();
 
 	protected AbstractCommandLineClient() {
 		_console = System.console();
@@ -43,8 +43,13 @@ public abstract class AbstractCommandLineClient implements CLI {
 		_metas.put(cmd.getIdenetifierString(), cmd);
 	}
 
+	protected HelpCommand getHelp() {
+		return _help;
+	}
 	protected void setHelp(String key) {
-		registerCommand(_help = new HelpCommand(this, key));
+		_help = new HelpCommand(this, key);
+		_help.setDescription("Prints this message");
+		registerCommand(_help);
 	}
 
 	/**
@@ -117,7 +122,7 @@ public abstract class AbstractCommandLineClient implements CLI {
 	/**
 	 * Parses the command line according to command metadata and invokes
 	 * execution of the command to the concrete subclass with the parsed option
-	 * values and arguments
+	 * values and arguments.
 	 * 
 	 * @param line
 	 *            a command line
@@ -125,15 +130,18 @@ public abstract class AbstractCommandLineClient implements CLI {
 	protected void executeCommandLine(String line) throws Exception {
 		for (Command cmd : _metas.values()) {
 			if (cmd.matches(line)) {
-				if (cmd == _help)
+				if (cmd == _help) {
 					_help.run(line);
-				else
+				} else {
 					execute(cmd.parse(line, true));
+				}
 				return;
 			}
 		}
-		if (_help != null)
-			_help.help();
+		if (_help != null) {
+			getWriter().println("Unknown command [" + line + "]");
+			_help.printHelp();
+		}
 	}
 	
 	@Override

@@ -16,18 +16,26 @@ import java.util.TreeMap;
  *
  */
 public class Command {
-	List<String> identifiers = new ArrayList<String>();
-	Map<String, Option> _options = new TreeMap<String, Option>();
-	List<Argument> _args = new ArrayList<Argument>();
+	private final List<String> _identifiers = new ArrayList<String>();
+	private final Map<String, Option> _options = new TreeMap<String, Option>();
+	private final List<Argument> _args = new ArrayList<Argument>();
 	private String _description = "";
 	private String _usage;
 	private boolean requiresParse = true;
 
 	private static enum ParseState {READ_OPTION_KEY, READ_OPTION_VALUE, READ_ARGS};
 
+	/**
+	 * Supply each identifier in order that helps to recognize a command line.
+	 * 
+	 * @see #matches(String)
+	 * @param identifiers
+	 */
 	public Command(String...identifiers) {
+		if (identifiers == null || identifiers.length == 0)
+			throw new IllegalArgumentException("Command must have at least one identifier");
 		for (int i = 0; identifiers != null && i < identifiers.length; i++) {
-			this.identifiers.add(identifiers[i]);
+			this._identifiers.add(identifiers[i]);
 		}
 	}
 	
@@ -76,12 +84,14 @@ public class Command {
 	/**
 	 * Parse the given line.
 	 * 
-	 * @param line
+	 * @param line input command line
+	 * @param removeIdentifer if true the identifiers that match the first
+	 * word(s) are removed from the input.
 	 * @return result of the parse. never null.
 	 */
 	ParsedCommand parse(String line, boolean removeIdentifer) {
 		if (removeIdentifer) {
-			line = match(line);
+			line = this.removeIdentifier(line);
 		}
 	    StringTokenizer tokenizer = new StringTokenizer(line);
 	    ParsedCommand parsed = new ParsedCommand(this, line);
@@ -119,45 +129,30 @@ public class Command {
 	}
 	
 	
-	/**
-	 * Inspect the line to affirm if this receiver can process the given line.
-	 * @param line a given string
-	 * @return the string that can be parsed by this receiver. null if the given
-	 * line does not match.
-	 */
-	String match(String line) {
-	    StringTokenizer tokenizer = new StringTokenizer(line);
-	    int i = 0;
-	    while (tokenizer.hasMoreElements() && i < identifiers.size()) {
-		    String token = tokenizer.nextToken();
-		    if (identifiers.get(i++).equals(token)) continue;
-		    else return null;
-	    }
-	    StringBuffer buf = new StringBuffer();
-	    while (tokenizer.hasMoreElements()) {
-		    String token = tokenizer.nextToken();
-		    if (buf.length() > 0) buf.append(" ");
-	    	buf.append(token);
-	    }
-	    return buf.toString();
-	}
 	
+	/**
+	 * Affirm if this command recognizes this line.
+	 * A command recognizes a line if each word in the beginning
+	 * matches the identifiers of this command. 
+	 * @param line
+	 * @return
+	 */
 	boolean matches(String line) {
 	    StringTokenizer tokenizer = new StringTokenizer(line);
 	    int i = 0;
-	    while (tokenizer.hasMoreElements() && i < identifiers.size()) {
+	    while (tokenizer.hasMoreElements() && i < _identifiers.size()) {
 		    String token = tokenizer.nextToken();
-		    if (identifiers.get(i++).equals(token)) continue;
+		    if (_identifiers.get(i++).equals(token)) continue;
 		    else return false;
 	    }
-	    return i >= identifiers.size();
+	    return i >= _identifiers.size();
 	}
 	
 	String getIdenetifierString() {
 	    StringBuffer buf = new StringBuffer();
-	    for (String id : identifiers) {
+	    for (String id : _identifiers) {
 		    if (buf.length() > 0) buf.append(" ");
-	    	buf.append(id);
+	    	    buf.append(id);
 	    }
 	    return buf.toString();
 	}
@@ -188,6 +183,31 @@ public class Command {
 		return _args;
 	}
 		
+	
+	
+	/**
+	 * Inspect the line to affirm if this receiver can process the given line.
+	 * @param line a given string
+	 * @return the string that can be parsed by this receiver. null if the given
+	 * line does not match.
+	 */
+	String removeIdentifier(String line) {
+	    StringTokenizer tokenizer = new StringTokenizer(line);
+	    int i = 0;
+	    while (tokenizer.hasMoreElements() && i < _identifiers.size()) {
+		    String token = tokenizer.nextToken();
+		    if (_identifiers.get(i++).equals(token)) continue;
+		    else return null;
+	    }
+	    StringBuffer buf = new StringBuffer();
+	    while (tokenizer.hasMoreElements()) {
+		    String token = tokenizer.nextToken();
+		    if (buf.length() > 0) buf.append(" ");
+	    	buf.append(token);
+	    }
+	    return buf.toString();
+	}
+
 	}
 
 	

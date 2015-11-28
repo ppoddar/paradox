@@ -1,8 +1,5 @@
 package org.paradox.query;
 
-import org.paradox.query.Expression.Path;
-import org.paradox.query.Expression.Predicate;
-import org.paradox.query.Expression.Value;
 
 /**
  * A factory for query expressions.

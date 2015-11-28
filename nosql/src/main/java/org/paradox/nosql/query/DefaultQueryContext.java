@@ -20,15 +20,12 @@ import org.paradox.query.kv.ValueTransformer;
 import org.paradox.schema.Schema;
 import org.paradox.schema.UserType;
 import org.paradox.util.NVPair;
-import org.paradox.util.Transformer;
-import org.paradox.util.TransforminIterator;
 
 import oracle.kv.Consistency;
 import oracle.kv.Depth;
 import oracle.kv.Direction;
 import oracle.kv.KVStore;
 import oracle.kv.Key;
-import oracle.kv.KeyValueVersion;
 import oracle.kv.Value;
 
 /**

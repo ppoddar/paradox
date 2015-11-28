@@ -8,12 +8,13 @@
 		<version>0.2</version>
 		<relativePath>..</relativePath>
 	</parent>
+	<groupId>org.paradox</groupId>
 	<artifactId>query</artifactId>
+	<version>0.2</version>
 	<packaging>jar</packaging>
 	
 
 	<build>
-		<finalName>paradox-query</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.antlr</groupId>
@@ -49,11 +50,14 @@
 		</dependency>
 		<dependency>
 			<groupId>org.paradox</groupId>
+			<artifactId>schema</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.paradox</groupId>
 			<artifactId>util</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
 	</dependencies>
-
-
 </project>
