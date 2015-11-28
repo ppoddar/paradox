@@ -1,7 +1,4 @@
 /**/target/
-/**/*.jar
-/**/*.zip
-/doc.xml
 /notes.txt
 /wip/
 /META-INF
