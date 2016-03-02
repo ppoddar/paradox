@@ -52,7 +52,7 @@ class HelpCommand extends Command {
 			String id = line.substring(getIdenetifierString().length()).trim();
 			Command cmd = _cli.getCommand(id);
 			if (cmd == null) {
-				printer.print("*** Unknown command " + id);
+				printer.printLine("*** Unknown command " + id);
 			} else {
 				printer.printLine(cmd.getIdenetifierString());
 				printer.printLine(cmd.getDescription());

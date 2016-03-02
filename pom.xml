@@ -5,10 +5,10 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.paradox</groupId>
-	<artifactId>paradox</artifactId>
+	<artifactId>parent</artifactId>
 	<packaging>pom</packaging>
 	<version>0.2</version>
-	<name>Paradox: SQL on Oracle NoSQl</name>
+	<name>Paradox: SQL on Oracle NoSQL</name>
 	<properties>
 		<project.version>0.2</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,9 +16,6 @@
 	<modules>
 		<module>api</module>
 		<module>cli</module>
-		<module>util</module>
-		<module>schema</module>
-		<module>query</module>
 		<module>nosql</module>
 		<module>distribution</module>
 	</modules>
@@ -36,28 +33,10 @@
 					</configuration>
 				</plugin>
 
-				<plugin>
-					<artifactId>maven-assembly-plugin</artifactId>
-					<version>2.5.5</version>
-					<configuration>
-						<finalName>paradox-${project.version}</finalName>
-						<appendAssemblyId>true</appendAssemblyId>
-						<outputDirectory>${basedir}</outputDirectory>
-						<descriptors>
-							<descriptor>assembly.xml</descriptor>
-						</descriptors>
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>2.4.1</version>
-			</plugin>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>

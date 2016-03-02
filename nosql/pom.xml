@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.paradox</groupId>
-		<artifactId>paradox</artifactId>
+		<artifactId>parent</artifactId>
 		<version>0.2</version>
 		<relativePath>..</relativePath>
 	</parent>
@@ -22,12 +22,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.paradox</groupId>
-			<artifactId>schema</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.paradox</groupId>
-			<artifactId>query</artifactId>
+			<artifactId>paradox</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 	</dependencies>

@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="query/target/test-classes" path="schema/src/main/java"/>
-	<classpathentry kind="src" path="query/src/test/java"/>
-	<classpathentry kind="src" output="query/target/classes" path="query/src/main/java"/>
-	<classpathentry kind="src" output="util/target/classes" path="util/src/main/java"/>
 	<classpathentry kind="src" output="nosql/target/classes" path="nosql/src/main/java"/>
 	<classpathentry kind="src" output="cli/target/test-classes" path="cli/src/test/java"/>
 	<classpathentry kind="src" output="cli/target/test-classes" path="cli/src/test/resources"/>
 	<classpathentry kind="src" output="nosql/target/test-classes" path="nosql/src/test/java"/>
 	<classpathentry kind="src" output="nosql/target/test-classes" path="nosql/src/test/resources"/>
-	<classpathentry kind="src" output="schema/target/test-classes" path="schema/src/test/java"/>
-	<classpathentry kind="src" output="schema/target/test-classes" path="schema/src/test/resources"/>
-	<classpathentry kind="src" output="util/target/test-classes" path="util/src/test/java"/>
-	<classpathentry kind="src" output="util/target/test-classes" path="util/src/test/resources"/>
 	<classpathentry kind="src" output="cli/target/classes" path="cli/src/main/java"/>
 	<classpathentry kind="src" output="api/target/classes" path="api/src/main/java"/>
+	<classpathentry kind="src" output="api/target/test-classes" path="api/src/test"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/pipoddar.ORADEV/.m2/repository"/>
@@ -23,9 +16,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JSON"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ORACLE-NOSQL"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ANTLR4"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ORACLE_NOSQL"/>
+	<classpathentry kind="var" path="M2_REPO/org/antlr/antlr4/4.5/antlr4-4.5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/com/oracle/kv/oracle-nosql-client/3.2.5/oracle-nosql-client-3.2.5.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/json/json/20140107/json-20140107.jar"/>
 	<classpathentry kind="output" path="query/target/test-classes"/>
 </classpath>

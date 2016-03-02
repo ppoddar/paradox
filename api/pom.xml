@@ -4,22 +4,60 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.paradox</groupId>
-		<artifactId>paradox</artifactId>
+		<artifactId>parent</artifactId>
 		<version>0.2</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<groupId>org.paradox</groupId>
-	<artifactId>api</artifactId>
+	<artifactId>paradox</artifactId>
 	<packaging>jar</packaging>
 
-	<name>API</name>
+	<name>Paradox API</name>
+
+	<build>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.antlr</groupId>
+					<artifactId>antlr4-maven-plugin</artifactId>
+					<version>4.5</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.antlr</groupId>
+				<artifactId>antlr4-maven-plugin</artifactId>
+				<configuration>
+					<outputDirectory>src/main/java/antlr4/generated</outputDirectory>
+					<sourceDirectory>src/main/resources</sourceDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>antlr4</id>
+						<goals>
+							<goal>antlr4</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 
 	<dependencies>
 		<dependency>
-			<groupId>org.paradox</groupId>
-			<artifactId>schema</artifactId>
-			<version>${project.version}</version>
+			<groupId>org.antlr</groupId>
+			<artifactId>antlr4</artifactId>
+			<version>4.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20140107</version>
 		</dependency>
 	</dependencies>
-	
+
 </project>

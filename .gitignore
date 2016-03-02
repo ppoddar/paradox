@@ -8,3 +8,4 @@
 /query/src/main/java/antlr4/generated/*.java
 /**/*.tokens
 /target
+/bin/

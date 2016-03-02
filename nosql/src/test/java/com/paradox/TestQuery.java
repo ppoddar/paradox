@@ -17,6 +17,8 @@ import org.paradox.query.QueryContext;
 
 /**
  * Queries hand-crafted data to validate predicate-based query results.
+ * The test only run if a NoSQl database has started before this test.
+ * Otherwise, all test are effectively ignore.
  *  
  * @author pinaki poddar
  *
@@ -33,7 +35,13 @@ public class TestQuery {
 		String hostPort   = System.getProperty("hostPort", "localhost:5000");
 		KVStoreConfig config = new KVStoreConfig(storeName, hostPort);
 		
-		_store = KVStoreFactory.getStore(config);
+		try {
+			_store = KVStoreFactory.getStore(config);
+		} catch (Exception ex) {
+			System.err.println("***ERROR: Opening store " + config);
+			System.err.println("***WARNING: All tests will be skkiped");
+			return;
+		}
 		_ctx = new QueryContextBuilder(_store).build();
 		
 		deleteAll(_store, _type);
@@ -42,6 +50,7 @@ public class TestQuery {
 
 	@Test
 	public void testCount() throws Exception {
+		if (_store == null) return;
 		String sql = "select * from Person";
 		Iterator<JSONObject> result = _ctx.executeQuery(sql);
 		Assert.assertEquals(_dataSize, count(result));
@@ -88,8 +97,7 @@ public class TestQuery {
 	
 	@Test
 	public void testLike() throws Exception {
-		assertQueryResultByResultCount(
-				"select * from Person where name LIKE 'Person-[1-5]'", 5);
+		assertQueryResultByResultCount("select * from Person where name LIKE 'Person-[1-5]'", 5);
 	}
 	
 	@Test
@@ -98,8 +106,7 @@ public class TestQuery {
 	}
 	@Test
 	public void testIsNotNull() throws Exception {
-		assertQueryResultByResultCount("select * from Person where NOT(ISNULL gender)",
-				_dataSize - 2);
+		assertQueryResultByResultCount("select * from Person where NOT(ISNULL gender)", _dataSize - 2);
 	}
 	@Test
 	public void testAnd() throws Exception {
@@ -116,7 +123,9 @@ public class TestQuery {
 		Assert.assertNull(json.opt("a"));
 		Assert.assertSame(JSONObject.NULL, json.opt("b"));
 	}
+	
 	void assertQueryResultByResultCount(String sql, int expectedResultCount) throws Exception {
+		if (_store == null) return;
 		Iterator<JSONObject> result = _ctx.executeQuery(sql);
 		Assert.assertEquals(expectedResultCount, count(result));
 	}
