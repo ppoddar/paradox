@@ -1,3 +1,24 @@
+/**
+
+      Copyright ©2016. Author Pinaki Poddar. All Rights Reserved. 
+
+	Permission to use, copy, modify, and distribute this software and its documentation 
+	for educational, research, and not-for-profit purposes, without fee and without a 
+	signed licensing agreement, is hereby granted, provided that the above copyright notice, 
+	this paragraph and the following two paragraphs appear in all copies, modifications, 
+	and distributions. 
+
+
+	IN NO EVENT SHALL THE AUTHOR BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, 
+	OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE 
+	AND ITS DOCUMENTATION, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+	THE AUTHOR SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE AND 
+	ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS". THE AUTHOR HAS 
+	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+*/
+
 package org.paradox.command;
 
 import java.io.BufferedReader;
@@ -59,7 +80,8 @@ public class Paradox extends AbstractCommandLineClient {
 		connect.defineArgument().setName("url").setDescription("Connection URL format is nosql://store-name@host:port. Default host is 'localhost'." +"Default port is 5000.");
 		
 		Command select = new Command("select").setDescription("Executes a SQL select statement");
-		select.requiresParse(false);
+		select.requiresParse(false)
+		      .removesIdentifier(false);
 		select.setUsage("select [projection|*] from [type] (where predicate (and|or predicate)) (order by) (group by) (skip n) (limit n)");
 		
 		Command status = new Command("status").setDescription("Prints current state of the client");
@@ -130,23 +152,26 @@ public class Paradox extends AbstractCommandLineClient {
 
 
 	@Override
-	protected void execute(ParsedCommand cmd) throws Exception {
-		if (cmd.matches("get")) {
-			new Get().execute(cmd.getArgs());
-		} else if (cmd.matches("connect")) {
-			connect(cmd.getArgs(0));
-		} else if (cmd.matches("exit")) {
+	protected void execute(ParsedCommand parsed) throws Exception {
+		Command cmd = parsed.getOriginal();
+		System.err.println("Parsed command [" + parsed.getLine() + "]");
+		if (cmd.recognizes("get")) {
+			new Get().execute(parsed.getArgs());
+		} else if (cmd.recognizes("connect")) {
+			connect(parsed.getArgs(0));
+		} else if (cmd.recognizes("exit")) {
 			System.exit(0);
-		} else if (cmd.matches("load schema")) {
-			loadSchema(cmd.getArgs(0));
-		} else if (cmd.matches("show schema")) {
+		} else if (cmd.recognizes("load schema")) {
+			loadSchema(parsed.getArgs(0));
+		} else if (cmd.recognizes("show schema")) {
 			new SchemaPrinter().print(_schema, getWriter());
 		} else if ("load data".equalsIgnoreCase(cmd.toString())) {
-			BufferedReader reader = new BufferedReader(new FileReader(cmd.getArgs(0)));
-			DataLoader.loadData(getQueryContext(), cmd.getOption("-type"), reader);
-		} else if (cmd.matches("select")) {
-			new SelectQuery().execute(cmd.getLine());
-		} else if (cmd.matches("status")) {
+			BufferedReader reader = new BufferedReader(new FileReader(parsed.getArgs(0)));
+			DataLoader.loadData(getQueryContext(), parsed.getOption("-type"), reader);
+		} else if (cmd.recognizes("select")) {
+			System.err.println("select query [" + parsed.getLine() + "]");
+			new SelectQuery().execute(parsed.getLine());
+		} else if (cmd.recognizes("status")) {
 			status();
 		} 
 	}
@@ -165,15 +190,15 @@ public class Paradox extends AbstractCommandLineClient {
 	}
 	
 	public class SelectQuery {
-		public void execute(String cmdLine) throws Exception {
+		public void execute(String query) throws Exception {
 			long start = System.currentTimeMillis();
-			Iterator<JSONObject> results = getQueryContext().executeQuery(cmdLine);
+			Iterator<JSONObject> results = getQueryContext().executeQuery(query);
 			long elapsed = System.currentTimeMillis() - start;
 			int count = 0;
 			for (; results.hasNext(); count++) {
 				getWriter().println("\t["+ count +"]: " + results.next());
 			}
-			getWriter().println("Query executed in " + elapsed + "ms and selected " 
+			getWriter().println("Query [" + query + "] executed in " + elapsed + "ms and selected " 
 			   + (count == 0 ? "no" : ""+count) + " key-value pair" + (count < 2 ? "" : "s"));
 		}
 	}

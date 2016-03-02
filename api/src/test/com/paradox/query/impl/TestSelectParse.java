@@ -1,3 +1,24 @@
+/**
+
+      Copyright ©2016. Author Pinaki Poddar. All Rights Reserved. 
+
+	Permission to use, copy, modify, and distribute this software and its documentation 
+	for educational, research, and not-for-profit purposes, without fee and without a 
+	signed licensing agreement, is hereby granted, provided that the above copyright notice, 
+	this paragraph and the following two paragraphs appear in all copies, modifications, 
+	and distributions. 
+
+
+	IN NO EVENT SHALL THE AUTHOR BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, 
+	OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE 
+	AND ITS DOCUMENTATION, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+	THE AUTHOR SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE AND 
+	ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS". THE AUTHOR HAS 
+	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+*/
+
 package com.paradox.query.impl;
 
 import java.util.Iterator;
@@ -24,18 +45,58 @@ public class TestSelectParse {
 		String sql = "selEct name FroM Person";
 		Select select = parseSelect(sql);
 		Assert.assertEquals(sql, select.getSQL());
+		
 	}
 	
 	@Test
-	public void testCandidate() throws Exception {
+	public void testCandidateName() throws Exception {
 		String sql = "select name from Person";
 		Select select = parseSelect(sql);
 		String extent = select.getCandidate().getName();
+
 		Assert.assertEquals("Person", extent);
 	}
+	
+	@Test
+	public void testSingleComponentSingleField() throws Exception {
+		String sql = "select name from Person";
+		Select select = parseSelect(sql);
+		String term = select.getProjectionTerms().next().getName();
+
+		Assert.assertEquals("name", term);
+	}
+	
+	@Test
+	public void testSingleComponentMultipleField() throws Exception {
+		String sql = "select name,age from Person";
+		Select select = parseSelect(sql);
+		Iterator<Expression.Path<?>> terms = select.getProjectionTerms();
+		String term1 = terms.next().getName();
+		String term2 = terms.next().getName();
+
+		Assert.assertFalse(terms.hasNext());
+		Assert.assertEquals("name", term1);
+		Assert.assertEquals("age", term2);
+	}
+	
+	@Test
+	public void testMultiComponentSingleField() throws Exception {
+		String[] fieldPaths = {"p.address"};//, "p.address", "p1p.address", "pp1.address"};
+		for (String path : fieldPaths) {
+			String sql = "select " + path + " from Person";
+			Select select = parseSelect(sql);
+			Iterator<Expression.Path<?>> terms = select.getProjectionTerms();
+			String term = terms.next().getName();
+		
+			Assert.assertFalse(terms.hasNext());
+			Assert.assertEquals(path, term);
+		}
+	}
+	
+	
 	@Test
 	public void testCandidateAlias() throws Exception {
-		String sql = "select name from Person p";
+		String sql = "select name from Person as p";
 		Select select = parseSelect(sql);
 		Expression.Candidate<?> candidate = select.getCandidate();
 		Assert.assertEquals("Person", candidate.getName());

@@ -19,23 +19,28 @@
 	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-package org.paradox.schema.impl;
+package org.paradox.util;
 
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 
-import org.paradox.schema.EnumeratedType;
-import org.paradox.schema.Schema;
-
-class AbstractEnumeratedType extends AbstractType implements EnumeratedType {
-
-	AbstractEnumeratedType(Schema schema, String name) {
-		super(schema, name, FLAG_ENUM);
-	}
-
-	@Override
-	public List<String> values() {
-		// TODO Auto-generated method stub
-		return null;
+public class Terminal {
+	private InputStream in = System.in;
+	private PrintStream out = new PrintStream(System.out);
+	
+	public void run() {
+		try {
+			int i = in.read();
+			out.print((char)i);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+			
 	}
 	
+	public static void main(String[] args) {
+		new Terminal().run();
+	}
+
 }

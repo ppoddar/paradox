@@ -4,8 +4,6 @@ lexer grammar NoSQLLexer;
 package antlr4.generated;
 }
 
-LETTER      : 'a'..'z'|'A'..'Z' ;
-DIGIT       : '0'..'9' ;
 UNDERSCORE  : '_' ;
 WILDCARD    : '*';
 DOUBLEQUOTE : '"';  // single quote is defined later after lexer mode switching rule
@@ -29,28 +27,31 @@ LESS_OR_EQUAL  : '<=';
 LIKE         : 'LIKE';
 
 // Keywords
-AND     : A N D;
-AS      : A S;
-ASC     : A S C ;
-AVG     : A V G;
-COUNT   : C O U N T;
-DESC    : D E S C;
-EXISTS  : E X I S T S;
-FROM    : F R O M;
-GROUP_BY: G R O U P B Y;
-IS_NULL : I S N U L L;
-IS_NOT_NULL : I S N O T N U L L;
-LIMIT   : L I M I T;
-MAX     : M A X;
-MIN     : M I N;
-NOT     : N O T;
-OR      : O R;
-ORDER_BY: O R D E R B Y;
-SELECT  : S E L E C T;
-SKIP    : S K I P;
-SUM     : S U M;
-WHERE   : W H E R E;
-
+AND     : [Aa][Nn][Dd];
+AS      : [Aa][Ss];
+ASC     : [Aa][Ss][Cc];
+AVG     : [Aa][Vv][Gg];
+COUNT   : [Cc][Oo][Uu][Nn][Tt];
+DESC    : [Dd][Ee][Ss][Cc];
+EXISTS  : [Ee][Xx][Ii][Ss][Tt][Ss];
+FROM    : [Ff][Rr][Oo][Mm];
+BY      : [Bb][Yy];
+IS      : [Ii][Ss];
+NULL    : [Nn][Uu][Ll][Ll];
+GROUP_BY: [Gg][Rr][Oo][Uu][Pp] BY;
+IS_NULL : IS NULL;
+IS_NOT_NULL : IS NOT NULL;
+LIMIT   : [Ll][Ii][Mm][Ii][Tt];
+MAX     : [Mm][Aa][Xx];
+MIN     : [Mm][Ii][Nn];
+NOT     : [Nn][Oo][Tt];
+OR      : [Oo][Rr];
+ORDER_BY: [Oo][Rr][Dd][Ee][Rr] BY;
+SELECT  : [Ss][Ee][Ll][Ee][Cc][Tt];
+SKIP    : [Ss][Kk][Ii][Pp];
+SUM     : [Ss][Uu][Mm];
+WHERE   : [Ww][Hh][Ee][Rr][Ee];
+/**
 fragment A: 'a'|'A';
 fragment B: 'b'|'B';
 fragment C: 'c'|'C';
@@ -77,8 +78,10 @@ fragment W: 'w'|'W';
 fragment X: 'x'|'X';
 fragment Y: 'y'|'Y';
 fragment Z: 'z'|'Z';
-
-IDENTIFIER : [a-zA-Z]+;
+*/
+IDENTIFIER : LETTER (LETTER|DIGIT)*; //[a-zA-Z]+;
+LETTER      : 'a'..'z'|'A'..'Z' ;
+DIGIT       : '0'..'9' ;
 
 // Ignore Whitespace in common mode but not inside String Literals
 WS : (' '|'\t'|'\r'|'\n')+ -> skip ; 

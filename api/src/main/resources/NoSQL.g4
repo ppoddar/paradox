@@ -32,13 +32,13 @@ projections   : rootPath
 	| fieldPath (COMMA fieldPath)* 
 	| aggregateTerm (COMMA aggregateTerm)* ;
 
-typeName      : IDENTIFIER;      //  LETTER (LETTER | DIGIT | UNDERSCORE)*;
-rootPath        : WILDCARD ;
+typeName      : IDENTIFIER ((AS)? alias)?;      //  LETTER (LETTER | DIGIT | UNDERSCORE)*;
+rootPath      : WILDCARD ;
 fieldName     : IDENTIFIER; // (LETTER | UNDERSCORE) (LETTER | DIGIT | UNDERSCORE)* ;
-fieldPath       : fieldName (DOT fieldName)*;
+fieldPath     : fieldName(DOT fieldName)*;
 aggregateTerm : (sum | min | max | avg | count) (AS alias)?;
 
-alias         : LETTER (LETTER | DIGIT)*;
+alias         : IDENTIFIER;
 
 predicate          : predicateTerm ((and|or))* ;
 predicateTerm  : unaryPredicate | binaryPredicate ;

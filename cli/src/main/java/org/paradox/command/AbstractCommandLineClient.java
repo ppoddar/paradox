@@ -1,3 +1,24 @@
+/**
+
+      Copyright ©2016. Author Pinaki Poddar. All Rights Reserved. 
+
+	Permission to use, copy, modify, and distribute this software and its documentation 
+	for educational, research, and not-for-profit purposes, without fee and without a 
+	signed licensing agreement, is hereby granted, provided that the above copyright notice, 
+	this paragraph and the following two paragraphs appear in all copies, modifications, 
+	and distributions. 
+
+
+	IN NO EVENT SHALL THE AUTHOR BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, 
+	OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE 
+	AND ITS DOCUMENTATION, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+	THE AUTHOR SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE AND 
+	ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS". THE AUTHOR HAS 
+	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+*/
+
 package org.paradox.command;
 
 import java.io.Console;
@@ -63,6 +84,7 @@ public abstract class AbstractCommandLineClient implements CLI {
 			if (line.isEmpty())
 				continue;
 			try {
+				System.err.println("Executing [" + line + "]");
 				executeCommandLine(line);
 			} catch (ParseException ex) {
 				getWriter().println("*** ERROR: " + ex.getMessage());
@@ -78,16 +100,8 @@ public abstract class AbstractCommandLineClient implements CLI {
 	}
 
 	/**
-	 * Execute the command registered as the given command moniker.
+	 * Execute the command registered as the given command.
 	 * 
-	 * @param cmd
-	 *            moniker of the command
-	 * @param line
-	 *            the entire command line
-	 * @param options
-	 *            the parsed options and their values
-	 * @param args
-	 *            the parsed arguments
 	 * @throws Exception
 	 *             raise exception from execution. This receiver will print
 	 *             stack trace on console.
@@ -129,11 +143,11 @@ public abstract class AbstractCommandLineClient implements CLI {
 	 */
 	protected void executeCommandLine(String line) throws Exception {
 		for (Command cmd : _metas.values()) {
-			if (cmd.matches(line)) {
+			if (cmd.recognizes(line)) {
 				if (cmd == _help) {
 					_help.run(line);
 				} else {
-					execute(cmd.parse(line, true));
+					execute(cmd.parse(line));
 				}
 				return;
 			}
@@ -147,7 +161,7 @@ public abstract class AbstractCommandLineClient implements CLI {
 	@Override
 	public Command getCommand(String id) {
 		for (Command cmd : this) {
-			if (cmd.matches(id)) {
+			if (cmd.recognizes(id)) {
 				return cmd;
 			}
 		}

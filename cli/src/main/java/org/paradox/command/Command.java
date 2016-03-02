@@ -1,3 +1,24 @@
+/**
+
+      Copyright ©2016. Author Pinaki Poddar. All Rights Reserved. 
+
+	Permission to use, copy, modify, and distribute this software and its documentation 
+	for educational, research, and not-for-profit purposes, without fee and without a 
+	signed licensing agreement, is hereby granted, provided that the above copyright notice, 
+	this paragraph and the following two paragraphs appear in all copies, modifications, 
+	and distributions. 
+
+
+	IN NO EVENT SHALL THE AUTHOR BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, 
+	OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE 
+	AND ITS DOCUMENTATION, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+	THE AUTHOR SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE AND 
+	ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS". THE AUTHOR HAS 
+	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+*/
+
 package org.paradox.command;
 
 import java.util.ArrayList;
@@ -9,7 +30,7 @@ import java.util.TreeMap;
 
 /**
  * A command is defined with zero or more options and arguments.
- * A command also has zero or more identifiers that are used to
+ * A command also has one or more identifiers that are used to
  * detect if a command line begins with the same tokens.
  *  
  * @author pinaki poddar
@@ -21,14 +42,15 @@ public class Command {
 	private final List<Argument> _args = new ArrayList<Argument>();
 	private String _description = "";
 	private String _usage;
-	private boolean requiresParse = true;
+	private boolean _removeIdentifier = true;
+	private boolean _requiresParse = true;
 
 	private static enum ParseState {READ_OPTION_KEY, READ_OPTION_VALUE, READ_ARGS};
 
 	/**
 	 * Supply each identifier in order that helps to recognize a command line.
 	 * 
-	 * @see #matches(String)
+	 * @see #recognizes(String)
 	 * @param identifiers
 	 */
 	public Command(String...identifiers) {
@@ -39,26 +61,66 @@ public class Command {
 		}
 	}
 	
+	/**
+	 * Gets a description of this command.
+	 * @return
+	 */
 	public String getDescription() {
 		return _description;
 	}
+	
+	/**
+	 * Sets a description for this command.
+	 * @param desc
+	 * @return
+	 */
 	Command setDescription(String desc) {
 		_description = desc;
 		return this;
 	}
+	
+	/**
+	 * Sets usage description for this command.
+	 * @param u
+	 * @return
+	 */
 	Command setUsage(String u) {
 		_usage = u;
 		return this;
 	}
+	
+	/**
+	 * Affirms if this command has the given option. 
+	 * @param key
+	 * @return
+	 */
 	boolean hasOption(String key) {
 		return _options.containsKey(key);
 	}
 	
+	/**
+	 * Sets whether this command requires to be parsed.
+	 * @param flag
+	 * @return
+	 */
 	Command requiresParse(boolean flag) {
-		requiresParse = flag;
+		_requiresParse = flag;
 		return this;
 	}
 	
+	/**
+	 * Returns whether this command requires parsing.
+	 * @return
+	 */
+	public boolean requiresParse() {
+		return _requiresParse;
+	}
+	
+	/**
+	 * defines an option.
+	 * @param key
+	 * @return
+	 */
 	protected Option defineOption(String key) {
 		if (key == null || !key.startsWith("-")) {
 			throw new IllegalArgumentException("invalid option key " + key
@@ -78,24 +140,19 @@ public class Command {
 		return arg;
 	}
 	
-	ParsedCommand parse(String line) {
-		return parse(line, false);
-	}
 	/**
 	 * Parse the given line.
 	 * 
 	 * @param line input command line
-	 * @param removeIdentifer if true the identifiers that match the first
-	 * word(s) are removed from the input.
 	 * @return result of the parse. never null.
 	 */
-	ParsedCommand parse(String line, boolean removeIdentifer) {
-		if (removeIdentifer) {
+	ParsedCommand parse(String line) {
+		if (_removeIdentifier) {
 			line = this.removeIdentifier(line);
 		}
 	    StringTokenizer tokenizer = new StringTokenizer(line);
 	    ParsedCommand parsed = new ParsedCommand(this, line);
-		if (!requiresParse) return parsed;
+		if (!_requiresParse) return parsed;
 	    Option option = null;
 	    ParseState state = ParseState.READ_OPTION_KEY;
 	    
@@ -137,7 +194,7 @@ public class Command {
 	 * @param line
 	 * @return
 	 */
-	boolean matches(String line) {
+	boolean recognizes(String line) {
 	    StringTokenizer tokenizer = new StringTokenizer(line);
 	    int i = 0;
 	    while (tokenizer.hasMoreElements() && i < _identifiers.size()) {
@@ -183,7 +240,10 @@ public class Command {
 		return _args;
 	}
 		
-	
+	public Command removesIdentifier(boolean flag) {
+		_removeIdentifier = flag;
+		return this;
+	}
 	
 	/**
 	 * Inspect the line to affirm if this receiver can process the given line.

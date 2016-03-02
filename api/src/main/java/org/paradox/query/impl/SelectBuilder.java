@@ -1,3 +1,24 @@
+/**
+
+      Copyright ©2016. Author Pinaki Poddar. All Rights Reserved. 
+
+	Permission to use, copy, modify, and distribute this software and its documentation 
+	for educational, research, and not-for-profit purposes, without fee and without a 
+	signed licensing agreement, is hereby granted, provided that the above copyright notice, 
+	this paragraph and the following two paragraphs appear in all copies, modifications, 
+	and distributions. 
+
+
+	IN NO EVENT SHALL THE AUTHOR BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, 
+	OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS SOFTWARE 
+	AND ITS DOCUMENTATION, EVEN IF THE AUTHOR HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+	THE AUTHOR SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+	WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE AND 
+	ACCOMPANYING DOCUMENTATION, IF ANY, PROVIDED HEREUNDER IS PROVIDED "AS IS". THE AUTHOR HAS 
+	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+*/
+
 package org.paradox.query.impl;
 
 import java.io.IOException;
@@ -67,13 +88,13 @@ import antlr4.generated.NoSQLParser.WhereClauseContext;
  * The grammar for SQL-like string is defined using ANTLR (version 4). 
  * <p>
  * This builder listens as nodes of Abstract Syntax Tree (AST) generated  
- * from an input query string are walked. On each AST node, this builder 
+ * from an input query string are visited. On each AST node, this builder 
  * creates appropriate types of {@link Expression query expression} and populates
  * a {@link Select select} data structure. 
  * <br>
  * The intermediate {@link Expression expressions} are maintained in an 
  * internal Stack machine. The enterXXX() pushes the expression on to
- * the stack and exitXXX() pops it, with the exception of aliased expressions.
+ * the stack and exitXXX() pops it.
  * 
  * <p>
  * The concrete expressions are created by a {@link ExpressionFactory factory}.
@@ -111,9 +132,15 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 		synchronized (_stack) {
 			_select = new Select(sql);
 			ANTLRInputStream in = new ANTLRInputStream(sql);
-			 NoSQLLexer lexer = new NoSQLLexer(in);;
+			NoSQLLexer lexer = new NoSQLLexer(in);
+			
+			DescriptiveErrorListener e = new DescriptiveErrorListener(sql);
+			lexer.removeErrorListeners();
+			lexer.addErrorListener(e);
 			CommonTokenStream tokens = new CommonTokenStream(lexer);
 			NoSQLParser parser = new NoSQLParser(tokens);
+			parser.removeErrorListeners();
+			parser.addErrorListener(e);
 			ParseTree ast = parser.selectStatement(); // parse the statement
 			new ParseTreeWalker().walk(this, ast);
 		}
@@ -232,7 +259,7 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	}
 	
 	public void exitAlias(AliasContext ctx) {
-		pop(Expression.Path.class).setAlias(ctx.getText());
+		peek(Expression.Candidate.class).setAlias(ctx.IDENTIFIER().getText());
 	}
 
 	
@@ -294,34 +321,17 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	public void exitNot(NotContext ctx) {
 		push(_factory.newNot(pop(Expression.Predicate.class)));
 	}
+	
 	public void enterTypeName(TypeNameContext ctx) {
-		Expression.Candidate<?> candidate = _factory.newCandidate(ctx.getText());
+		Expression.Candidate<?> candidate = _factory.newCandidate(ctx.IDENTIFIER().getText());
 		_select.setCandidate(candidate);
 		push(candidate);
 	}
-	/**
-	 * The candidate is now available and select is set accordingly.
-	 * 
-	 * @see Select#setRoot(org.paradox.query.Expression.Candidate)
-	 */
 	
 	public void exitTypeName(TypeNameContext ctx) {
-//		Expression.Candidate<?> candidate = _factory.newCandidate(ctx.getText());
-//		_select.setRoot(candidate);
-//		// now projection paths can be validated
-//		if (_select.hasPaths()) {
-//			Iterator<Expression.Path<?>> paths = _select.getFieldTerms();
-//			while (paths.hasNext()) {
-//				validatePath(paths.next());
-//			}
-//		} else if (_select.hasAggregates()) {
-//			Iterator<Expression.Aggregate<?>> aggregates = _select.getAggregateTerms();
-//			while (aggregates.hasNext()) {
-//				Expression.Path< ?> path = (Expression.Path< ?>)aggregates.next().getArgument(0);
-//				validatePath(path);
-//			}
-//		}
+		pop(Expression.Candidate.class);
 	}
+	
 	public void exitSelectClause(SelectClauseContext ctx) { 
 		//assertEmptyStack();
 		_stack.clear();
@@ -370,20 +380,21 @@ public class SelectBuilder extends NoSQLBaseListener implements ANTLRErrorListen
 	
 
 	
-	public void visitErrorNode(ErrorNode error) {
-		Token token = error.getSymbol();
-
-		int n = token.getStartIndex();
-		int l = token.getText().length();
-		String sql = _select.getSQL();
-		String message = "Syntax error in SQL [" + sql + "]";
-		if (n != -1) {
-		  message = "Encountered [" + token.getText() + "] at position " +  n + " in SQL [" 
-		          + sql.substring(0,n) + "^" + token.getText() + "^ " + sql.substring(n+l) + "]";
-		}
-		
-		throw new RuntimeException(message);
-	}
+//	public void visitErrorNode(ErrorNode error) {
+//		Token token = error.getSymbol();
+//
+//		int n = token.getStartIndex();
+//		int l = token.getText().length();
+//		String sql = _select.getSQL();
+//		String message = "Syntax error in SQL [" + sql + "]";
+//		if (n != -1) {
+//		  message = "Encountered [" + token.getText() + "] at position " +  n + " in SQL [" 
+//		          + sql.substring(0,n) + "^" + token.getText() + "^ " + sql.substring(n+l) 
+//		          + "] expecting ";
+//		}
+//		
+//		throw new RuntimeException(message);
+//	}
 
 
 	
