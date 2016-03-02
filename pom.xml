@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/maven-v4_0_0.xsd">
+                        http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.paradox</groupId>
 	<artifactId>parent</artifactId>
 	<packaging>pom</packaging>
 	<version>0.2</version>
-	<name>Paradox: SQL on Oracle NoSQL</name>
+	<name>Paradox: SQL on NoSQL</name>
 	<properties>
 		<project.version>0.2</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -46,6 +46,9 @@
 					<quiet>true</quiet>
 					<verbose>false</verbose>
 					<excludePackageNames>antlr4.*:*.command.*:*.impl:*.exp:*.util</excludePackageNames>
+					<stylesheet>maven</stylesheet>
+					<stylesheetfile>site/resources/css/javadoc.css</stylesheetfile>
+					<overview>site/doc/overview.html</overview>
 				</configuration>
 				<executions>
 					<execution>

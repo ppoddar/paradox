@@ -22,19 +22,19 @@
 package org.paradox.query;
 
 import org.paradox.query.exp.ExpressionVisitor;
-import org.paradox.query.kv.KVQueryContext;
 
 
 /**
- * Generic node of a Query. A query predicate is a tree of expression nodes.
- * A query projection and order by clause are lists of expressions.
+ * Generic node of a Query Tree. A query is represented as a tree of Expression nodes.
+ * A query projection and order by clause are also lists of {@link Expression.Path Path
+ * Expressions}.
  * 
  * <p>
- * An expression evaluates its argument(s) to produce a value. 
- * The generic type argument of expression denotes the type of value produced by evaluation. 
+ * An expression {@link #evaluate(Object, QueryContext) evaluates} its argument(s) to produce a value. 
+ * The generic type argument of an Expression denotes the type of value produced by evaluation. 
  * <br>
  * The type of candidate is relevant for {@link Expression.Path path-based expression}. 
- * A path expression is {@link Expression#evaluate(Object, KVQueryContext) evaluated} by extracting 
+ * A path expression is {@link Expression#evaluate(Object, QueryContext) evaluated} by extracting 
  * the attribute value  of the the candidate instance. A path expression must know the 
  * representation type of the candidate instance.
  * <br>
@@ -61,7 +61,7 @@ public interface Expression<V> {
 	 * Evaluates this receiver for the given candidate.
 	 */
 
-	V evaluate(Object candidate, KVQueryContext<?,?,?> ctx);
+	V evaluate(Object candidate, QueryContext<?,?,?> ctx);
 	
 	/**
 	 * Expressions that operate on other expressions as arguments.
@@ -91,6 +91,11 @@ public interface Expression<V> {
 	
 	/** Affirms if left hand is null. **/
 	interface IsNull extends Predicate{}
+	
+	/**
+	 * Affirms if a given attribute exists in a candidate record. 
+	 *
+	 */
 	interface Exists extends Predicate{}
 	
 	/** Affirms if two expressions evaluate to be equal. **/
@@ -181,7 +186,11 @@ public interface Expression<V> {
 	}
 
 	
-	
+	/**
+	 * A path that appears in an {@code ORDER BY} clause.
+	 *
+	 * @param <V> the value of the path. Must be comparable.
+	 */
 	interface OrderablePath<V> extends Path<V> {
 		/**
 		 * Sets this path values to be sorted in descending order when the path appears

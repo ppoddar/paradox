@@ -38,10 +38,10 @@ import oracle.kv.Key;
 import oracle.kv.ValueVersion;
 
 import org.json.JSONObject;
-import org.paradox.nosql.query.DefaultKeyMaker;
-import org.paradox.nosql.query.DefaultQueryContext;
-import org.paradox.nosql.query.JSONValueTransformer;
-import org.paradox.nosql.query.QueryContextBuilder;
+import org.paradox.query.impl.nosql.DefaultKeyMaker;
+import org.paradox.query.impl.nosql.DefaultQueryContext;
+import org.paradox.query.impl.nosql.JSONValueTransformer;
+import org.paradox.query.impl.nosql.QueryContextBuilder;
 import org.paradox.schema.Attribute;
 import org.paradox.schema.Schema;
 import org.paradox.schema.UserType;

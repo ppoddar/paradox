@@ -23,17 +23,38 @@ package org.paradox.query;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import org.paradox.schema.Schema;
 
 /**
  *  A context provides an environment to execute a query
  *  on a key-value store and returns result in user 
  *  representation.
+ *  <p>
+ *  Query execution on a Key-Value store requires associated artifacts
+ *  that the user of this interface must supply:
+ * <ul>
+ * <li>{@link KeyMaker} to create a partial or complete key. 
+ * For key-value store, the composition of key is designed by the application  
+ * and hence the {@link KeyMaker} contract can only be satisfied by the application.
+ * <li>{@link ValueTransformer} to extract the property from the stored value.    
+ * The storage representation is opaque (an array of bytes). The query expressions 
+ * based on property value e.g. {@code person.age > 25} can not be evaluated unless 
+ * the user representation is known. 
+ * <li>{@link Schema} to validate the query semantically. The schema can be optional.
+ * If a schema is supplied, then the name tokens in a query are validated against 
+ * the schema namespace.  
  *  
- *  @param K key type
- *  @param V value type
- *  @param U user type
+ * <li>which is the representation for the output/selected result?
+ * </ul>
+ * This interface pulls together these concerns.
+ * <p>
+ * 
+ * <K> type of key used by the data store
+ * <V> type of representation for values used by the data store
+ * <U> type of representation for values used by the user application
+ * 
+ * @author pinaki poddar
+ *
  */
 public interface QueryContext<K,V,U> {
 
@@ -113,5 +134,19 @@ public interface QueryContext<K,V,U> {
 	   * descendant from the given key.
 	   */
 	  Iterator<K> getExtent(K k);
+	  
+		/**
+		 * Gets the policy to create identifier key for NoSQL data store.
+		 * 
+		 * @return a policy that creates key for data store. Never null.
+		 */
+		KeyMaker<K> getKeyMaker();
+		
+		/**
+		 * Gets the transformer that converts between NoSQL storage representation and
+		 * user representation of data values.
+		 */
+		ValueTransformer<V,U> getValueTransformer();
+
 
 }

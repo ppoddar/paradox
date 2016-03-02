@@ -21,8 +21,8 @@
 
 package org.paradox.query.impl;
 
-import org.paradox.query.kv.KVQueryContext;
-import org.paradox.query.kv.ValueTransformer;
+import org.paradox.query.QueryContext;
+import org.paradox.query.ValueTransformer;
 
 /**
  * Implements a path expression.
@@ -33,7 +33,7 @@ import org.paradox.query.kv.ValueTransformer;
  * assume anything about candidate instances.
  * <br>
  * This implementation delegates evaluation to {@link ValueTransformer#extractFieldValue(Object, String) Value Transformer} 
- * interface which is made available via {@link KVQueryContext#getValueTransformer() execution context}. 
+ * interface which is made available via {@link QueryContext#getValueTransformer() execution context}. 
  * 
  * @author pinaki poddar
  *
@@ -68,7 +68,7 @@ public class FieldPath<V> extends AbstractPath<V> {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public V evaluate(Object candidate, KVQueryContext ctx) {
+	public V evaluate(Object candidate, QueryContext ctx) {
 		return (V)ctx.getValueTransformer().extractFieldValue(candidate, getName());
 	}
 }

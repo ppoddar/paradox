@@ -23,11 +23,9 @@ package org.paradox.query;
 
 import java.util.Iterator;
 
-import org.paradox.query.kv.KVQueryContext;
-
 /**
  * Packs query result in a user representation.
- * A packer instance lives for a single {@link KVQueryContext#executeQuery(String) query execution}.
+ * A packer instance lives for a single {@link QueryContext#executeQuery(String) query execution}.
  * 
  * @param <U> type in user representation
  * 

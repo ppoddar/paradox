@@ -19,13 +19,13 @@
 	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-package org.paradox.nosql.query;
+package org.paradox.query.impl.nosql;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.paradox.query.kv.KeyMaker;
+import org.paradox.query.KeyMaker;
 import org.paradox.schema.Attribute;
 import org.paradox.schema.Schema;
 import org.paradox.schema.UserType;

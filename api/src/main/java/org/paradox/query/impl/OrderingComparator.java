@@ -25,7 +25,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 import org.paradox.query.Expression;
-import org.paradox.query.kv.KVQueryContext;
+import org.paradox.query.QueryContext;
 
 /**
  * A comparator to order query results.
@@ -35,10 +35,10 @@ import org.paradox.query.kv.KVQueryContext;
  * @param <T> the type of result rows to be compared
  */
 public class OrderingComparator<T> implements Comparator<T> {
-	private final KVQueryContext<?,?,?> _ctx;
+	private final QueryContext<?,?,?> _ctx;
 	private final Select _select;
 	
-	public OrderingComparator(KVQueryContext<?,?,?> ctx, Select select) {
+	public OrderingComparator(QueryContext<?,?,?> ctx, Select select) {
 		_ctx = ctx;
 		_select = select;
 	}

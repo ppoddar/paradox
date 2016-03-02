@@ -19,7 +19,7 @@
 	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-package org.paradox.nosql.query;
+package org.paradox.query.impl.nosql;
 
 import java.util.Iterator;
 import java.util.List;
@@ -30,14 +30,14 @@ import org.json.JSONObject;
 import org.paradox.query.Expression;
 import org.paradox.query.ExpressionFactory;
 import org.paradox.query.Index;
+import org.paradox.query.KeyMaker;
+import org.paradox.query.QueryContext;
 import org.paradox.query.ResultPacker;
+import org.paradox.query.ValueTransformer;
 import org.paradox.query.impl.ExpressionCollector;
 import org.paradox.query.impl.QueryExpressionFactory;
 import org.paradox.query.impl.Select;
 import org.paradox.query.impl.SelectBuilder;
-import org.paradox.query.kv.KVQueryContext;
-import org.paradox.query.kv.KeyMaker;
-import org.paradox.query.kv.ValueTransformer;
 import org.paradox.schema.Schema;
 import org.paradox.schema.UserType;
 import org.paradox.util.NVPair;
@@ -58,7 +58,7 @@ import oracle.kv.Value;
  * 
  * @author pinaki poddar
  */
-public final class DefaultQueryContext implements KVQueryContext<Key,Value,JSONObject> {
+public final class DefaultQueryContext implements QueryContext<Key,Value,JSONObject> {
 	private Schema            		_schema;
 	private KeyMaker<Key> 			_keyMaker;
 	private ValueTransformer<Value,JSONObject>  	_valueTransformer;

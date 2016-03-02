@@ -19,7 +19,7 @@
 	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-package org.paradox.nosql.query;
+package org.paradox.query.impl.nosql;
 
 import oracle.kv.Consistency;
 import oracle.kv.KVStore;
@@ -29,13 +29,12 @@ import oracle.kv.Value;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
-import org.paradox.query.kv.KVQueryContext;
-import org.paradox.query.kv.KeyMaker;
-import org.paradox.query.kv.ValueTransformer;
+import org.paradox.query.KeyMaker;
+import org.paradox.query.ValueTransformer;
 import org.paradox.schema.Schema;
 
 /**
- * Builder for {@link KVQueryContext}.
+ * Builder for {@link QueryContext}.
  * <br>
  * Uses a {@link DefaultKeyMaker default key} policy. 
  * 

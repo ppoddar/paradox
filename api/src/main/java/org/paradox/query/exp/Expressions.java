@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import org.paradox.query.Expression;
-import org.paradox.query.kv.KVQueryContext;
-import org.paradox.query.kv.ValueNotExistException;
+import org.paradox.query.ValueNotExistException;
+import org.paradox.query.QueryContext;
 
 /**
  * Defines the concrete query expressions.
@@ -103,6 +103,7 @@ public class Expressions {
 			addArgument(rhs);
 			_operator = operator;
 		}
+		
 		public String toString() {
 			switch (getArgumentCount()) {
 			case 1:  return _operator + '(' + getArgument(0) + ')';
@@ -129,7 +130,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			Object lhs = null;
 			try {
 				lhs = getArgument(0).evaluate(candidate, ctx);
@@ -151,7 +152,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			return !super.evaluate(candidate, ctx);
 		}
 	}
@@ -161,7 +162,7 @@ public class Expressions {
 			super("isnull", path);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			try {
 				Object lhs = getArgument(0).evaluate(candidate, ctx);
 				return lhs == null;
@@ -176,8 +177,9 @@ public class Expressions {
 		public Exists(Expression.Path<?> path) {
 			super("exists", path);
 		}
+		
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			try {
 				getArgument(0).evaluate(candidate, ctx);
 			} catch (ValueNotExistException ex) {
@@ -193,7 +195,7 @@ public class Expressions {
 			super("not", predicate);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			Boolean lhs = ((Predicate)getArgument(0)).evaluate(candidate, ctx);
 			return lhs == null ? false : !lhs.booleanValue();
 		}
@@ -205,7 +207,7 @@ public class Expressions {
 			super(operator, path, value);
 		}
 		@Override
-		public final Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public final Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			Number lhs = (Number)getArgument(0).evaluate(candidate, ctx);
 			Number rhs = (Number)getArgument(1).evaluate(candidate, ctx);
 			return compare(lhs,rhs);
@@ -255,7 +257,7 @@ public class Expressions {
 			super("like", path, value);
 		}
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			String lhs = (String)getArgument(0).evaluate(candidate, ctx);
 			String rhs = (String)getArgument(1).evaluate(candidate, ctx);
 			rhs = unquote(rhs);
@@ -273,7 +275,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public V evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public V evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			return _value;
 		}
 		
@@ -362,7 +364,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public Integer evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Integer evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			return assertCollection(candidate).size();
 		}
 	}
@@ -372,7 +374,7 @@ public class Expressions {
 			super("sum", path);
 		}
 		@Override
-		public Number evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Number evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			Collection<?> coll = assertCollection(candidate);
 			double sum = 0.0;
 			for (Object obj : coll) {
@@ -387,7 +389,7 @@ public class Expressions {
 			super(path);
 		}
 		@Override
-		public Number evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Number evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			Collection<?> coll = assertCollection(candidate);
 			if (coll.isEmpty()) return 0.0;
 			double sum = 0.0;
@@ -403,7 +405,7 @@ public class Expressions {
 			super("min", path);
 		}
 		@Override
-		public Number evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Number evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			Collection<?> coll = assertCollection(candidate);
 			if (coll.isEmpty()) return 0.0;
 			double min = Double.MAX_VALUE;
@@ -419,7 +421,7 @@ public class Expressions {
 			super("max", path);
 		}
 		@Override
-		public Number evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Number evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			Collection<?> coll = assertCollection(candidate);
 			if (coll.isEmpty()) return 0.0;
 			double max = Double.MIN_VALUE;
@@ -460,7 +462,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public Object evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Object evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			if (!_bound) throw new RuntimeException("Bind parameter [" + _paramKey + "] is not bound");
 			return _paramValue;
 		}
@@ -473,7 +475,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			Boolean lhs = ((Predicate)getArgument(0)).evaluate(candidate, ctx);
 			if (lhs) return true;
 			return ((Predicate)getArgument(1)).evaluate(candidate, ctx);
@@ -490,7 +492,7 @@ public class Expressions {
 		}
 		
 		@Override
-		public Boolean evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+		public Boolean evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 			Boolean lhs = ((Predicate)getArgument(0)).evaluate(candidate, ctx);
 			if (!lhs) return false;
 			return ((Predicate)getArgument(1)).evaluate(candidate, ctx);

@@ -31,8 +31,6 @@ import java.util.List;
  * assumption that instances would be persisted. Hence, a user-defined type also designates a list of its attributes
  * that participate to form a primary key. The order of these attributes is significant from generating a compound key.
  * 
- * @see KeyMaker
- * 
  * @author pinaki poddar
  *
  */

@@ -19,11 +19,14 @@
 	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-package org.paradox.query.kv;
+package org.paradox.query;
 
 /**
- * Raised when a property does not exist in a given record.
- * Different than property having a null value.
+ * Raised when a property does not exist in a given record,
+ * different than a property having a null value.
+ * 
+ * 
+ * @see Expression.Exists
  * 
  * @author pinaki poddar
  *
@@ -33,6 +36,7 @@ public class ValueNotExistException extends RuntimeException {
 	public ValueNotExistException(String path) {
 		super(path + "not found");
 	}
+	
 	public ValueNotExistException(String seg, String path) {
 		super(seg + "not found in " + path);
 	}

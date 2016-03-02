@@ -22,12 +22,13 @@
 package org.paradox.schema;
 
 /**
- * An attribute (or property, or field) of a {@linkplain UserType user-defined type}.
+ * An attribute (or property) of a {@linkplain UserType user-defined type}.
  * <p>
  * An attribute is <em>of</em> a type. The attribute type determines what value can be held
  * in this attribute. 
  * <br>
- * An attribute belongs to an owning type and is name is unique within the owning type.
+ * An attribute belongs to an {@link #getOwner() owning type} and 
+ * its name is unique within the {@link #getScope() scope} of the owning type.
  * <br>
  * @author pinaki poddar
  *

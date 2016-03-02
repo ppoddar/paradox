@@ -24,8 +24,8 @@ package org.paradox.query.impl;
 import java.util.LinkedList;
 
 import org.paradox.query.Expression;
+import org.paradox.query.ValueTransformer;
 import org.paradox.query.exp.ExpressionVisitor;
-import org.paradox.query.kv.ValueTransformer;
 
 public abstract class AbstractPath<V> implements Expression.Path<V> {
 	private final LinkedList<String> _fields = new LinkedList<String>();

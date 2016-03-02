@@ -32,8 +32,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.paradox.query.Expression;
+import org.paradox.query.QueryContext;
 import org.paradox.query.ResultPacker;
-import org.paradox.query.kv.KVQueryContext;
 import org.paradox.util.ChainedIterator;
 
 /**
@@ -45,7 +45,7 @@ import org.paradox.util.ChainedIterator;
  */
 public abstract class AbstractResultPacker<T> implements ResultPacker<T> {
 	private Select _select;
-	private KVQueryContext<?,?,T> _ctx;
+	private QueryContext<?,?,T> _ctx;
 	private Map<Object,Set<T>> selected;
 	private OrderingComparator<T> _orderByComparator;
 	private static final Object DUMMY_GROUP = new Object();
@@ -55,7 +55,7 @@ public abstract class AbstractResultPacker<T> implements ResultPacker<T> {
 	 * @param select
 	 * @param ctx
 	 */
-	public void setContext(Select select, KVQueryContext<?,?,T> ctx) {
+	public void setContext(Select select, QueryContext<?,?,T> ctx) {
 		_select = select;
 		_ctx = ctx;
 		selected = new HashMap<Object,Set<T>>();

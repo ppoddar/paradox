@@ -19,15 +19,15 @@
 	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-package org.paradox.nosql.query;
+package org.paradox.query.impl.nosql;
 
 import oracle.kv.Value;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.paradox.query.kv.ValueNotExistException;
-import org.paradox.query.kv.ValueTransformer;
+import org.paradox.query.ValueNotExistException;
+import org.paradox.query.ValueTransformer;
 
 /**
  * Converts between {@link JSONObject} and Oracle NoSQL {@link Value}.

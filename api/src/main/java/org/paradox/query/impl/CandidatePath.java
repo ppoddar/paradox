@@ -22,7 +22,7 @@
 package org.paradox.query.impl;
 
 import org.paradox.query.Expression;
-import org.paradox.query.kv.KVQueryContext;
+import org.paradox.query.QueryContext;
 
 
 
@@ -41,7 +41,7 @@ public class CandidatePath<V> extends AbstractPath<V> implements Expression.Cand
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public V evaluate(Object candidate, KVQueryContext<?,?,?> ctx) {
+	public V evaluate(Object candidate, QueryContext<?,?,?> ctx) {
 		return (V)candidate;
 	}
 

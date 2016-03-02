@@ -23,5 +23,10 @@ package org.paradox.schema;
 
 import org.paradox.schema.Type;
 
-public interface PrimitiveType extends Type {
-}
+/**
+ * Primitive Type is a pre-defined type in a Type system 
+ * and does not have any attribute.
+ * 
+ *
+ */
+public interface PrimitiveType extends Type {}

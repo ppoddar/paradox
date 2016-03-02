@@ -19,16 +19,16 @@
 	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-package org.paradox.nosql.query;
+package org.paradox.query.impl.nosql;
 
 import oracle.kv.Key;
 import oracle.kv.Value;
 
 import org.json.JSONObject;
+import org.paradox.query.QueryContext;
 import org.paradox.query.ResultPacker;
 import org.paradox.query.impl.AbstractResultPacker;
 import org.paradox.query.impl.Select;
-import org.paradox.query.kv.KVQueryContext;
 
 /**
  * Packs query result in a JSON object.
@@ -38,7 +38,7 @@ import org.paradox.query.kv.KVQueryContext;
  */
 public class JSONResultPacker extends AbstractResultPacker<JSONObject> implements ResultPacker<JSONObject> {
 
-	public JSONResultPacker(Select select, KVQueryContext<Key, Value, JSONObject> ctx) {
+	public JSONResultPacker(Select select, QueryContext<Key, Value, JSONObject> ctx) {
 		setContext(select, ctx);
 	}
 	

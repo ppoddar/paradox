@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.paradox.schema.Schema;
 import org.paradox.schema.SchemaValidationException;
 import org.paradox.schema.Type;
-import org.paradox.schema.compiler.DefaultSchemaCompiler;
+import org.paradox.schema.impl.DefaultSchemaCompiler;
 
 public class TestCompiler {
 

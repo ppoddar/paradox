@@ -19,7 +19,7 @@
 	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-package org.paradox.schema.compiler;
+package org.paradox.schema.impl;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -34,8 +34,6 @@ import org.paradox.schema.NamingPolicy;
 import org.paradox.schema.Schema;
 import org.paradox.schema.Type;
 import org.paradox.schema.UserType;
-import org.paradox.schema.impl.DefaultSchema;
-import org.paradox.schema.impl.SchemaCompiler;
 
 /**
  * Compiles a schema from a schema specification in JSON format. 

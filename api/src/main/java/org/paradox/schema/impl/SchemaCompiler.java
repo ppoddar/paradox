@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.paradox.schema.Schema;
-import org.paradox.schema.compiler.DefaultSchemaCompiler;
 
 /**
  * Compiles a resource content into a {@link Schema}.

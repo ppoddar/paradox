@@ -4,8 +4,17 @@
 </head>
 <body>
 
-Query Engine Interface.    
+Query Engine Interface for generic Key-Value store.    
 
+This package provides the user interfaces to execute a query using a SQL like string. 
+A query engine on a key-value store requires 
+few essential artifacts that must be supplied by the user of this API. 
+These interface contracts are  defined in:
+<ol type='i'>
+	<li>{@link org.paradox.query.KeyMaker KeyMaker}
+	<li>{@link org.paradox.query.ValueTransformer}
+	<li>{@link org.paradox.schema.Schema}
+</ol>
 A concrete implementation is used in client code, as follows, to execute a query: 
 
 <script src="../../../../../scripts/prism.js"></script>
@@ -28,6 +37,8 @@ available, then the query is also checked for semantic validity
 i.e. all name tokens (the candidate type, 
 the field paths) must be present in the schema.
 <p>
+
+
 
 </body>
 

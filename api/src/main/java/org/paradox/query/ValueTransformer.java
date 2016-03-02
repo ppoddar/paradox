@@ -19,20 +19,15 @@
 	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-package org.paradox.query.kv;
-
+package org.paradox.query;
 
 /**
- * A transformer between data representation used by user application and storage.
+ * A transformer between data representation used by user application and data storage.
  * <p>
- * This interface provides the transformation protocol for to convert a storage {@link Value}
+ * This interface provides the transformation protocol for to convert a stored value
  * to a user level representation and vice versa. 
  * <p>
- * Oracle NoSQL uses {@link Value} interface for storage representation in its Key-Value store. 
- * {@code oracle.kv.Value} interface provides two-way conversion between itself and byte array. 
- * A user application however may prefer a more transparent data representation than byte array.
- * <p>
- * The other important feature of this interface is to {@link #extractFieldValue(Object, String) extract}
+ * The important feature of this interface is to {@link #extractFieldValue(Object, String) extract}
  * the value of a property.
  * 
  * <V> storage data type 

@@ -33,8 +33,8 @@ import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.paradox.nosql.query.QueryContextBuilder;
 import org.paradox.query.QueryContext;
+import org.paradox.query.impl.nosql.QueryContextBuilder;
 
 /**
  * Queries hand-crafted data to validate predicate-based query results.

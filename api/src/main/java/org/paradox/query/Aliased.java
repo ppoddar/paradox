@@ -21,13 +21,27 @@
 
 package org.paradox.query;
 
+/**
+ * An expression term which is referred by another name.
+ * 
+ *
+ */
 public interface Aliased {
 	/**
-	 * Affirms if this expression has been aliased.
+	 * Affirms if this expression term has been aliased.
 	 */
 	boolean isAliased();
 	
+	/**
+	 * Gets the alias of this expression 
+	 * @return null if term has not been aliased.
+	 */
 	public String getAlias();
 	
+	
+	/**
+	 * Sets an alias for this expression term.
+	 * @param alias can be null.
+	 */
 	public void setAlias(String alias);
 }

@@ -19,7 +19,7 @@
 	NO OBLIGATION TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 */
 
-package org.paradox.query.kv;
+package org.paradox.query;
 
 import java.util.Map;
 
